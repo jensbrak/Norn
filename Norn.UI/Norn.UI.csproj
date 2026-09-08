@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Desktop shell. References Adapter and nothing else — it must not be able
+       to see GameCore or Primitives. Bootstrap is written in C#; .axaml is
+       banned. Scaffolded against the installed Avalonia.Templates 11.3.12,
+       verified rather than written from recall. Pinned to the latest 11.3.x,
+       not 12.x. -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Norn.UI</RootNamespace>
+    <!-- The project stays Norn.UI (the rate-of-change split) but
+         the shipped binary is the product's name, not the internal
+         project-splitting scheme: Norn.exe / Norn, not Norn.UI.exe /
+         Norn.UI. Same value on both platforms — no RID-conditional casing. -->
+    <AssemblyName>Norn</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- Windows-only: embeds the icon into the PE resource table, giving
+         Explorer/taskbar/Alt-Tab a real icon for Norn.exe itself. Silently
+         ignored on Linux builds — that platform has no PE resource section,
+         and (absent packaging, which Norn doesn't have yet) no OS-level
+         place to hang an app icon at all. Norn.UI/AppIcon.cs's WindowIcon is
+         the part that also reaches Linux, via each window's own titlebar/
+         _NET_WM_ICON hint. -->
+    <ApplicationIcon>Assets\norn.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.19" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.19" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.19" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.19" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.19">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Norn.Adapter\Norn.Adapter.csproj" />
+  </ItemGroup>
+
+  <!-- App icon and in-app logo art (AppIcon.cs), compiled in as Avalonia
+       resources — avares://Norn/Assets/... — rather than the
+       CopyToOutputDirectory treatment SharedItemData.csv etc. use below:
+       there's no user-override use case for these, so a fixed compiled
+       asset is the simpler fit. norn.ico is also referenced by
+       ApplicationIcon above; norn-logo.png is the top-down render used
+       everywhere in-app; norn-logo-perspective.png is AboutWindow's
+       deliberate exception — every other surface
+       uses the top-down art. -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\norn.ico" />
+    <AvaloniaResource Include="Assets\norn-logo.png" />
+    <AvaloniaResource Include="Assets\norn-logo-perspective.png" />
+  </ItemGroup>
+
+  <!-- Content/ groups the four files below: bundled, read-only-at-the-app-
+       level resources shipped next to the executable, as opposed to
+       Norn.UI root's own runtime-generated data (AppState, Settings,
+       SessionCache). All four share the same mechanism regardless of
+       being prose or tabular — CopyToOutputDirectory here, resolved by a
+       dedicated *Shim off AppContext.BaseDirectory, loaded once at
+       startup before any window shows — which is why they share one
+       folder instead of being split by file extension. -->
+
+  <!-- The shared item-data CSV: the "bundled default" a
+       user's build/publish output ships with, resolved by ItemCatalogShim
+       relative to the running executable. An ordinary tracked project
+       resource, same treatment as app.manifest above — not a gitignored
+       reference input, unlike the gitignored save-file corpus. -->
+  <ItemGroup>
+    <None Include="Content\SharedItemData.csv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Vide's localization-string export — same
+         tracked-resource treatment as SharedItemData.csv above, resolved by
+         LocalizationCatalogShim. -->
+    <None Include="Content\LocalizationData.csv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The in app Help window's content, resolved by HelpShim. Same
+         bundled resource treatment as the two entries above; no per user
+         override path exists for this one, since there is nothing for a
+         user to customize. Content overlaps conceptually with what the
+         public repository's README covers, but the two are not planned to
+         be generated from each other: they serve different readers. -->
+    <None Include="Content\HelpContent.md" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The welcome window's "What's new" content, resolved by
+         ReleaseNotesShim. Same bundled resource treatment as HelpContent.md
+         just above, and the same MarkdownSectionParser grammar. -->
+    <None Include="Content\ReleaseNotes.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

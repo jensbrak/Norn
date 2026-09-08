@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Format-level constructs, mirrored from the game. Changes ~never.
+       No references to anything else in the solution, by design. -->
+
+  <PropertyGroup>
+    <RootNamespace>Norn.GameCore.Primitives</RootNamespace>
+    <!-- Mirrored code carries no nullable annotations, so it stays
+         line-comparable with decompiled source. -->
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+</Project>

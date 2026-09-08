@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Corpus round-trip harness and the architecture tests. References every
+       project, including UI, because the architecture tests inspect UI's
+       compiled assembly references.
+
+       xUnit v3, not v2: the corpus is gitignored, so its tests must skip rather
+       than fail when it is absent, and dynamic skip (Assert.Skip) does not exist
+       in v2 at all. v3 test projects are
+       self-executing, hence OutputType Exe. -->
+
+  <PropertyGroup>
+    <RootNamespace>Norn.Tests</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Norn.GameCore.Primitives\Norn.GameCore.Primitives.csproj" />
+    <ProjectReference Include="..\Norn.GameCore\Norn.GameCore.csproj" />
+    <ProjectReference Include="..\Norn.Adapter\Norn.Adapter.csproj" />
+    <ProjectReference Include="..\Norn.UI\Norn.UI.csproj" />
+  </ItemGroup>
+
+</Project>

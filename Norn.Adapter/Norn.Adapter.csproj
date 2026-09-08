@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Anti-corruption layer: GameCore types out, standard .NET primitives in.
+       No Avalonia, no change notification. -->
+
+  <PropertyGroup>
+    <RootNamespace>Norn.Adapter</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- A plain reference, deliberately. SDK-style project references flow
+         transitively to compilation, so Norn.UI *can* compile against GameCore
+         through this one — measured, and it does. Both MSBuild levers
+         that cut the flow (PrivateAssets="compile" here, or
+         DisableTransitiveProjectReferences in Norn.UI) also stop GameCore.dll
+         being deployed with the app, which breaks it at runtime. The boundary is
+         enforced instead by the hook and the architecture tests, which catch a
+         violation the moment it is written. -->
+    <ProjectReference Include="..\Norn.GameCore\Norn.GameCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Norn's first external dependency added for project code rather than
+         inherited from Avalonia. LocalizationCatalog's source CSV (Vide's
+         localization export) contains multiline quoted values — a correct
+         RFC 4180 reader has to consume the file as a character stream, not
+         line-by-line, which is meaningfully more failure-prone to hand-roll
+         correctly than SharedItemDataCatalog's original single-quoted-field,
+         no-embedded-newline case was. MIT-licensed, de facto .NET standard,
+         none of the bus-factor/abandonment concerns that ruled out the
+         rejected Avalonia markup libraries. -->
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+  </ItemGroup>
+
+</Project>

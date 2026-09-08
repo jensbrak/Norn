@@ -1,0 +1,42 @@
+<Project>
+
+  <!-- Shared build settings. Per-project overrides live in the .csproj files;
+       the only one that exists today is <Nullable>, disabled in the two mirrored
+       projects so their code diffs cleanly against decompiled source. -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Single source of truth for app identity/version (Norn.UI/AppInfo.cs is
+       the only reader): the SDK turns these into AssemblyProduct/
+       AssemblyCopyright/AssemblyVersion/AssemblyInformationalVersion on every
+       project's generated AssemblyInfo, so editing one number here is enough
+       for the About window to pick it up via reflection — no hand-maintained
+       duplicate anywhere. -->
+  <PropertyGroup>
+    <Product>Norn</Product>
+    <Version>1.0.0</Version>
+    <Copyright>Copyright © jensbrak</Copyright>
+    <!-- The SDK appends "+<git-commit-sha>" to InformationalVersion by
+         default whenever the project sits in a git repo (deterministic-build
+         source tracking) - exactly the kind of build identifier the About
+         window is deliberately not showing yet (see above), so it's turned
+         off here rather than left to leak through as an accidental value.
+         Worth revisiting alongside CI: exact build/commit identification is
+         wanted eventually, likely debug
+         builds specifically - but the SDK's own suffix is the full 40-char
+         SHA with no short form built in, so a real version of this would
+         need a custom target overriding SourceRevisionId with git's own
+         abbreviated-hash mode (or a truncation of the full SHA) ahead of
+         GenerateAssemblyInfo, not just re-enabling this switch. Caution
+         editing this comment: a literal double hyphen breaks XML comment
+         syntax and silently invalidates this entire file (every project
+         fails to restore) - exactly what happened once already here. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+</Project>

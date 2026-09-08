@@ -1,0 +1,55 @@
+#!/bin/sh
+# pre-commit -- refuses commits that would put unremovable material into history.
+#
+# Enabled via:  git config core.hooksPath .githooks
+# Version-controlled deliberately, so it survives a fresh clone.
+#
+# This catches the mistake regardless of who makes it -- agent, IDE, or hand --
+# which is why it lives here rather than in any one contributor's own setup.
+
+set -e
+
+fail=0
+
+# --- Reference material -------------------------------------------------
+# A real Valheim save or world file has no business in this repository except
+# as a deliberately curated, genericized test fixture under Norn.Tests/Fixtures/
+# -- everywhere else, a .fch/.fwl/.db file getting staged means someone's own
+# personal save data is about to enter history, which can't be undone without
+# rewriting every later commit.
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+
+blocked=$(printf '%s\n' "$staged" | grep -E '(^|/)reference/|\.fch$|\.fwl$|\.db$' | grep -v '^Norn\.Tests/Fixtures/' || true)
+if [ -n "$blocked" ]; then
+    echo "pre-commit: BLOCKED -- save/world/reference data cannot be committed here." >&2
+    echo "" >&2
+    printf '%s\n' "$blocked" | sed 's/^/    /' >&2
+    echo "" >&2
+    echo "  Personal save data stays out of history. Curated, genericized test" >&2
+    echo "  fixtures belong under Norn.Tests/Fixtures/ specifically -- nowhere else." >&2
+    echo "  If this was 'git add -A', stage explicit paths instead." >&2
+    echo "" >&2
+    fail=1
+fi
+
+# --- Oversized files ----------------------------------------------------
+# A large blob is usually reference material that slipped past the patterns.
+for f in $staged; do
+    [ -f "$f" ] || continue
+    size=$(wc -c < "$f" 2>/dev/null || echo 0)
+    if [ "$size" -gt 1048576 ]; then
+        echo "pre-commit: BLOCKED -- $f is $((size / 1024)) KB (limit 1 MB)." >&2
+        echo "  If this is genuinely source, commit it with --no-verify and say why." >&2
+        fail=1
+    fi
+done
+
+# --- Build output -------------------------------------------------------
+leaked=$(printf '%s\n' "$staged" | grep -E '(^|/)(bin|obj)/' || true)
+if [ -n "$leaked" ]; then
+    echo "pre-commit: BLOCKED -- build output staged:" >&2
+    printf '%s\n' "$leaked" | sed 's/^/    /' >&2
+    fail=1
+fi
+
+exit $fail

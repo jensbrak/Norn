@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Norn.Adapter/Norn.Adapter.csproj" />
+  <Project Path="Norn.GameCore.Primitives/Norn.GameCore.Primitives.csproj" />
+  <Project Path="Norn.GameCore/Norn.GameCore.csproj" />
+  <Project Path="Norn.Tests/Norn.Tests.csproj" />
+  <Project Path="Norn.UI/Norn.UI.csproj" />
+</Solution>

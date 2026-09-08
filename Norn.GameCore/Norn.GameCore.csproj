@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mirrored load/save logic and game enums. The only project a game patch
+       should touch. References Primitives and nothing else. -->
+
+  <PropertyGroup>
+    <RootNamespace>Norn.GameCore</RootNamespace>
+    <!-- See Norn.GameCore.Primitives.csproj. -->
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Norn.GameCore.Primitives\Norn.GameCore.Primitives.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The write path is widened deliberately, one field at a time, never
+         wholesale. It started internal; this grant exists because Norn.Adapter
+         needs SavePlayerToDisk() to save edits through CharacterEditor. Norn.UI still cannot see
+         GameCore at all (ArchitectureTests), so this doesn't reopen the
+         "write path reachable from the UI" guarantee — only Adapter's own
+         public surface controls what's reachable from there on. -->
+    <InternalsVisibleTo Include="Norn.Tests" />
+    <InternalsVisibleTo Include="Norn.Adapter" />
+  </ItemGroup>
+
+</Project>
