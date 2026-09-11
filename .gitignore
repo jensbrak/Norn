@@ -21,3 +21,6 @@ Thumbs.db
 # Editor
 .idea/
 *.swp
+
+# Personal save-file corpus (see CONTRIBUTING.md) -- never committed
+/reference/

@@ -65,8 +65,9 @@ To run the test suite:
 dotnet test
 ```
 
-There is no prebuilt binary release yet — building from source is currently the
-only supported way to run Norn.
+Prebuilt Windows and Linux binaries for tagged versions are published on the
+[Releases](https://github.com/jensbrak/Norn/releases) page. Building from
+source (above) always works too, and is the only option between releases.
 
 ## Status
 

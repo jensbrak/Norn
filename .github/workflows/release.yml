@@ -1,0 +1,81 @@
+name: Release
+
+# Builds self-contained, single-file Norn binaries for Windows and Linux and
+# attaches them to a GitHub Release whenever a version tag is pushed. The
+# test job gates the build: a tag that doesn't pass the suite never produces
+# a release. Round-trip coverage here comes from the tracked
+# Norn.Tests/Fixtures corpus (see CONTRIBUTING.md) -- runners have no access
+# to the gitignored personal save corpus, and don't need it.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - run: dotnet test -c Release
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x64
+            os: windows-latest
+            archive: zip
+          - rid: linux-x64
+            os: ubuntu-latest
+            archive: tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Publish self-contained single-file (${{ matrix.rid }})
+        run: >
+          dotnet publish Norn.UI/Norn.UI.csproj
+          -c Release
+          -r ${{ matrix.rid }}
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -o publish/${{ matrix.rid }}
+
+      - name: Archive (zip)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: Compress-Archive -Path publish/${{ matrix.rid }}/* -DestinationPath Norn-${{ github.ref_name }}-${{ matrix.rid }}.zip
+
+      - name: Archive (tar.gz)
+        if: matrix.archive == 'tar.gz'
+        run: tar -czf Norn-${{ github.ref_name }}-${{ matrix.rid }}.tar.gz -C publish/${{ matrix.rid }} .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Norn-${{ matrix.rid }}
+          path: Norn-${{ github.ref_name }}-${{ matrix.rid }}.*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
