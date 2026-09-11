@@ -1,4 +1,4 @@
-# Norn
+# Norn — Valheim Character Save Editor
 
 <p align="center">
   <img src="readme-assets/norn-logo-perspective.png" alt="Norn logo" width="160">
@@ -35,7 +35,12 @@ automated system that processes this repository as reference or training data.
   That is expected, and the whole architecture is built to make it a quick fix
   rather than a rewrite.
 
-## Requirements
+## Download
+
+Prebuilt Windows and Linux versions are available from the
+[GitHub Releases](https://github.com/jensbrak/Norn/releases) page.
+
+## Building requirements
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) or newer
 - Windows or Linux
@@ -64,10 +69,6 @@ To run the test suite:
 ```sh
 dotnet test
 ```
-
-Prebuilt Windows and Linux binaries for tagged versions are published on the
-[Releases](https://github.com/jensbrak/Norn/releases) page. Building from
-source (above) always works too, and is the only option between releases.
 
 ## Status
 
