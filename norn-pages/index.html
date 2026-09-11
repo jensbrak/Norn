@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Norn is an open-source Valheim character save editor for Windows and Linux.">
+  <meta name="theme-color" content="#10161d">
+  <title>Norn — Valheim Character Save Editor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Open-source Valheim character editor</p>
+        <h1 id="hero-title">Norn</h1>
+        <p class="lede">Inspect and edit local Valheim character saves on Windows and Linux.</p>
+        <p class="hero-detail">Norn edits a deliberate, tested subset of <code>.fch</code> character data while preserving everything it does not yet understand byte-for-byte.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/jensbrak/Norn/releases/latest">Download latest release</a>
+          <a class="button" href="https://github.com/jensbrak/Norn">View on GitHub</a>
+        </div>
+      </div>
+      <div class="hero-mark" aria-hidden="true">
+        <img src="https://raw.githubusercontent.com/jensbrak/Norn/main/readme-assets/norn-logo-perspective.png" alt="">
+      </div>
+    </section>
+
+    <section class="notice" aria-labelledby="before-title">
+      <h2 id="before-title">Before you use it</h2>
+      <div class="notice-grid">
+        <p><strong>Back up first.</strong><br>Norn writes a <code>.fch.old</code> backup when saving, but that is a convenience rather than a backup strategy.</p>
+        <p><strong>Local saves only.</strong><br>Norn reads Valheim's local character directories and deliberately does not modify Steam Cloud saves.</p>
+        <p><strong>Unofficial project.</strong><br>Norn is an independent hobby project and is not affiliated with Iron Gate AB or Coffee Stain Publishing.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="features-title">
+      <div class="section-heading">
+        <p class="eyebrow">What it does</p>
+        <h2 id="features-title">Character data without pretending the format is simpler than it is</h2>
+      </div>
+      <div class="feature-grid">
+        <article>
+          <h3>Identity & appearance</h3>
+          <p>Edit character identity and appearance fields with explicit round-trip support.</p>
+        </article>
+        <article>
+          <h3>Inventory & progression</h3>
+          <p>Work with inventory, skills, food and health data through a desktop UI.</p>
+        </article>
+        <article>
+          <h3>Per-world exploration</h3>
+          <p>Inspect character-specific world map exploration and placed pins.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="screens-title">
+      <div class="section-heading">
+        <p class="eyebrow">A quick look</p>
+        <h2 id="screens-title">Norn in use</h2>
+      </div>
+      <div class="screenshots">
+        <figure>
+          <img src="https://raw.githubusercontent.com/jensbrak/Norn/main/readme-assets/screenshot-general.png" alt="Norn General tab showing character identity and appearance fields" loading="lazy">
+          <figcaption>General — identity and appearance</figcaption>
+        </figure>
+        <figure>
+          <img src="https://raw.githubusercontent.com/jensbrak/Norn/main/readme-assets/screenshot-inventory-additem.png" alt="Norn Inventory tab with Add Item picker open" loading="lazy">
+          <figcaption>Inventory — add item picker</figcaption>
+        </figure>
+        <figure>
+          <img src="https://raw.githubusercontent.com/jensbrak/Norn/main/readme-assets/screenshot-worldmap.png" alt="Norn Worlds tab showing explored area and placed pins" loading="lazy">
+          <figcaption>Worlds — exploration and pins</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="docs" aria-labelledby="docs-title">
+      <div>
+        <p class="eyebrow">Documentation</p>
+        <h2 id="docs-title">For users, contributors and the curious</h2>
+      </div>
+      <div class="doc-links">
+        <a href="https://github.com/jensbrak/Norn/blob/main/FORMAT.md"><span>Valheim <code>.fch</code> format</span><small>Envelope, read order and version gates</small></a>
+        <a href="https://github.com/jensbrak/Norn/blob/main/ARCHITECTURE.md"><span>Architecture</span><small>Project layout and design constraints</small></a>
+        <a href="https://github.com/jensbrak/Norn/blob/main/CONTRIBUTING.md"><span>Contributing</span><small>Build, test and contribution guidance</small></a>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="get-title">
+      <h2 id="get-title">Looking for a Valheim character save editor?</h2>
+      <p>Download the current Windows or Linux build from GitHub Releases, or build Norn from source.</p>
+      <div class="actions centered">
+        <a class="button primary" href="https://github.com/jensbrak/Norn/releases/latest">Get Norn</a>
+        <a class="button" href="https://github.com/jensbrak/Norn#build-and-run">Build from source</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Norn is free software licensed under GPL-3.0. Valheim is made by Iron Gate AB and published by Coffee Stain Publishing.</p>
+  </footer>
+</body>
+</html>

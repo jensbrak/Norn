@@ -1,0 +1,43 @@
+name: Deploy GitHub Pages
+
+# Builds and deploys the static landing site in norn-pages/ via GitHub's own
+# Pages Actions flow (configure-pages / upload-pages-artifact / deploy-pages)
+# rather than the classic "deploy from branch" option. Deliberate: NornDev
+# (the private working repo this one is exported from) already has its own
+# docs/ directory for internal design notes -- see SKILL.md there -- and
+# GitHub Pages' conventional source folder is also named docs/. Using
+# Actions instead means this repo's main branch never needs a docs/ folder
+# at all, so that name collision never has a chance to matter. norn-pages/
+# was picked for the same reason: distinct from docs/, self-describing.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "norn-pages/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: norn-pages
+      - id: deployment
+        uses: actions/deploy-pages@v4
