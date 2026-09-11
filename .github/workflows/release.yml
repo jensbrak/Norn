@@ -6,6 +6,10 @@ name: Release
 # a release. Round-trip coverage here comes from the tracked
 # Norn.Tests/Fixtures corpus (see CONTRIBUTING.md) -- runners have no access
 # to the gitignored personal save corpus, and don't need it.
+#
+# The release lands as a draft, not published -- download the artifacts off
+# it and actually run them first. Publish by hand once they check out; if
+# they don't, delete the draft and its tag and retag once fixed.
 
 on:
   push:
@@ -79,3 +83,4 @@ jobs:
         with:
           files: artifacts/*
           generate_release_notes: true
+          draft: true
