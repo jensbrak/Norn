@@ -508,9 +508,9 @@ public sealed class InventoryTabModule : ITabModule
     /// crafter/weight without a persistent on-tile glyph" answer, matching
     /// the game's own single-info-card-on-hover shape rather than Norn's
     /// usual always-visible-text convention. Aggregates the full display
-    /// name, crafter, equipped status, and weight; deferred per-tile
-    /// enrichment (item description, etc.) can extend this later without a
-    /// new mechanism.
+    /// name, crafter, cheated status, equipped status, and weight; deferred
+    /// per-tile enrichment (item description, etc.) can extend this later
+    /// without a new mechanism.
     /// <para>
     /// The name line is always included, not just when the tile face
     /// truncates it (<see cref="TextBlock.MaxLines"/>, above) — same
@@ -552,6 +552,18 @@ public sealed class InventoryTabModule : ITabModule
         if (!string.IsNullOrEmpty(item.CrafterName))
         {
             lines.Add($"Crafted by: {item.CrafterName}");
+        }
+
+        // Read-only — surfacing an already-true fact from the save, per
+        // CLAUDE.md §4 item 9, same category as Unlockables' Trophies field.
+        // Shown only when true: the overwhelming majority of items were
+        // never console-spawned, so showing this unconditionally would be
+        // noise on nearly every tile — same "notable case only" convention
+        // PickedUp uses below, just inverted (there, false is notable; here,
+        // true is).
+        if (item.Cheated)
+        {
+            lines.Add("Cheated: Yes");
         }
 
         if (shared is not null && ItemEquippability.IsEquipable(shared.ItemType))

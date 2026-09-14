@@ -51,18 +51,12 @@ internal static class IconButtons
     /// Miscellaneous Technical) — a literal "location on a map" meaning,
     /// but too small relative to ✕/↑.
     /// </para></summary>
+    // note: "»»" (ExploreAllGlyph) lived here 2026-09-01 through the "Reveal
+    // world" move into WorldMapWindow — a plain text Button there now,
+    // alongside the window's other two action buttons, not an icon glyph;
+    // see docs/decisions.md for the original settling story if this needs
+    // reviving for an icon-button context in the future.
     public const string ViewMapGlyph = "»";
-
-    /// <summary>"Explore all" (Worlds tab) — reveals a world's entire map.
-    /// <see cref="ViewMapGlyph"/> doubled: the same "» = expand/see more"
-    /// meta-language already settled there, intensified to read as "expand
-    /// all the way" for a closely related but stronger action, rather than
-    /// inventing an unrelated symbol. Settled 2026-09-01 — confirmed
-    /// legible at actual 28×28 button size by running the app, and
-    /// accepted on first look, unlike
-    /// <see cref="ViewMapGlyph"/>'s own several
-    /// rejected rounds.</summary>
-    public const string ExploreAllGlyph = "»»";
 
     public const double Size = 28;
 

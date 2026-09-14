@@ -7,9 +7,10 @@ namespace Norn.GameCore;
 // note:    WorldPlayerData.m_mapData is still opaque byte[] on the ordinary
 //          PlayerProfile Read/Write round trip and is re-emitted verbatim for
 //          every world a caller doesn't explicitly touch (R3) — that default
-//          is unchanged. Decode/Encode exist so one narrow, explicit editing
-//          path (CharacterEditor.ExploreAllMap, Norn.Adapter) can replace one
-//          world's blob with a freshly-encoded one; re-encoding is no longer
+//          is unchanged. Decode/Encode exist so a narrow, explicit set of
+//          editing paths (CharacterEditor.ExploreAllMap/ClearReceivedMapData,
+//          Norn.Adapter) can replace one world's blob with a freshly-encoded
+//          one; re-encoding is no longer
 //          permanently off the table, but the "must never appear on a
 //          write path R1 covers" default in Norn.GameCore.Primitives.Utils
 //          still holds everywhere else. The reasoning: gzip output is not
@@ -287,11 +288,13 @@ public static partial class Minimap
     //          m_exploredOthers are private fields always allocated together
     //          at Start() — not structurally guaranteed here, since MapData
     //          exposes both as public mutable fields with no invariant
-    //          enforcing equal length. Correct today because the sole caller
-    //          (CharacterEditor.ExploreAllMap) only Array.Fills Explored in
-    //          place, never resizes either array; a caller that resized one
-    //          without the other would hit IndexOutOfRangeException here
-    //          rather than anything source would do. Kept anyway for
+    //          enforcing equal length. Correct today because both callers
+    //          (CharacterEditor.ExploreAllMap, which Array.Fills Explored;
+    //          ClearReceivedMapData, which Array.Clears ExploredOthers) only
+    //          ever mutate an array's contents in place, never resize either
+    //          one; a caller that resized one without the other would hit
+    //          IndexOutOfRangeException here rather than anything source
+    //          would do. Kept anyway for
     //          diffability against a future patch.
     // note:    MAPVERSION is written unconditionally, regardless of
     //          data.Version — matches source exactly (GetMapData never reads
@@ -314,11 +317,11 @@ public static partial class Minimap
     //          against the game's own Mono runtime (Norn.GameCore.Primitives.Utils),
     //          so this method's output can satisfy R2 (Decode(Encode(x))
     //          round trip) but never R1 against a game-written blob.
-    //          CharacterEditor.ExploreAllMap is
-    //          the only caller, and only ever invokes this for a world whose
-    //          map the user explicitly chose to modify — every other world's
-    //          m_mapData stays the untouched opaque byte[] R3 already
-    //          guarantees.
+    //          CharacterEditor.ExploreAllMap and CharacterEditor.ClearReceivedMapData
+    //          are the only callers, and each only ever invokes this for a
+    //          world whose map the user explicitly chose to modify — every
+    //          other world's m_mapData stays the untouched opaque byte[] R3
+    //          already guarantees.
     public static byte[] Encode(MapData data)
     {
         ZPackage outer = new ZPackage();

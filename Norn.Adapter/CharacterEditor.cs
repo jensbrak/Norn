@@ -975,6 +975,44 @@ public sealed class CharacterEditor
     }
 
     /// <summary>
+    /// Decodes one world's map blob, clears every byte of <see cref="WorldMapDto.ExploredOthers"/>
+    /// (fog revealed via a shared source — a cartography table — as opposed
+    /// to this character's own exploration, which is untouched) and drops
+    /// every pin whose <c>m_ownerID</c> is non-zero (received via a
+    /// cartography table and not yet adopted — the same partition
+    /// <see cref="WorldMapDto.ReceivedPinCount"/> counts), then re-encodes —
+    /// the second caller of <see cref="Minimap.Encode"/>, same shape as
+    /// <see cref="ExploreAllMap"/>. No-op if the world isn't known or has no
+    /// map data.
+    /// <para>
+    /// Unlike <see cref="ExploreAllMap"/> (which mirrors the in-game
+    /// <c>exploremap</c> console command), nothing in the game ever lets a
+    /// player selectively discard only received map data while keeping
+    /// their own — same editor-exclusive-capability category as
+    /// <see cref="ClearWorldMapData"/>/<see cref="ClearUsedCheats"/>, not a
+    /// mirror of anything.
+    /// </para>
+    /// </summary>
+    public void ClearReceivedMapData(long worldId)
+    {
+        var worldData = _profile.m_worldData
+            .Where(pair => pair.Key == worldId)
+            .Select(pair => pair.Value)
+            .FirstOrDefault();
+
+        if (worldData?.m_mapData is null)
+        {
+            return;
+        }
+
+        var mapData = Minimap.Decode(worldData.m_mapData);
+        Array.Clear(mapData.ExploredOthers, 0, mapData.ExploredOthers.Length);
+        mapData.Pins.RemoveAll(pin => pin.m_ownerID != 0);
+        worldData.m_mapData = Minimap.Encode(mapData);
+        IsDirty = true;
+    }
+
+    /// <summary>
     /// Clears one world's claimed-bed spawn flag only — mirrors the game's
     /// own <c>PlayerProfile.ClearCustomSpawnPoint</c> exactly: the bool goes
     /// false, the vector is left as-is, so

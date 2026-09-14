@@ -146,6 +146,39 @@ internal static class TabRows
 
         return grid;
     }
+
+    /// <summary>
+    /// A legend paragraph plus its own dismiss ✕, docked right and
+    /// top-aligned against the wrapped text. Dismissing persists immediately
+    /// (<see cref="SettingsStore"/>'s usual auto-save) and hides the row in
+    /// place — no rebuild needed on the caller's part, same self-owned
+    /// post-click state <see cref="RowGroup.AddClearableFlagRow"/> already
+    /// uses. Promoted out of <c>WorldsTabModule</c> (its original, and until
+    /// <c>WorldMapWindow</c>'s "Reveal world" action moved there, only
+    /// consumer) — the "would these two ever diverge" test any shared helper
+    /// gets, answer no: a dismissible warning paragraph is the same shape
+    /// whether it's hanging above a tab's row list or a modal window's
+    /// toggle row.
+    /// </summary>
+    public static Control BuildDismissibleLegend(string text, Action onDismiss)
+    {
+        var row = new DockPanel { Margin = new Thickness(0, 0, 0, 12) };
+
+        var dismiss = IconButtons.Create(IconButtons.ClearGlyph, "Dismiss this message.");
+        dismiss.VerticalAlignment = VerticalAlignment.Top;
+        DockPanel.SetDock(dismiss, Dock.Right);
+        dismiss.Click += (_, _) =>
+        {
+            onDismiss();
+            SettingsStore.Save();
+            row.IsVisible = false;
+        };
+        row.Children.Add(dismiss);
+
+        row.Children.Add(RowGroup.DescriptionText(text));
+
+        return row;
+    }
 }
 
 /// <summary>

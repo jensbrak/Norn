@@ -26,7 +26,8 @@ public static class InventoryMapper
                 item.m_crafterName,
                 item.m_customData.ToList(),
                 item.m_worldLevel,
-                item.m_pickedUp))
+                item.m_pickedUp,
+                item.m_cheated))
             .ToList();
 
         return new InventoryDto(items);

@@ -15,7 +15,8 @@ public sealed record ItemDto(
     string CrafterName,
     IReadOnlyList<KeyValuePair<string, string>> CustomData,
     int WorldLevel,
-    bool PickedUp);
+    bool PickedUp,
+    bool Cheated);
 
 /// <summary>Read-only view for the Inventory tab.</summary>
 public sealed record InventoryDto(IReadOnlyList<ItemDto> Items);
