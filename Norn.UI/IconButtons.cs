@@ -53,9 +53,7 @@ internal static class IconButtons
     /// </para></summary>
     // note: "»»" (ExploreAllGlyph) lived here 2026-09-01 through the "Reveal
     // world" move into WorldMapWindow — a plain text Button there now,
-    // alongside the window's other two action buttons, not an icon glyph;
-    // see docs/decisions.md for the original settling story if this needs
-    // reviving for an icon-button context in the future.
+    // alongside the window's other two action buttons, not an icon glyph.
     public const string ViewMapGlyph = "»";
 
     public const double Size = 28;

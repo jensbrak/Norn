@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Styling;
 using Norn.Adapter;
 
 namespace Norn.UI;
@@ -13,14 +15,30 @@ namespace Norn.UI;
 /// (<see cref="SaveFileListControls"/>) as a functionality/layout reference,
 /// not a literal port: a search box + clear button, a category
 /// <see cref="ComboBox"/> in place of the sidebar's sort key/direction pair
-/// (category isn't a sort axis, so there's no direction button), and two
-/// convenience <see cref="CheckBox"/>es in place of "Show backups" — "Set
-/// crafter tag" and "Fill stack" (quality/durability didn't seem worth
+/// (category isn't a sort axis, so there's no direction button), a
+/// convenience <see cref="CheckBox"/> in place of "Show backups" — "Set
+/// crafter tag" — and an amount field (quality/durability didn't seem worth
 /// the same treatment).
 /// <para>
-/// Both checkboxes' *default* state (not their per-session value — see
-/// below) comes from <see cref="Settings.DefaultSetCrafterTagOnAdd"/>/
-/// <see cref="Settings.DefaultFillStackOnAdd"/>, not <see cref="AppState"/>
+/// The amount field is a plain <see cref="NumericUpDown"/> —
+/// <c>Minimum</c>/<c>Maximum</c>/<c>Value</c> only, no
+/// <c>InnerRightContent</c> trick. That trick (an inline "/ M" reading as
+/// part of the same control) was exactly one of the chrome problems found
+/// with <c>StackEditDialog</c>, a predecessor of this window — the item's
+/// max stack is shown here as ordinary separate static text in the field's
+/// own label instead
+/// ("Amount (max 50):"), not embedded inside the control. The control's own
+/// <c>Maximum</c> is deliberately <see cref="AmountEntry.Ceiling"/>, not the
+/// selected item's real max — see that constant's own doc comment for why a
+/// lower, per-item <c>Maximum</c> here reintroduces a live keystroke-
+/// rejection bug; the real bound is enforced once, correctly, at Add time by
+/// <see cref="CharacterEditor.SetItemStack"/>'s own clamp.
+/// </para>
+/// <para>
+/// The checkbox's and the amount field's *default* state (not their
+/// per-session value — see below) come from
+/// <see cref="Settings.DefaultSetCrafterTagOnAdd"/>/
+/// <see cref="Settings.DefaultAmountToMaxOnAdd"/>, not <see cref="AppState"/>
 /// (moved off it, 2026-09-02) — the distinction: a deliberate,
 /// stable, values-based default is a real preference someone would want to
 /// find and set once, not silent "whatever I clicked last" bookkeeping,
@@ -29,29 +47,29 @@ namespace Norn.UI;
 /// that reason — it's passive view continuity, not a behavioral default).
 /// Both settings default <c>true</c> — "Set crafter tag" replicates real
 /// game behavior and is
-/// safe to default on now that it's per-item gated; "Fill stack" isn't
-/// a personal preference but is judged the likely majority want.
-/// Checking/unchecking a box in this window only affects *this* session,
+/// safe to default on now that it's per-item gated; defaulting the amount
+/// to max isn't a personal preference either but is judged the likely
+/// majority want.
+/// Changing either in this window only affects *this* session,
 /// same as search text/category — it does not write back to
 /// <see cref="Settings"/>; that only changes through the Settings window
 /// itself.
 /// </para>
 /// <para>
-/// Both checkboxes are further gated per-item — "Set crafter tag" on
-/// <see cref="SharedItemDataDto.CanHaveCrafterTag"/>, "Fill stack" on
+/// Both are further gated per-item — "Set crafter tag" on
+/// <see cref="SharedItemDataDto.CanHaveCrafterTag"/>, the amount field on
 /// <see cref="SharedItemDataDto.MaxStack"/>
-/// <c>&gt; 1</c> — disabled and force-unchecked whenever the currently
-/// selected item doesn't support the action, regardless of the default
-/// setting or what was checked for the previously selected item. Real
+/// <c>&gt; 1</c> — disabled (and, for the amount field, pinned to 1) whenever
+/// the currently selected item doesn't support the action, regardless of the
+/// default setting or what was set for the previously selected item. Real
 /// restriction (disabled), not explanatory wording — "Fill stack (when
 /// possible)" was this window's own earlier attempt at the wording approach
 /// instead, reverted 2026-09-02 once "Set crafter tag" needed the real
 /// restriction anyway (the whole point being to stop Norn from quietly
 /// producing a state the actual game could never itself produce; a
-/// same-window sibling checkbox silently no-op'ing right next to it read as
+/// same-window sibling control silently no-op'ing right next to it read as
 /// exactly the inconsistency that would undersell it) — both now behave
-/// identically, and the plain "Fill stack" label no longer needs the
-/// qualifier once disabling already says the same thing more directly.
+/// identically.
 /// </para>
 /// <para>
 /// No drag-and-drop (Loki's own add-item mechanism) — deliberately avoided,
@@ -77,11 +95,15 @@ internal sealed class AddItemWindow : Window
     private readonly Button _clearSearch = IconButtons.Create(IconButtons.ClearGlyph, "Clear the search filter.");
     private readonly ComboBox _category = new() { HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly CheckBox _setCrafterTag = new() { Content = "Set crafter tag", IsEnabled = false };
-    private readonly CheckBox _fillStack = new() { Content = "Fill stack", IsEnabled = false };
+    // The AmountLabelClass tag + the Style added in the constructor is
+    // what actually dims this on disable — see that Style's own comment.
+    private const string AmountLabelClass = "amount-label";
+    private readonly TextBlock _amountLabel = new() { Text = "Amount:", VerticalAlignment = VerticalAlignment.Center, IsEnabled = false, Classes = { AmountLabelClass } };
+    private readonly NumericUpDown _amount = new() { Minimum = 1, Maximum = AmountEntry.Ceiling, Value = 1, IsEnabled = false, Width = 130 };
     private readonly ListBox _list = new();
     private readonly Button _add = new() { Content = "Add", IsEnabled = false };
 
-    private (string PrefabName, bool SetCrafter, bool FillStack)? _result;
+    private (string PrefabName, bool SetCrafter, int Amount)? _result;
 
     private AddItemWindow()
     {
@@ -101,10 +123,11 @@ internal sealed class AddItemWindow : Window
         }
 
         _category.SelectedIndex = 0;
-        // Both checkboxes start disabled/unchecked (constructor initializers) regardless
-        // of either setting's default — nothing is selected yet, so nothing is known to
-        // support either action. SelectionChanged (below) applies the real defaults the
-        // first time a selection actually exists.
+        // Both the checkbox and the amount field start disabled (constructor
+        // initializers) regardless of either setting's default — nothing is
+        // selected yet, so nothing is known to support either action.
+        // SelectionChanged (below) applies the real defaults the first time
+        // a selection actually exists.
 
         // supportsRecycling: false — same reason as MainWindow's sidebar
         // template (found in review): the row's text is snapshotted at
@@ -124,11 +147,15 @@ internal sealed class AddItemWindow : Window
         searchRow.Children.Add(_clearSearch);
         searchRow.Children.Add(_search);
 
-        // Side by side, not one checkbox per row — two short labels don't
-        // each need a full row.
+        // Side by side, not one control per row — the checkbox and the
+        // amount group don't each need a full row.
+        var amountGroup = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        amountGroup.Children.Add(_amountLabel);
+        amountGroup.Children.Add(_amount);
+
         var checkboxRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16 };
         checkboxRow.Children.Add(_setCrafterTag);
-        checkboxRow.Children.Add(_fillStack);
+        checkboxRow.Children.Add(amountGroup);
 
         var topStack = new StackPanel { Orientation = Orientation.Vertical, Spacing = 8, Margin = new Thickness(12, 12, 12, 8) };
         topStack.Children.Add(searchRow);
@@ -157,6 +184,28 @@ internal sealed class AddItemWindow : Window
 
         Content = DialogChrome.Wrap(root);
 
+        // Mirrors CheckBox's own disabled-state mechanism for a plain
+        // TextBlock, which has none of its own — confirmed against
+        // Avalonia's actual Fluent theme source (11.3.19), not guessed:
+        // CheckBox.xaml's ":disabled" style swaps Foreground to
+        // {DynamicResource CheckBoxForegroundUncheckedDisabled}, which
+        // FluentControlResources.xaml in turn points at
+        // SystemControlDisabledBaseMediumLowBrush — the same shared token
+        // Button/ComboBox/RepeatButton all use for their own disabled text.
+        // Declared as a real Style with a ":disabled" selector, exactly
+        // like CheckBox's own, rather than an imperative C# resource
+        // lookup: IsEnabled already flips the ":disabled" pseudo-class on
+        // every Control for free, so the Style applies/reverts
+        // automatically and correctly whenever _amountLabel.IsEnabled
+        // changes below — no manual TryFindResource/ClearValue timing to
+        // get right (an earlier version of this fix tried exactly that in
+        // code-behind and got the timing wrong, leaving the label
+        // unreadable when caught during live testing).
+        Styles.Add(new Style(x => x.OfType<TextBlock>().Class(AmountLabelClass).Class(":disabled"))
+        {
+            Setters = { new Setter(TextBlock.ForegroundProperty, new DynamicResourceExtension("SystemControlDisabledBaseMediumLowBrush")) },
+        });
+
         _search.TextChanged += (_, _) => Refresh();
         _category.SelectionChanged += (_, _) => Refresh();
         _clearSearch.Click += (_, _) => _search.Text = "";
@@ -174,9 +223,17 @@ internal sealed class AddItemWindow : Window
             _setCrafterTag.IsEnabled = canTag;
             _setCrafterTag.IsChecked = canTag && SettingsStore.Current.DefaultSetCrafterTagOnAdd;
 
-            var canFillStack = selected is { MaxStack: > 1 };
-            _fillStack.IsEnabled = canFillStack;
-            _fillStack.IsChecked = canFillStack && SettingsStore.Current.DefaultFillStackOnAdd;
+            // Maximum stays fixed at AmountEntry.Ceiling regardless of the
+            // selected item's real MaxStack — see that constant's own doc
+            // comment for why (a lower, per-item Maximum here reintroduces
+            // NumericUpDown's live keystroke-rejection bug). The real bound
+            // is still enforced, correctly, once at Add time by
+            // CharacterEditor.SetItemStack's own clamp.
+            var canStack = selected is { MaxStack: > 1 };
+            _amountLabel.Text = canStack ? $"Amount (max {selected!.MaxStack}):" : "Amount:";
+            _amountLabel.IsEnabled = canStack;
+            _amount.IsEnabled = canStack;
+            _amount.Value = canStack && SettingsStore.Current.DefaultAmountToMaxOnAdd ? selected!.MaxStack : 1;
         };
         _list.DoubleTapped += (_, _) => Confirm();
         _add.Click += (_, _) => Confirm();
@@ -197,18 +254,19 @@ internal sealed class AddItemWindow : Window
             return;
         }
 
-        _result = (row.Item.ItemName, _setCrafterTag.IsChecked == true, _fillStack.IsChecked == true);
+        _result = (row.Item.ItemName, _setCrafterTag.IsChecked == true, (int)(_amount.Value ?? 1));
         Close();
     }
 
     /// <summary>Shows the picker modally over <paramref name="owner"/> and
     /// returns the chosen prefab name plus whether to also stamp it as
-    /// crafted by the current profile and/or fill its stack to the catalog
-    /// max (a no-op for a non-stackable item — <see cref="CharacterEditor.FillItemStack"/>
+    /// crafted by the current profile and the chosen amount (always
+    /// <c>&gt;= 1</c>; stays 1 for a non-stackable item, and setting it above 1
+    /// is a no-op for one anyway — <see cref="CharacterEditor.SetItemStack"/>
     /// already degrades gracefully), or <c>null</c> if cancelled (any way
     /// other than Add/double-click, same "closing is declining" convention
     /// as <see cref="ConfirmDialog.Ask"/>).</summary>
-    internal static async Task<(string PrefabName, bool SetCrafter, bool FillStack)?> Open(Window owner)
+    internal static async Task<(string PrefabName, bool SetCrafter, int Amount)?> Open(Window owner)
     {
         var window = new AddItemWindow();
         await window.ShowDialog(owner);

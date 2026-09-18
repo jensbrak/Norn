@@ -556,6 +556,33 @@ public sealed class CharacterEditor
         },
         p => View = View with { Inventory = InventoryMapper.Map(p) });
 
+    /// <summary>
+    /// Sets one item's exact stack, clamped to <c>[1, SharedData.MaxStack]</c> —
+    /// same clamp-to-bound shape as <see cref="SetItemQuality"/>. Deliberately
+    /// a floor of 1, not 0: this method's contract is "1 to max," not "0 to
+    /// max" — a previous, since-removed version of this method floored at 0,
+    /// but reducing to nothing isn't a supported path here;
+    /// <see cref="RemoveItemAt"/> is the separate, existing action for that.
+    /// No-op if the slot is empty,
+    /// the item isn't in the catalog, or it isn't stackable at all.
+    /// </summary>
+    public void SetItemStack(int x, int y, int stack) => MutateInnerBlob(
+        p =>
+        {
+            var item = FindItem(p, x, y);
+            var shared = item is null ? null : ItemPrefabHashes.TryFindShared(item);
+            if (item is null || shared is null || shared.MaxStack <= 1)
+            {
+                return false;
+            }
+
+            var clamped = Math.Clamp(stack, 1, shared.MaxStack);
+            var changed = item.m_stack != clamped;
+            item.m_stack = clamped;
+            return changed;
+        },
+        p => View = View with { Inventory = InventoryMapper.Map(p) });
+
     // game-derived: InventoryGui.DoCrafting (Valheim 0.221.10/0.221.4,
     // confirmed identical in both trees) is the game's only call
     // site that stamps a real identity onto m_crafterID/m_crafterName — it

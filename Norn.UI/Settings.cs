@@ -105,16 +105,16 @@ public sealed class Settings
     // a follow-up review): "Set crafter tag" now replicates real game
     // behavior safely, since the per-item gate already stops it
     // from ever applying to an item the game itself couldn't tag — nothing
-    // left for a cautious default to protect against. "Fill stack" isn't
-    // a personal preference, but is judged the likely majority want for
-    // people using Norn (a convenience toggle, not a values-based restraint
-    // the way crafter tag was originally treated) — both are one Settings
-    // toggle away from off for whoever disagrees, which is the point of
-    // these being real Settings instead of neither configurable nor
-    // findable.
+    // left for a cautious default to protect against. Defaulting the add
+    // amount to max isn't a personal preference either, but is judged the
+    // likely majority want for people using Norn (a convenience toggle, not
+    // a values-based restraint the way crafter tag was originally treated)
+    // — both are one Settings toggle away from off for whoever disagrees,
+    // which is the point of these being real Settings instead of neither
+    // configurable nor findable.
     [Setting(Group = "Inventory", Description = "Default state of the \"Set crafter tag\" checkbox when adding an item.")]
     public bool DefaultSetCrafterTagOnAdd { get; set; } = true;
 
-    [Setting(Group = "Inventory", Description = "Default state of the \"Fill stack\" checkbox when adding an item.")]
-    public bool DefaultFillStackOnAdd { get; set; } = true;
+    [Setting(Group = "Inventory", Description = "Default the amount field to the item's max stack when adding an item (otherwise starts at 1).")]
+    public bool DefaultAmountToMaxOnAdd { get; set; } = true;
 }

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Norn.Adapter;
@@ -15,7 +16,8 @@ namespace Norn.UI;
 /// <para>
 /// Action model, revised again after the tile-interaction pass:
 /// right-click opens a context menu (Repair /
-/// Quality Up / Quality Down / Fill Stack / Delete); left-click on a tile
+/// Quality Up / Quality Down / Fill Stack / Edit Amount / Delete);
+/// left-click on a tile
 /// fires whichever single quick action the item actually supports (repair or
 /// fill-stack — never both), cued by the tile's own cursor changing to a hand
 /// when one applies; Ctrl+left-click deletes outright, mirroring the game's
@@ -24,17 +26,28 @@ namespace Norn.UI;
 /// an implicit "what's the target" signal that didn't hold up.
 /// </para>
 /// <para>
-/// Manual numeric entry (stack count, durability) is gone entirely, not
-/// redesigned — the popup it used to go through (<c>StackEditDialog</c>) had
-/// real chrome/layout problems, and an in-place textbox was weighed and set
-/// aside too: Avalonia's own "this is editable" visual treatment doesn't sit
-/// well in a tile this small without crowding it or breaking alignment with
-/// the surrounding static text (the same tension already visible in
-/// <c>General</c>'s player-name row, worse at tile scale). Quality, stack,
-/// and durability are all reachable only through the same stepped/maximize
-/// actions everything else in this tab uses. A well-designed inline control
-/// for this remains a real future direction, just not one built for this
-/// pass.
+/// Exact stack entry is back, quality and durability remain
+/// stepped/maximize-only. The original manual entry (stack count and
+/// durability both) was removed entirely in an earlier pass — the popup it
+/// went through (<c>StackEditDialog</c>) had real chrome/layout problems, and
+/// an in-place textbox was weighed and set aside too: Avalonia's own "this is
+/// editable" visual treatment doesn't sit well in a tile this small without
+/// crowding it or breaking alignment with the surrounding static text (the
+/// same tension already visible in <c>General</c>'s player-name row, worse
+/// at tile scale). That earlier pass also recorded a sketch for a future
+/// direction: a field that reads as ordinary static text until
+/// hovered/clicked, with no frame present at rest. "Edit amount" here is a
+/// deliberate **substitution** for that sketch, not an implementation of
+/// it — a light-dismiss <c>Flyout</c> reached via the context menu, not an
+/// always-present inline control — chosen because it reuses this app's
+/// existing "closing is declining" popup convention and needed no new
+/// always-present-control design work. It also avoids the earlier pass's
+/// specific chrome complaints structurally: the amount field is a plain
+/// <see cref="NumericUpDown"/> (<c>Minimum</c>/<c>Maximum</c>/<c>Value</c>
+/// only, no <c>InnerRightContent</c> "/ M" trick — the max is shown as
+/// ordinary separate static text instead), and the popup is a non-modal
+/// <c>Flyout</c>, not a <c>Window</c>, so there's no minimize button or
+/// title bar to get wrong.
 /// </para>
 /// <para>
 /// Every direct action now posts a short status-bar note via <c>onMessage</c>
@@ -388,7 +401,7 @@ public sealed class InventoryTabModule : ITabModule
             rebuild();
         };
 
-        border.ContextMenu = BuildContextMenu(x, y, item, displayName, shared, editor, rebuild, onEdited, onMessage);
+        border.ContextMenu = BuildContextMenu(border, x, y, item, displayName, shared, editor, rebuild, onEdited, onMessage);
 
         return border;
     }
@@ -472,7 +485,7 @@ public sealed class InventoryTabModule : ITabModule
         return i;
     }
 
-    private static ContextMenu BuildContextMenu(int x, int y, ItemDto item, string displayName, SharedItemDataDto? shared, CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage)
+    private static ContextMenu BuildContextMenu(Border anchor, int x, int y, ItemDto item, string displayName, SharedItemDataDto? shared, CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage)
     {
         var menu = new ContextMenu();
 
@@ -496,11 +509,102 @@ public sealed class InventoryTabModule : ITabModule
         Add("Quality up", CanQualityUp(item), () => editor.SetItemQuality(x, y, item.Quality + 1));
         Add("Quality down", CanQualityDown(item), () => editor.SetItemQuality(x, y, item.Quality - 1));
         Add("Fill stack", CanFillStack(item), () => { editor.FillItemStack(x, y); onMessage($"Filled {displayName} to {shared!.MaxStack}"); });
+
+        // Can't go through Add above — it assumes its action mutates
+        // synchronously before onEdited()/rebuild() fire, but this one opens
+        // a popup and only mutates once the user actually confirms.
+        // Deliberately looser than CanFillStack (no item.Stack < MaxStack
+        // clause): reducing a full stack is a supported use, not just
+        // topping one up.
+        var editAmount = new MenuItem { Header = "Edit amount", IsEnabled = CanEditAmount(item) };
+        editAmount.Click += (_, _) => ShowEditAmountFlyout(anchor, x, y, item, shared!, displayName, editor, onEdited, onMessage, rebuild);
+        menu.Items.Add(editAmount);
+
         Add("Set crafter to self", CanSetCrafterToSelf(item, editor), () => { editor.SetItemCrafterAt(x, y); onMessage($"Marked {displayName} as crafted by you"); });
         Add("Clear crafter tag", CanClearCrafter(item), () => { editor.ClearItemCrafterAt(x, y); onMessage($"Cleared crafter tag on {displayName}"); });
         Add("Delete", true, () => { editor.RemoveItemAt(x, y); onMessage($"Deleted {displayName}"); });
 
         return menu;
+    }
+
+    /// <summary>
+    /// Opens a small, transient Flyout anchored to the tile's own Border,
+    /// pre-filled with the item's current stack — the "Edit amount" menu
+    /// entry's target. Built fresh per invocation rather than cached: the
+    /// whole tile tree is rebuilt wholesale on every edit anyway (see
+    /// <see cref="Rebuild"/>), so there's no stale-Flyout state to manage.
+    /// Light-dismiss (click outside) discards with no effect — Avalonia's
+    /// own free Flyout behavior, matching the "closing is declining"
+    /// convention <see cref="AddItemWindow"/>/<see cref="ConfirmDialog"/>
+    /// already use — nothing here mutates unless <c>Commit</c> actually
+    /// runs. Enter/Escape need explicit <c>KeyDown</c> handling (Flyout
+    /// supplies neither natively), tunnel-routed since NumericUpDown's own
+    /// inner TextBox could otherwise consume Enter first.
+    /// </summary>
+    private static void ShowEditAmountFlyout(
+        Border anchor, int x, int y, ItemDto item, SharedItemDataDto shared, string displayName,
+        CharacterEditor editor, Action onEdited, Action<string> onMessage, Action rebuild)
+    {
+        // Maximum is AmountEntry.Ceiling, not shared.MaxStack — see that
+        // constant's own doc comment for why a lower, per-item Maximum here
+        // reintroduces NumericUpDown's live keystroke-rejection bug. The
+        // real bound is still enforced, correctly, once at Commit by
+        // CharacterEditor.SetItemStack's own clamp.
+        var numeric = new NumericUpDown
+        {
+            Minimum = 1,
+            Maximum = AmountEntry.Ceiling,
+            Value = Math.Clamp(item.Stack, 1, shared.MaxStack),
+            Width = 130,
+        };
+        var confirm = new Button { Content = "Set" };
+
+        var content = new StackPanel { Orientation = Orientation.Vertical, Spacing = 6, Margin = new Thickness(10) };
+        content.Children.Add(new TextBlock { Text = $"Amount (max {shared.MaxStack}):" });
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        row.Children.Add(numeric);
+        row.Children.Add(confirm);
+        content.Children.Add(row);
+
+        var flyout = new Flyout { Content = content, Placement = PlacementMode.Bottom };
+
+        void Commit()
+        {
+            var requested = (int)(numeric.Value ?? item.Stack);
+            editor.SetItemStack(x, y, requested);
+
+            // Read back the actual stored value, not the requested one —
+            // SetItemStack clamps to the catalog max, so a requested amount
+            // above it (allowed to type, per AmountEntry.Ceiling) would
+            // otherwise post a status message claiming a value that was
+            // never actually set.
+            var actual = editor.View.Inventory.Items.Single(i => i.GridX == x && i.GridY == y).Stack;
+            onMessage($"Set {displayName}'s amount to {actual}");
+            flyout.Hide();
+            onEdited();
+            rebuild();
+        }
+
+        confirm.Click += (_, _) => Commit();
+
+        content.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                Commit();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                flyout.Hide();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        flyout.Opened += (_, _) => numeric.Focus();
+
+        FlyoutBase.SetAttachedFlyout(anchor, flyout);
+        FlyoutBase.ShowAttachedFlyout(anchor);
     }
 
     /// <summary>
@@ -554,8 +658,8 @@ public sealed class InventoryTabModule : ITabModule
             lines.Add($"Crafted by: {item.CrafterName}");
         }
 
-        // Read-only — surfacing an already-true fact from the save, per
-        // CLAUDE.md §4 item 9, same category as Unlockables' Trophies field.
+        // Read-only — surfacing an already-true fact from the save, not
+        // granting one, same category as Unlockables' Trophies field.
         // Shown only when true: the overwhelming majority of items were
         // never console-spawned, so showing this unconditionally would be
         // noise on nearly every tile — same "notable case only" convention
@@ -606,6 +710,11 @@ public sealed class InventoryTabModule : ITabModule
     private static bool CanFillStack(ItemDto item) =>
         SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxStack: > 1 } shared
         && item.Stack < shared.MaxStack;
+
+    // Looser than CanFillStack — available even at a full stack, since
+    // reducing one is a supported use here.
+    private static bool CanEditAmount(ItemDto item) =>
+        SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxStack: > 1 };
 
     private static bool CanQualityUp(ItemDto item) =>
         SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxQuality: > 1 } shared
@@ -666,10 +775,16 @@ public sealed class InventoryTabModule : ITabModule
             editor.SetItemCrafterAt(x, y);
         }
 
-        if (result.Value.FillStack)
+        if (result.Value.Amount > 1)
         {
-            editor.FillItemStack(x, y);
+            editor.SetItemStack(x, y, result.Value.Amount);
         }
+
+        // Read back the actual stored stack, not the requested Amount —
+        // SetItemStack clamps to the catalog max (typing above it is
+        // allowed, see AmountEntry.Ceiling), so a qualifier built from the
+        // raw request could claim an amount that was never actually set.
+        var actualStack = editor.View.Inventory.Items.Single(i => i.GridX == x && i.GridY == y).Stack;
 
         var qualifiers = new List<string>();
         if (result.Value.SetCrafter)
@@ -677,9 +792,9 @@ public sealed class InventoryTabModule : ITabModule
             qualifiers.Add("crafted by you");
         }
 
-        if (result.Value.FillStack)
+        if (actualStack > 1)
         {
-            qualifiers.Add("stack filled");
+            qualifiers.Add($"amount {actualStack}");
         }
 
         var suffix = qualifiers.Count > 0 ? $" ({string.Join(", ", qualifiers)})" : "";

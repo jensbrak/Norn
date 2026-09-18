@@ -127,6 +127,114 @@ public class CharacterEditorCatalogTests
         Assert.Equal(maxStack, reopened!.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
     }
 
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Set_item_stack_round_trips_through_save_and_reload(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 });
+        Assert.SkipWhen(target is null, $"{fileName} has no stackable item resolvable against the catalog.");
+
+        var maxStack = SharedItemDataCatalog.TryFind(target!.PrefabName)!.MaxStack;
+        // Guaranteed different from the item's current stack either way
+        // (MaxStack > 1 means maxStack - 1 >= 1), so IsDirty is meaningfully
+        // asserted below rather than trivially true from a no-op match.
+        var requested = target.Stack < maxStack ? target.Stack + 1 : maxStack - 1;
+
+        editor.SetItemStack(target.GridX, target.GridY, requested);
+        Assert.True(editor.IsDirty);
+        Assert.Equal(requested, editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+
+        editor.Save();
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        Assert.Equal(requested, reopened!.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+    }
+
+    /// <summary>Confirms the clamp at both ends, including the deliberate
+    /// floor of 1 — a departure from a previous, since-removed version of
+    /// <c>SetItemStack</c>, which floored at 0.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Set_item_stack_clamps_to_catalog_bounds(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 });
+        Assert.SkipWhen(target is null, $"{fileName} has no stackable item resolvable against the catalog.");
+
+        var maxStack = SharedItemDataCatalog.TryFind(target!.PrefabName)!.MaxStack;
+
+        editor.SetItemStack(target.GridX, target.GridY, maxStack + 1000);
+        Assert.Equal(maxStack, editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+
+        editor.SetItemStack(target.GridX, target.GridY, 0);
+        Assert.Equal(1, editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+
+        editor.SetItemStack(target.GridX, target.GridY, -50);
+        Assert.Equal(1, editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+    }
+
+    /// <summary>Mirrors <see cref="Add_item_with_fill_stack_requested_does_not_stack_a_non_stackable_item"/>'s
+    /// guard, directly against <see cref="CharacterEditor.SetItemStack"/>
+    /// this time rather than through <c>AddItemAt</c> + fill.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Set_item_stack_does_not_stack_a_non_stackable_item(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: <= 1 });
+        Assert.SkipWhen(target is null, $"{fileName} has no non-stackable item resolvable against the catalog.");
+
+        editor.SetItemStack(target!.GridX, target.GridY, 5);
+        Assert.False(editor.IsDirty);
+        Assert.Equal(target.Stack, editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY).Stack);
+    }
+
     /// <summary>Picks any prefab name already present in this file's own
     /// inventory as a known-resolvable one, rather than assuming a specific
     /// item exists across every corpus file. Skips if none resolve, or the
