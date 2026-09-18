@@ -19,7 +19,7 @@
        duplicate anywhere. -->
   <PropertyGroup>
     <Product>Norn</Product>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Copyright>Copyright © jensbrak</Copyright>
     <!-- The SDK appends "+<git-commit-sha>" to InformationalVersion by
          default whenever the project sits in a git repo (deterministic-build

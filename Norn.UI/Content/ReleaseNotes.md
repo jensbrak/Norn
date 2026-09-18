@@ -7,6 +7,18 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.1.0
+
+World- and inventory tab improvements:
+
+- World tab: "Explore All" (now "Reveal world") and "Clear map data" moved into the map view.
+- World tab: New "Clear received map data" action clears exploration received from other players without touching your own.
+- Inventory tab: Now possible to add or edit exact amount of stack.
+- Inventory tab: Add Item now tops up an existing stack of the same item first, then overflows into another slot if the amount doesn't fit.
+- Inventory tab: Rearm / restock convenience buttons.
+- Inventory tab: "Add item" is now "Add items" and supports successive adds.
+- Inventory tab: Items the game itself flagged as cheated now show that in the tooltip.
+
 ## 1.0.0
 
 First release of Norn, an open source Valheim character editor that:
