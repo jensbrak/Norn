@@ -75,10 +75,37 @@ namespace Norn.UI;
 /// No drag-and-drop (Loki's own add-item mechanism) — deliberately avoided,
 /// matching the inventory tile UI's existing stance (Shift-click
 /// stack-split was dropped for implying a drag-drop landing mechanism Norn
-/// has nowhere else). Picking a row adds it and closes the window, via
-/// either a double-click or the explicit "Add" button — both do the same
-/// thing, framing the button as a second way to
-/// trigger one action, not a separate multi-add mode.
+/// has nowhere else). Picking a row (double-click or the "Add" button — both
+/// trigger the same action) invokes the caller's <c>onPick</c> callback
+/// immediately, which performs the mutation and reports back whether room
+/// remains for another add; the window itself never touches
+/// <see cref="Norn.Adapter.CharacterEditor"/>.
+/// </para>
+/// <para>
+/// **Keep window open.** An opt-in <see cref="CheckBox"/>, shown only when
+/// the caller passes <c>allowKeepOpen: true</c> (the toolbar "Add items"
+/// entry point; the empty tile's own single-slot "Add item" context-menu
+/// entry never shows it — multi-add doesn't make sense targeting one
+/// specific tile). Checked and room still remaining after a pick: the
+/// window stays open instead of closing, selection/search/category/checkbox
+/// state untouched, so a repeated Add or double-click adds again
+/// immediately. Unchecked, or no room left, or Close: closes, same as
+/// before this existed. Its value persists via
+/// <see cref="AppState.AddItemKeepWindowOpen"/> — resumed on open, saved on
+/// every toggle, same mechanism <c>WorldMapWindow</c>'s own two checkboxes
+/// use — not <see cref="Settings"/>: whether someone happens to be
+/// batch-adding right now isn't a values-based preference a genuinely
+/// different user would want stable and findable, just workflow continuity
+/// worth resuming silently, unlike "Set crafter tag"/the amount field's own
+/// Settings-backed *defaults* just above (which still reset fresh
+/// per-session regardless). Because picks now commit immediately rather
+/// than after <see cref="Open"/> returns, the dismiss button reads "Close"
+/// here instead of "Cancel" — any earlier picks in a keep-open session
+/// already happened and aren't undone by dismissing the window, so framing
+/// it as declining would be misleading. The anchored, single-shot path
+/// keeps "Cancel": nothing commits there until a pick is actually made, so
+/// the "closing is declining" convention (<see cref="ConfirmDialog.Ask"/>'s
+/// own framing) still holds exactly.
 /// </para>
 /// </summary>
 internal sealed class AddItemWindow : Window
@@ -102,11 +129,16 @@ internal sealed class AddItemWindow : Window
     private readonly NumericUpDown _amount = new() { Minimum = 1, Maximum = AmountEntry.Ceiling, Value = 1, IsEnabled = false, Width = 130 };
     private readonly ListBox _list = new();
     private readonly Button _add = new() { Content = "Add", IsEnabled = false };
+    private readonly CheckBox _keepOpen = new() { Content = "Keep window open" };
 
-    private (string PrefabName, bool SetCrafter, int Amount)? _result;
+    private readonly bool _allowKeepOpen;
+    private readonly Func<(string PrefabName, bool SetCrafter, int Amount), bool> _onPick;
 
-    private AddItemWindow()
+    private AddItemWindow(bool allowKeepOpen, Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick)
     {
+        _allowKeepOpen = allowKeepOpen;
+        _onPick = onPick;
+
         Title = "Add Item";
         Icon = AppIcon.Default;
         Width = 420;
@@ -163,23 +195,46 @@ internal sealed class AddItemWindow : Window
         topStack.Children.Add(checkboxRow);
         DockPanel.SetDock(topStack, Dock.Top);
 
-        var cancel = new Button { Content = "Cancel" };
-        var buttons = new StackPanel
+        // "Close" once allowKeepOpen is true — a pick commits immediately
+        // (see Confirm below), so "Cancel" would misdescribe dismissing the
+        // window after one or more picks already happened. The anchored,
+        // single-shot path keeps "Cancel": nothing commits there until a
+        // pick is made, so "closing is declining" still holds.
+        var closeButton = new Button { Content = allowKeepOpen ? "Close" : "Cancel" };
+        var rightButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
             HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(12, 8, 12, 12),
         };
-        buttons.Children.Add(_add);
-        buttons.Children.Add(cancel);
-        DockPanel.SetDock(buttons, Dock.Bottom);
+        rightButtons.Children.Add(_add);
+        rightButtons.Children.Add(closeButton);
+
+        // A DockPanel, not a single StackPanel, so "Keep window open" can
+        // sit at the far left while Add/Close stay right-aligned in the
+        // remaining space — same right-aligned look as before this checkbox
+        // existed when allowKeepOpen is false and it's never added.
+        var bottomRow = new DockPanel { Margin = new Thickness(12, 8, 12, 12) };
+        if (allowKeepOpen)
+        {
+            _keepOpen.IsChecked = AppStateStore.Current.AddItemKeepWindowOpen;
+            _keepOpen.VerticalAlignment = VerticalAlignment.Center;
+            _keepOpen.IsCheckedChanged += (_, _) =>
+            {
+                AppStateStore.Current.AddItemKeepWindowOpen = _keepOpen.IsChecked == true;
+                AppStateStore.Save();
+            };
+            DockPanel.SetDock(_keepOpen, Dock.Left);
+            bottomRow.Children.Add(_keepOpen);
+        }
+        bottomRow.Children.Add(rightButtons); // fills the remainder (DockPanel.LastChildFill)
+        DockPanel.SetDock(bottomRow, Dock.Bottom);
 
         _list.Margin = new Thickness(12, 0, 12, 0);
 
         var root = new DockPanel();
         root.Children.Add(topStack);
-        root.Children.Add(buttons);
+        root.Children.Add(bottomRow);
         root.Children.Add(_list); // fills the remainder (DockPanel.LastChildFill)
 
         Content = DialogChrome.Wrap(root);
@@ -237,7 +292,7 @@ internal sealed class AddItemWindow : Window
         };
         _list.DoubleTapped += (_, _) => Confirm();
         _add.Click += (_, _) => Confirm();
-        cancel.Click += (_, _) => Close();
+        closeButton.Click += (_, _) => Close();
 
         Refresh();
     }
@@ -254,22 +309,35 @@ internal sealed class AddItemWindow : Window
             return;
         }
 
-        _result = (row.Item.ItemName, _setCrafterTag.IsChecked == true, (int)(_amount.Value ?? 1));
+        var pick = (row.Item.ItemName, _setCrafterTag.IsChecked == true, (int)(_amount.Value ?? 1));
+        var roomRemains = _onPick(pick);
+
+        if (_allowKeepOpen && _keepOpen.IsChecked == true && roomRemains)
+        {
+            // Stay open: selection/search/category/checkbox state is left
+            // exactly as it is, so a repeated Add or double-click adds again
+            // immediately.
+            return;
+        }
+
         Close();
     }
 
-    /// <summary>Shows the picker modally over <paramref name="owner"/> and
-    /// returns the chosen prefab name plus whether to also stamp it as
-    /// crafted by the current profile and the chosen amount (always
-    /// <c>&gt;= 1</c>; stays 1 for a non-stackable item, and setting it above 1
-    /// is a no-op for one anyway — <see cref="CharacterEditor.SetItemStack"/>
-    /// already degrades gracefully), or <c>null</c> if cancelled (any way
-    /// other than Add/double-click, same "closing is declining" convention
-    /// as <see cref="ConfirmDialog.Ask"/>).</summary>
-    internal static async Task<(string PrefabName, bool SetCrafter, int Amount)?> Open(Window owner)
+    /// <summary>Shows the picker modally over <paramref name="owner"/>.
+    /// Each pick (double-click or the "Add" button — both trigger the same
+    /// action) invokes <paramref name="onPick"/> immediately with the chosen
+    /// prefab name, whether to also stamp it as crafted by the current
+    /// profile, and the chosen amount (always <c>&gt;= 1</c>; stays 1 for a
+    /// non-stackable item, and setting it above 1 is a no-op for one anyway —
+    /// <see cref="CharacterEditor.SetItemStack"/> already degrades
+    /// gracefully). <paramref name="onPick"/> performs the mutation and
+    /// returns whether room remains for another add; when
+    /// <paramref name="allowKeepOpen"/> is true and its own "Keep window
+    /// open" checkbox is checked, the window stays open to pick again as
+    /// long as room remains, instead of closing after one pick.</summary>
+    internal static async Task Open(Window owner, bool allowKeepOpen, Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick)
     {
-        var window = new AddItemWindow();
+        var window = new AddItemWindow(allowKeepOpen, onPick);
         await window.ShowDialog(owner);
-        return window._result;
     }
 }

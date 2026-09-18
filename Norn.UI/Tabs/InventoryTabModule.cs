@@ -123,7 +123,7 @@ public sealed class InventoryTabModule : ITabModule
             Rebuild(container, editor, onEdited, onMessage);
         };
 
-        var addItem = new Button { Content = "Add Item" };
+        var addItem = new Button { Content = "Add items" };
         var emptySlot = FindFirstEmptySlot(items);
         addItem.IsEnabled = emptySlot is not null || items.Any(CanFillStack);
         addItem.Click += async (_, _) =>
@@ -132,7 +132,9 @@ public sealed class InventoryTabModule : ITabModule
             // tile, unlike an empty tile's own "Add item" menu entry below.
             // A stackable item merges/fills wherever it fits; a
             // non-stackable one falls back to a freshly found empty slot
-            // inside AddItem itself.
+            // inside AddItem itself. Unanchored also means AddItemWindow's
+            // "keep window open" checkbox is offered — plural "Add items"
+            // reflects that a click here can add more than one.
             await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage));
         };
 
@@ -786,22 +788,27 @@ public sealed class InventoryTabModule : ITabModule
     }
 
     /// <summary>
-    /// Shared behavior behind both Add Item entry points (the toolbar button
-    /// and an empty tile's own context menu): resolves the owning
-    /// <see cref="Window"/> from whichever control was clicked, the same
-    /// pattern <c>WorldsTabModule.ShowMap</c> established for its own
-    /// on-demand modal, opens the picker, and applies its result.
+    /// Shared behavior behind both Add Item entry points (the toolbar's "Add
+    /// items" button and an empty tile's own context menu): resolves the
+    /// owning <see cref="Window"/> from whichever control was clicked, the
+    /// same pattern <c>WorldsTabModule.ShowMap</c> established for its own
+    /// on-demand modal, and opens the picker with a per-pick callback
+    /// (<see cref="ApplyPick"/>) rather than waiting for it to close.
     /// <para>
     /// <paramref name="anchor"/> is the specific empty tile the caller
     /// targeted, when there is one. An empty tile's own "Add item" menu entry
     /// always passes one — that tile is guaranteed to receive a new stack
-    /// (see <see cref="CharacterEditor.AddItemsAt"/>). The toolbar button
-    /// always passes <c>null</c> — it never targets one tile, so a stackable
-    /// item merges/fills wherever it fits (<see cref="CharacterEditor.AddItems"/>);
-    /// a non-stackable one falls back to a freshly found empty slot below,
-    /// which can come back empty once the toolbar button's own enablement
-    /// started allowing a full grid with a stackable-elsewhere item
-    /// (<see cref="CanFillStack"/>).
+    /// (see <see cref="CharacterEditor.AddItemsAt"/>) — and, being anchored
+    /// to one specific tile, never allows the picker's "keep window open"
+    /// checkbox. The toolbar button always passes <c>null</c> — it never
+    /// targets one tile, so a stackable item merges/fills wherever it fits
+    /// (<see cref="CharacterEditor.AddItems"/>); a non-stackable one falls
+    /// back to a freshly found empty slot in <see cref="ApplyPick"/>, which
+    /// can come back empty once the toolbar button's own enablement started
+    /// allowing a full grid with a stackable-elsewhere item
+    /// (<see cref="CanFillStack"/>) — and, unanchored, allows the checkbox,
+    /// re-targeting the next empty slot automatically on each further pick
+    /// since <see cref="ApplyPick"/> re-scans current items every call.
     /// </para>
     /// </summary>
     private static async Task AddItem((int X, int Y)? anchor, CharacterEditor editor, Control sender, Action onEdited, Action<string> onMessage, Action rebuild)
@@ -811,13 +818,27 @@ public sealed class InventoryTabModule : ITabModule
             return;
         }
 
-        var result = await AddItemWindow.Open(owner);
-        if (result is null)
+        await AddItemWindow.Open(owner, allowKeepOpen: anchor is null, pick =>
         {
-            return;
-        }
+            ApplyPick(anchor, editor, pick, onMessage);
+            onEdited();
+            rebuild();
 
-        var prefabName = result.Value.PrefabName;
+            // Same "is there room for anything" formula the toolbar button's
+            // own IsEnabled already uses — no new capacity concept.
+            var items = editor.View.Inventory.Items;
+            return FindFirstEmptySlot(items) is not null || items.Any(CanFillStack);
+        });
+    }
+
+    /// <summary>Applies one Add Item pick — the mutation logic <see cref="AddItem"/>
+    /// used to run once, after the picker closed, now invoked immediately per
+    /// pick from <see cref="AddItemWindow"/>'s own callback so the window can
+    /// stay open for another pick. See <see cref="AddItem"/> for
+    /// <paramref name="anchor"/>'s meaning.</summary>
+    private static void ApplyPick((int X, int Y)? anchor, CharacterEditor editor, (string PrefabName, bool SetCrafter, int Amount) pick, Action<string> onMessage)
+    {
+        var prefabName = pick.PrefabName;
         var shared = SharedItemDataCatalog.TryFind(prefabName);
         var displayName = shared?.DisplayName ?? prefabName;
 
@@ -826,9 +847,8 @@ public sealed class InventoryTabModule : ITabModule
             // Not stackable — the single-unit mechanism AddItemAt has always
             // used, unchanged. Nothing to merge into, so it needs a real
             // empty slot: the anchor tile when the caller targeted one, or a
-            // freshly found one otherwise (re-scanned here, not the toolbar
-            // button's own pre-picker snapshot, though nothing can have
-            // changed underneath a modal picker either way).
+            // freshly found one otherwise (re-scanned here, not any earlier
+            // pick's snapshot, so a keep-open session re-targets correctly).
             var target = anchor ?? FindFirstEmptySlot(editor.View.Inventory.Items);
             if (target is not { X: var x, Y: var y })
             {
@@ -837,15 +857,13 @@ public sealed class InventoryTabModule : ITabModule
             }
 
             editor.AddItemAt(x, y, prefabName);
-            if (result.Value.SetCrafter)
+            if (pick.SetCrafter)
             {
                 editor.SetItemCrafterAt(x, y);
             }
 
-            var qualifier = result.Value.SetCrafter ? " (crafted by you)" : "";
+            var qualifier = pick.SetCrafter ? " (crafted by you)" : "";
             onMessage($"Added {displayName}{qualifier}");
-            onEdited();
-            rebuild();
             return;
         }
 
@@ -853,15 +871,15 @@ public sealed class InventoryTabModule : ITabModule
         // empty slots, splitting the requested amount across as many as it
         // takes. See CharacterEditor.AddItems/AddItemsAt.
         var before = editor.View.Inventory.Items.Where(i => i.PrefabName == prefabName).Sum(i => i.Stack);
-        var amount = Math.Max(1, result.Value.Amount);
+        var amount = Math.Max(1, pick.Amount);
 
         if (anchor is { X: var anchorX, Y: var anchorY })
         {
-            editor.AddItemsAt(anchorX, anchorY, prefabName, amount, result.Value.SetCrafter);
+            editor.AddItemsAt(anchorX, anchorY, prefabName, amount, pick.SetCrafter);
         }
         else
         {
-            editor.AddItems(prefabName, amount, result.Value.SetCrafter);
+            editor.AddItems(prefabName, amount, pick.SetCrafter);
         }
 
         // Read back the actual total added, not the requested amount — both
@@ -874,12 +892,10 @@ public sealed class InventoryTabModule : ITabModule
         {
             0 => $"No room for {displayName}",
             _ when actualAdded < amount => $"Added {displayName} (amount {actualAdded} of {amount} — inventory full)",
-            _ => BuildAddedMessage(displayName, result.Value.SetCrafter, actualAdded),
+            _ => BuildAddedMessage(displayName, pick.SetCrafter, actualAdded),
         };
 
         onMessage(message);
-        onEdited();
-        rebuild();
     }
 
     private static string BuildAddedMessage(string displayName, bool setCrafter, int actualAdded)

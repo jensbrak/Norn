@@ -48,6 +48,7 @@ Not a rule, just a guideline. Use more or less as needed.
 - Right click on a slot to interact with it. Actions available depend on slot contents.
 - Left click: fill stack/repair item directly. Ctrl + Left click: delete slot contents.
 - Crafter tag can only be applied to items the game itself would tag with crafter name.
+- Rearm: fill ammo stacks only, restock: fill consumable stacks only.
 
 ## Tab: Skills
 
@@ -61,6 +62,7 @@ Not a rule, just a guideline. Use more or less as needed.
 - Death point likely legacy. Spawn point removed: character will spawn at map center.
 - Worlds removed from a character are listed in the "Removed worlds" section
   (only world exploration for the character is removed, the world itself is unaffected.)
+- ">>"-button: show map and map related actions (clear / reveal exploration).
 
 ## Tab: Unlockables
 

@@ -46,4 +46,14 @@ public sealed class AppState
     /// checkbox. Defaults to <c>true</c>, matching that checkbox's own
     /// pre-persistence default.</summary>
     public bool WorldMapShowPoints { get; set; } = true;
+
+    /// <summary>Last state of <see cref="AddItemWindow"/>'s "Keep window
+    /// open" checkbox (toolbar entry point only). Defaults to
+    /// <c>false</c>, matching that checkbox's own pre-persistence default.
+    /// Same category as the two World Map checkboxes above, not
+    /// <see cref="Settings"/>: whether someone happens to be batch-adding
+    /// right now isn't a values-based preference a genuinely different user
+    /// would want stable and findable, just workflow continuity worth
+    /// resuming silently.</summary>
+    public bool AddItemKeepWindowOpen { get; set; }
 }
