@@ -69,6 +69,19 @@ public sealed class InventoryTabModule : ITabModule
 {
     public string Title => "Inventory";
 
+    /// <summary>
+    /// Category-filtered quick-fill toolbar buttons — each a subset of "Fill
+    /// All Stacks" scoped to a fixed set of <see cref="ItemType"/>s. Kept as a
+    /// small data table rather than two bespoke button blocks so a future
+    /// "N configurable quick-fill buttons" extension (Settings-driven
+    /// label/category mapping) is a data change here, not a redesign.
+    /// </summary>
+    private static readonly (string Label, ItemType[] Types)[] QuickFillPresets =
+    [
+        ("Rearm", [ItemType.Ammo, ItemType.AmmoNonEquipable]),
+        ("Restock", [ItemType.Consumable]),
+    ];
+
     public Control Build(CharacterEditor editor, Action onEdited, Action<string> onMessage)
     {
         var panel = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(16) };
@@ -112,15 +125,36 @@ public sealed class InventoryTabModule : ITabModule
 
         var addItem = new Button { Content = "Add Item" };
         var emptySlot = FindFirstEmptySlot(items);
-        addItem.IsEnabled = emptySlot is not null;
+        addItem.IsEnabled = emptySlot is not null || items.Any(CanFillStack);
         addItem.Click += async (_, _) =>
         {
-            var (slotX, slotY) = emptySlot!.Value;
-            await AddItem(slotX, slotY, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage));
+            // No anchor — the toolbar button never targets one specific
+            // tile, unlike an empty tile's own "Add item" menu entry below.
+            // A stackable item merges/fills wherever it fits; a
+            // non-stackable one falls back to a freshly found empty slot
+            // inside AddItem itself.
+            await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage));
         };
 
         buttonRow.Children.Add(repairAll);
         buttonRow.Children.Add(fillAll);
+
+        foreach (var (label, types) in QuickFillPresets)
+        {
+            var typeSet = new HashSet<ItemType>(types);
+            var quickFillCount = items.Count(i => CanFillStackOfType(i, typeSet));
+            var quickFill = new Button { Content = label };
+            quickFill.IsEnabled = quickFillCount > 0;
+            quickFill.Click += (_, _) =>
+            {
+                editor.FillStacksOfType(typeSet);
+                onMessage($"Filled {quickFillCount} {(quickFillCount == 1 ? "stack" : "stacks")}");
+                onEdited();
+                Rebuild(container, editor, onEdited, onMessage);
+            };
+            buttonRow.Children.Add(quickFill);
+        }
+
         buttonRow.Children.Add(addItem);
         container.Children.Add(buttonRow);
 
@@ -216,7 +250,7 @@ public sealed class InventoryTabModule : ITabModule
 
             var emptyMenu = new ContextMenu();
             var addHere = new MenuItem { Header = "Add item" };
-            addHere.Click += async (_, _) => await AddItem(x, y, editor, border, onEdited, onMessage, rebuild);
+            addHere.Click += async (_, _) => await AddItem((x, y), editor, border, onEdited, onMessage, rebuild);
             emptyMenu.Items.Add(addHere);
             border.ContextMenu = emptyMenu;
 
@@ -711,6 +745,11 @@ public sealed class InventoryTabModule : ITabModule
         SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxStack: > 1 } shared
         && item.Stack < shared.MaxStack;
 
+    private static bool CanFillStackOfType(ItemDto item, IReadOnlySet<ItemType> types) =>
+        SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxStack: > 1 } shared
+        && types.Contains(shared.ItemType)
+        && item.Stack < shared.MaxStack;
+
     // Looser than CanFillStack — available even at a full stack, since
     // reducing one is a supported use here.
     private static bool CanEditAmount(ItemDto item) =>
@@ -752,8 +791,20 @@ public sealed class InventoryTabModule : ITabModule
     /// <see cref="Window"/> from whichever control was clicked, the same
     /// pattern <c>WorldsTabModule.ShowMap</c> established for its own
     /// on-demand modal, opens the picker, and applies its result.
+    /// <para>
+    /// <paramref name="anchor"/> is the specific empty tile the caller
+    /// targeted, when there is one. An empty tile's own "Add item" menu entry
+    /// always passes one — that tile is guaranteed to receive a new stack
+    /// (see <see cref="CharacterEditor.AddItemsAt"/>). The toolbar button
+    /// always passes <c>null</c> — it never targets one tile, so a stackable
+    /// item merges/fills wherever it fits (<see cref="CharacterEditor.AddItems"/>);
+    /// a non-stackable one falls back to a freshly found empty slot below,
+    /// which can come back empty once the toolbar button's own enablement
+    /// started allowing a full grid with a stackable-elsewhere item
+    /// (<see cref="CanFillStack"/>).
+    /// </para>
     /// </summary>
-    private static async Task AddItem(int x, int y, CharacterEditor editor, Control sender, Action onEdited, Action<string> onMessage, Action rebuild)
+    private static async Task AddItem((int X, int Y)? anchor, CharacterEditor editor, Control sender, Action onEdited, Action<string> onMessage, Action rebuild)
     {
         if (TopLevel.GetTopLevel(sender) is not Window owner)
         {
@@ -766,42 +817,86 @@ public sealed class InventoryTabModule : ITabModule
             return;
         }
 
-        editor.AddItemAt(x, y, result.Value.PrefabName);
+        var prefabName = result.Value.PrefabName;
+        var shared = SharedItemDataCatalog.TryFind(prefabName);
+        var displayName = shared?.DisplayName ?? prefabName;
 
-        var displayName = SharedItemDataCatalog.TryFind(result.Value.PrefabName)?.DisplayName ?? result.Value.PrefabName;
-
-        if (result.Value.SetCrafter)
+        if (shared is not { MaxStack: > 1 })
         {
-            editor.SetItemCrafterAt(x, y);
+            // Not stackable — the single-unit mechanism AddItemAt has always
+            // used, unchanged. Nothing to merge into, so it needs a real
+            // empty slot: the anchor tile when the caller targeted one, or a
+            // freshly found one otherwise (re-scanned here, not the toolbar
+            // button's own pre-picker snapshot, though nothing can have
+            // changed underneath a modal picker either way).
+            var target = anchor ?? FindFirstEmptySlot(editor.View.Inventory.Items);
+            if (target is not { X: var x, Y: var y })
+            {
+                onMessage($"No room for {displayName}");
+                return;
+            }
+
+            editor.AddItemAt(x, y, prefabName);
+            if (result.Value.SetCrafter)
+            {
+                editor.SetItemCrafterAt(x, y);
+            }
+
+            var qualifier = result.Value.SetCrafter ? " (crafted by you)" : "";
+            onMessage($"Added {displayName}{qualifier}");
+            onEdited();
+            rebuild();
+            return;
         }
 
-        if (result.Value.Amount > 1)
+        // Stackable — merges into existing non-full stacks and/or fills
+        // empty slots, splitting the requested amount across as many as it
+        // takes. See CharacterEditor.AddItems/AddItemsAt.
+        var before = editor.View.Inventory.Items.Where(i => i.PrefabName == prefabName).Sum(i => i.Stack);
+        var amount = Math.Max(1, result.Value.Amount);
+
+        if (anchor is { X: var anchorX, Y: var anchorY })
         {
-            editor.SetItemStack(x, y, result.Value.Amount);
+            editor.AddItemsAt(anchorX, anchorY, prefabName, amount, result.Value.SetCrafter);
+        }
+        else
+        {
+            editor.AddItems(prefabName, amount, result.Value.SetCrafter);
         }
 
-        // Read back the actual stored stack, not the requested Amount —
-        // SetItemStack clamps to the catalog max (typing above it is
-        // allowed, see AmountEntry.Ceiling), so a qualifier built from the
-        // raw request could claim an amount that was never actually set.
-        var actualStack = editor.View.Inventory.Items.Single(i => i.GridX == x && i.GridY == y).Stack;
+        // Read back the actual total added, not the requested amount — both
+        // a per-item MaxStack clamp and a full grid can cap what actually
+        // landed, and only this reflects the truth.
+        var after = editor.View.Inventory.Items.Where(i => i.PrefabName == prefabName).Sum(i => i.Stack);
+        var actualAdded = after - before;
 
+        var message = actualAdded switch
+        {
+            0 => $"No room for {displayName}",
+            _ when actualAdded < amount => $"Added {displayName} (amount {actualAdded} of {amount} — inventory full)",
+            _ => BuildAddedMessage(displayName, result.Value.SetCrafter, actualAdded),
+        };
+
+        onMessage(message);
+        onEdited();
+        rebuild();
+    }
+
+    private static string BuildAddedMessage(string displayName, bool setCrafter, int actualAdded)
+    {
         var qualifiers = new List<string>();
-        if (result.Value.SetCrafter)
+        if (setCrafter)
         {
             qualifiers.Add("crafted by you");
         }
 
-        if (actualStack > 1)
+        if (actualAdded > 1)
         {
-            qualifiers.Add($"amount {actualStack}");
+            qualifiers.Add($"amount {actualAdded}");
         }
 
         var suffix = qualifiers.Count > 0 ? $" ({string.Join(", ", qualifiers)})" : "";
-        onMessage($"Added {displayName}{suffix}");
-
-        onEdited();
-        rebuild();
+        return $"Added {displayName}{suffix}";
     }
 
     // Gated on SharedItemDataCatalog, superseding this note's own earlier

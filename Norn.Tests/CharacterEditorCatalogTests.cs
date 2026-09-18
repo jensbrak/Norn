@@ -494,4 +494,268 @@ public class CharacterEditorCatalogTests
             }
         }
     }
+
+    /// <summary>Proves the merge-over-new-slot preference: with both a
+    /// below-max stack and an empty slot available, an amount that fits
+    /// entirely in the existing stack must land there, not in a new one.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItems_tops_up_an_existing_partial_stack_before_creating_a_new_one(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 } shared && i.Stack < shared.MaxStack);
+        Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
+
+        var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
+        var hasEmptySlot = Enumerable.Range(0, InventoryLayout.Height)
+            .SelectMany(y => Enumerable.Range(0, InventoryLayout.Width).Select(x => (x, y)))
+            .Any(pos => !occupied.Contains(pos));
+        Assert.SkipWhen(!hasEmptySlot, $"{fileName}'s inventory is already full.");
+
+        var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
+        var room = shared.MaxStack - target.Stack;
+        var countBefore = editor.View.Inventory.Items.Count;
+
+        editor.AddItems(target.PrefabName, room, setCrafter: false);
+        Assert.True(editor.IsDirty);
+
+        // Same item count as before an empty slot was available too — the
+        // whole request fit in the existing stack, so no new one was made.
+        Assert.Equal(countBefore, editor.View.Inventory.Items.Count);
+        var updated = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(shared.MaxStack, updated.Stack);
+
+        editor.Save();
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        var reloaded = reopened!.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(shared.MaxStack, reloaded.Stack);
+    }
+
+    /// <summary>Proves split-to-fit: an amount bigger than one stack tops
+    /// the existing partial stack up to max, then spills the remainder into
+    /// exactly one brand-new stack.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItems_splits_a_large_amount_across_the_partial_stack_and_a_new_slot(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 } shared && i.Stack < shared.MaxStack);
+        Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
+
+        var occupiedCount = editor.View.Inventory.Items.Count;
+        Assert.SkipWhen(occupiedCount >= InventoryLayout.Width * InventoryLayout.Height,
+            $"{fileName}'s inventory has no room for a new stack.");
+
+        var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
+        var beforePositions = editor.View.Inventory.Items
+            .Where(i => i.PrefabName == target.PrefabName)
+            .Select(i => (i.GridX, i.GridY))
+            .ToHashSet();
+        var beforeTotal = editor.View.Inventory.Items.Where(i => i.PrefabName == target.PrefabName).Sum(i => i.Stack);
+
+        var room = shared.MaxStack - target.Stack;
+        var amount = room + shared.MaxStack; // fully tops up the partial stack, then fills one whole new stack
+
+        editor.AddItems(target.PrefabName, amount, setCrafter: false);
+        Assert.True(editor.IsDirty);
+
+        var afterItems = editor.View.Inventory.Items.Where(i => i.PrefabName == target.PrefabName).ToList();
+        Assert.Equal(beforePositions.Count + 1, afterItems.Count);
+        Assert.Equal(beforeTotal + amount, afterItems.Sum(i => i.Stack));
+
+        var updatedTarget = afterItems.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(shared.MaxStack, updatedTarget.Stack);
+
+        var newStack = afterItems.Single(i => !beforePositions.Contains((i.GridX, i.GridY)));
+        Assert.Equal(shared.MaxStack, newStack.Stack);
+    }
+
+    /// <summary>Proves anchor authority: a specific empty tile (the target of
+    /// an empty tile's own "Add item" menu entry) is always the one that gets
+    /// filled first, up to its own MaxStack — only the overflow beyond that
+    /// spills into topping up an unrelated partial stack elsewhere.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItemsAt_guarantees_the_anchor_and_spills_overflow_into_the_partial_stack(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 } shared && i.Stack < shared.MaxStack);
+        Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
+
+        var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
+        (int X, int Y)? anchor = null;
+        for (var y = 0; y < InventoryLayout.Height && anchor is null; y++)
+        {
+            for (var x = 0; x < InventoryLayout.Width; x++)
+            {
+                if (!occupied.Contains((x, y)))
+                {
+                    anchor = (x, y);
+                    break;
+                }
+            }
+        }
+
+        Assert.SkipWhen(anchor is null, $"{fileName}'s inventory is already full.");
+
+        var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
+        var room = shared.MaxStack - target.Stack;
+        var amount = shared.MaxStack + room; // fills the anchor to max, spills exactly `room` into the partial stack
+
+        editor.AddItemsAt(anchor!.Value.X, anchor.Value.Y, target.PrefabName, amount, setCrafter: false);
+        Assert.True(editor.IsDirty);
+
+        var atAnchor = editor.View.Inventory.Items.Single(i => i.GridX == anchor.Value.X && i.GridY == anchor.Value.Y);
+        Assert.Equal(target.PrefabName, atAnchor.PrefabName);
+        Assert.Equal(shared.MaxStack, atAnchor.Stack);
+
+        var updatedTarget = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(shared.MaxStack, updatedTarget.Stack);
+
+        editor.Save();
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        var reloadedAnchor = reopened!.View.Inventory.Items.Single(i => i.GridX == anchor.Value.X && i.GridY == anchor.Value.Y);
+        Assert.Equal(shared.MaxStack, reloadedAnchor.Stack);
+    }
+
+    /// <summary>No-op, cleanly, when the grid is completely full and every
+    /// existing stack of the requested item is already maxed — there is
+    /// nowhere left to put anything.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItems_no_ops_when_grid_is_full_and_nothing_fits(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var prefabName = editor!.View.Inventory.Items
+            .Select(i => i.PrefabName)
+            .FirstOrDefault(name => SharedItemDataCatalog.TryFind(name) is { MaxStack: > 1 });
+        Assert.SkipWhen(prefabName is null, $"{fileName} has no stackable item resolvable against the catalog.");
+
+        // Max out every stack (nothing left to merge into), then fill every
+        // remaining empty slot with the same resolvable prefab (nowhere
+        // left to place a new stack either).
+        editor.FillAllStacks();
+
+        var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
+        for (var y = 0; y < InventoryLayout.Height; y++)
+        {
+            for (var x = 0; x < InventoryLayout.Width; x++)
+            {
+                if (!occupied.Contains((x, y)))
+                {
+                    editor.AddItemAt(x, y, prefabName!);
+                }
+            }
+        }
+
+        editor.FillAllStacks();
+
+        var totalBefore = editor.View.Inventory.Items.Where(i => i.PrefabName == prefabName).Sum(i => i.Stack);
+        var countBefore = editor.View.Inventory.Items.Count;
+
+        editor.AddItems(prefabName!, 1, setCrafter: false);
+
+        Assert.Equal(totalBefore, editor.View.Inventory.Items.Where(i => i.PrefabName == prefabName).Sum(i => i.Stack));
+        Assert.Equal(countBefore, editor.View.Inventory.Items.Count);
+    }
+
+    /// <summary>Proves the category filter actually excludes non-matching
+    /// items, not just that filling itself works (already covered by
+    /// <see cref="Fill_item_stack_round_trips_through_save_and_reload"/>).</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void FillStacksOfType_only_fills_items_in_the_given_categories(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxStack: > 1 } shared && i.Stack < shared.MaxStack);
+        Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
+
+        var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
+        var otherType = Enum.GetValues<ItemType>().First(t => t != shared.ItemType);
+
+        editor.FillStacksOfType(new HashSet<ItemType> { otherType });
+        var untouched = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(target.Stack, untouched.Stack);
+
+        editor.FillStacksOfType(new HashSet<ItemType> { shared.ItemType });
+        Assert.True(editor.IsDirty);
+        var filled = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(shared.MaxStack, filled.Stack);
+    }
 }

@@ -742,6 +742,147 @@ public sealed class CharacterEditor
         },
         p => View = View with { Inventory = InventoryMapper.Map(p) });
 
+    /// <summary>
+    /// Adds <paramref name="amount"/> units of <paramref name="prefabName"/>
+    /// with no target slot — merges into existing non-full stacks first
+    /// (row-major grid order), then fills empty slots (row-major) with new
+    /// stacks, splitting across as many as it takes. The toolbar "Add Item"
+    /// button's mechanism: it never targets one specific tile, so there is
+    /// nothing to anchor placement to. See <see cref="AddItemsAt"/> for the
+    /// anchored variant an empty tile's own "Add item" menu entry uses.
+    /// </summary>
+    public void AddItems(string prefabName, int amount, bool setCrafter) =>
+        AddItemsCore(prefabName, amount, setCrafter, anchor: null);
+
+    /// <summary>
+    /// Adds <paramref name="amount"/> units of <paramref name="prefabName"/>,
+    /// guaranteeing a new stack lands at <paramref name="x"/>/<paramref
+    /// name="y"/> first (that tile must already be empty — this is what an
+    /// empty tile's own "Add item" menu entry targets, and the guarantee is
+    /// the point: the user picked that exact tile). Only the overflow beyond
+    /// one stack there — a requested amount bigger than <c>MaxStack</c> —
+    /// spills into merging with other non-full stacks and then other empty
+    /// slots, same as the anchor-less <see cref="AddItems"/>.
+    /// </summary>
+    public void AddItemsAt(int x, int y, string prefabName, int amount, bool setCrafter) =>
+        AddItemsCore(prefabName, amount, setCrafter, anchor: (x, y));
+
+    // game-derived: Inventory.AddItem's own real merge-by-grid-position
+    // behavior (see AddItemAt's provenance note above) — this is that
+    // omission, now implemented, plus the split-across-slots extension
+    // AddItemAt never needed as a single-unit-only mechanism. Shares the
+    // same field-setting rules (fixed quality 1, no variant, durability only
+    // when the resolved item uses it) as AddItemAt via the local CreateStack
+    // below, and the same "did it actually change" contract as FillStack.
+    private void AddItemsCore(string prefabName, int amount, bool setCrafter, (int X, int Y)? anchor) => MutateInnerBlob(
+        p =>
+        {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
+            var shared = SharedItemDataCatalog.TryFind(prefabName);
+            if (shared is null)
+            {
+                return false;
+            }
+
+            var prefabHash = StringExtensionMethods.GetStableHashCode(prefabName);
+            var remaining = amount;
+
+            Inventory.ItemData CreateStack(int x, int y, int stack)
+            {
+                var item = new Inventory.ItemData
+                {
+                    PrefabName = prefabName,
+                    PrefabHash = prefabHash,
+                    m_stack = stack,
+                    m_quality = 1,
+                    m_gridPos = new Vector2i(x, y),
+                    m_pickedUp = true,
+                };
+
+                if (shared.UsesDurability)
+                {
+                    item.m_durability = (float)shared.MaxDurabilityFor(1);
+                }
+
+                if (setCrafter && shared.CanHaveCrafterTag)
+                {
+                    item.m_crafterID = _profile.m_playerID;
+                    item.m_crafterName = _profile.m_playerName;
+                }
+
+                return item;
+            }
+
+            if (anchor is { X: var anchorX, Y: var anchorY })
+            {
+                if (anchorX < 0 || anchorX >= InventoryLayout.Width || anchorY < 0 || anchorY >= InventoryLayout.Height)
+                {
+                    return false;
+                }
+
+                if (FindItem(p, anchorX, anchorY) is not null)
+                {
+                    return false;
+                }
+
+                var placed = Math.Min(remaining, shared.MaxStack);
+                p.m_inventory.m_inventory.Add(CreateStack(anchorX, anchorY, placed));
+                remaining -= placed;
+            }
+
+            if (remaining > 0)
+            {
+                // The anchor stack just created above (if any) can never
+                // appear here: CreateStack always consumes min(remaining,
+                // MaxStack), so it's either already full (fails the
+                // m_stack < MaxStack check) or remaining hit 0 and this
+                // block doesn't run at all.
+                var partials = p.m_inventory.m_inventory
+                    .Where(i => i.PrefabHash == prefabHash && i.m_quality == 1 && i.m_variant == 0
+                        && i.m_stack < shared.MaxStack)
+                    .OrderBy(i => i.m_gridPos.y).ThenBy(i => i.m_gridPos.x);
+
+                foreach (var item in partials)
+                {
+                    if (remaining <= 0)
+                    {
+                        break;
+                    }
+
+                    var topUp = Math.Min(remaining, shared.MaxStack - item.m_stack);
+                    item.m_stack += topUp;
+                    remaining -= topUp;
+                }
+            }
+
+            if (remaining > 0)
+            {
+                var occupied = p.m_inventory.m_inventory.Select(i => (i.m_gridPos.x, i.m_gridPos.y)).ToHashSet();
+
+                for (var y = 0; y < InventoryLayout.Height && remaining > 0; y++)
+                {
+                    for (var x = 0; x < InventoryLayout.Width && remaining > 0; x++)
+                    {
+                        if (occupied.Contains((x, y)))
+                        {
+                            continue;
+                        }
+
+                        var placed = Math.Min(remaining, shared.MaxStack);
+                        p.m_inventory.m_inventory.Add(CreateStack(x, y, placed));
+                        remaining -= placed;
+                    }
+                }
+            }
+
+            return remaining != amount;
+        },
+        p => View = View with { Inventory = InventoryMapper.Map(p) });
+
     /// <summary>Removes one item outright, addressed by grid position. Needs
     /// no catalog data at all — matches Loki's own delete, which works even
     /// for an unresolved item. No-op when the slot was already empty.</summary>
@@ -777,6 +918,30 @@ public sealed class CharacterEditor
             var changed = false;
             foreach (var item in p.m_inventory.m_inventory)
             {
+                changed |= FillStack(item);
+            }
+
+            return changed;
+        },
+        p => View = View with { Inventory = InventoryMapper.Map(p) });
+
+    /// <summary>Fills every item's stack whose resolved <see cref="ItemType"/>
+    /// is in <paramref name="types"/> — the "Rearm"/"Restock" quick-fill
+    /// buttons' backing mutator, a category-filtered <see cref="FillAllStacks"/>
+    /// sharing the same <see cref="FillStack"/> helper. No-op when nothing in
+    /// those categories was less than full.</summary>
+    public void FillStacksOfType(IReadOnlySet<ItemType> types) => MutateInnerBlob(
+        p =>
+        {
+            var changed = false;
+            foreach (var item in p.m_inventory.m_inventory)
+            {
+                var shared = ItemPrefabHashes.TryFindShared(item);
+                if (shared is null || !types.Contains(shared.ItemType))
+                {
+                    continue;
+                }
+
                 changed |= FillStack(item);
             }
 
