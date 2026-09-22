@@ -743,3 +743,11 @@ never catch.
   is a real capability boundary, not just a format curiosity: nothing in a
   `.fch` alone can answer "what item is this" for a save written by 1.0.7+
   without a separately-sourced hash→name table.
+- **No enforced upper bound on item quality.** `m_quality` is a raw `ushort`
+  (section 6) with no ceiling check anywhere on the read or write path. 1.0
+  introduced an in-game mechanic (the "Forge of Potential") that legitimately
+  produces items above their catalog's normal max quality; such a value is
+  ordinary data, not corruption, and round-trips exactly like any other
+  quality value. The save format itself carries no signal that a quality
+  value exceeds its item's design max — that comparison requires external
+  catalog data this format doesn't carry.

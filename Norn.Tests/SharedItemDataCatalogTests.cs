@@ -67,6 +67,22 @@ public class SharedItemDataCatalogTests
     }
 
     [Fact]
+    public void QualityOverMax_is_zero_at_or_under_max_and_the_delta_above_it()
+    {
+        using var temp = TempFile.Create();
+        File.WriteAllText(temp.Path, Header + "SwordIron,True,True,150,20,1,Iron Sword,4,3\n");
+
+        SharedItemDataCatalog.Load(temp.Path);
+
+        var sword = SharedItemDataCatalog.TryFind("SwordIron");
+        Assert.NotNull(sword);
+        Assert.Equal(0, sword!.QualityOverMax(1));
+        Assert.Equal(0, sword.QualityOverMax(4));
+        Assert.Equal(1, sword.QualityOverMax(5));
+        Assert.Equal(38, sword.QualityOverMax(42));
+    }
+
+    [Fact]
     public void Parses_weight_columns_and_computes_the_quality_scaled_formula()
     {
         using var temp = TempFile.Create();

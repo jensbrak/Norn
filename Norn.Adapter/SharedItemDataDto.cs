@@ -57,4 +57,9 @@ public sealed record SharedItemDataDto(
     /// 0, with no explicit branch needed, matching the game's own two guards.
     /// </summary>
     public double WeightFor(int quality) => Weight * (1 + (quality - 1) * ScaleWeightByQuality);
+
+    /// <summary>How far a stored quality sits above this item's catalog
+    /// max — 0 at or under max. The only save-observable signal Valheim's
+    /// Forge of Potential refinement mechanic leaves behind.</summary>
+    public int QualityOverMax(int quality) => Math.Max(0, quality - MaxQuality);
 }

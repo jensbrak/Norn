@@ -93,6 +93,54 @@ public class CharacterEditorCatalogTests
         Assert.Equal((float)shared.MaxDurabilityFor(reloaded.Quality), reloaded.Durability);
     }
 
+    /// <summary>
+    /// Norn no longer clamps quality at the catalog's <c>MaxQuality</c> —
+    /// Valheim's own Forge of Potential mechanic legitimately exceeds it.
+    /// Confirms a quality above max round-trips exactly, same shape as the
+    /// below-max case already covered above.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Quality_can_be_raised_above_catalog_max_and_round_trips(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i =>
+            SharedItemDataCatalog.TryFind(i.PrefabName) is { MaxQuality: > 1 });
+        Assert.SkipWhen(target is null, $"{fileName} has no quality-capable item resolvable against the catalog.");
+
+        var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
+        var beyondMax = shared.MaxQuality + 3;
+
+        editor.SetItemQuality(target.GridX, target.GridY, beyondMax);
+        Assert.True(editor.IsDirty);
+
+        var updated = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(beyondMax, updated.Quality);
+        Assert.Equal(3, shared.QualityOverMax(updated.Quality));
+
+        editor.Save();
+        Assert.False(editor.IsDirty);
+
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        var reloaded = reopened!.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.Equal(beyondMax, reloaded.Quality);
+    }
+
     [Theory]
     [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
     public void Fill_item_stack_round_trips_through_save_and_reload(string? fileName)

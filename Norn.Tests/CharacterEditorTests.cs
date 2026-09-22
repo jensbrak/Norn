@@ -857,6 +857,38 @@ public class CharacterEditorTests
         Assert.Equal("", reloaded.CrafterName);
     }
 
+    /// <summary>Needs a corpus item that already carries the cheated flag —
+    /// skips otherwise, same shape as the crafter-tag test above.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Clear_item_cheated_round_trips_through_save_and_reload(string? fileName)
+    {
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+        var target = editor!.View.Inventory.Items.FirstOrDefault(i => i.Cheated);
+        Assert.SkipWhen(target is null, $"{fileName} has no cheated item.");
+
+        editor.ClearItemCheatedAt(target!.GridX, target.GridY);
+        Assert.True(editor.IsDirty);
+
+        var updated = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.False(updated.Cheated);
+
+        editor.Save();
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        var reloaded = reopened!.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
+        Assert.False(reloaded.Cheated);
+    }
+
     /// <summary>Needs at least one item present — skips otherwise rather
     /// than asserting on a slot that was never occupied.</summary>
     [Theory]

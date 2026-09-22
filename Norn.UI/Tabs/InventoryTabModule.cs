@@ -227,9 +227,15 @@ public sealed class InventoryTabModule : ITabModule
             // no distinction for "could be equipped but isn't" (that was a
             // Norn-only third state that made the tab feel less like the game
             // it's mirroring; dropped as part of this redesign).
+            // Cheated arms take precedence over the plain Equipped arm
+            // (pattern order matters) — a richer red when also equipped,
+            // same "step up in saturation" relationship Gray->SlateGray
+            // already uses for equip state alone.
             Background = item switch
             {
                 null => Brushes.DimGray,
+                { Cheated: true, Equipped: true } => Brushes.IndianRed,
+                { Cheated: true } => Brushes.RosyBrown,
                 { Equipped: true } => Brushes.SlateGray,
                 _ => Brushes.Gray,
             },
@@ -297,9 +303,10 @@ public sealed class InventoryTabModule : ITabModule
 
         if (shared is { MaxQuality: > 1 })
         {
+            var overMax = shared.QualityOverMax(item.Quality);
             var badge = new TextBlock
             {
-                Text = $"{item.Quality}",
+                Text = overMax > 0 ? $"{shared.MaxQuality}+{overMax}" : $"{item.Quality}",
                 FontWeight = FontWeight.Bold,
                 HorizontalAlignment = HorizontalAlignment.Right,
             };
@@ -558,6 +565,7 @@ public sealed class InventoryTabModule : ITabModule
 
         Add("Set crafter to self", CanSetCrafterToSelf(item, editor), () => { editor.SetItemCrafterAt(x, y); onMessage($"Marked {displayName} as crafted by you"); });
         Add("Clear crafter tag", CanClearCrafter(item), () => { editor.ClearItemCrafterAt(x, y); onMessage($"Cleared crafter tag on {displayName}"); });
+        Add("Clear cheated flag", CanClearCheated(item), () => { editor.ClearItemCheatedAt(x, y); onMessage($"Cleared cheated flag on {displayName}"); });
         Add("Delete", true, () => { editor.RemoveItemAt(x, y); onMessage($"Deleted {displayName}"); });
 
         return menu;
@@ -719,6 +727,16 @@ public sealed class InventoryTabModule : ITabModule
                 : $"Weight: {unit:0.0}");
         }
 
+        // Only the delta is directly observable (m_quality > catalog max);
+        // Norn can't confirm the item actually went through the Forge, only
+        // that it sits visibly above its catalog max.
+        if (shared is not null && shared.QualityOverMax(item.Quality) is var overMax && overMax > 0)
+        {
+            var chance = ForgeOfPotential.ProbabilityOfReaching(item.Quality, shared.MaxQuality);
+            lines.Add($"Over max quality by {overMax} (~{ForgeOfPotential.FormatPercent(chance)} " +
+                "chance of reaching this from max via the Forge of Potential)");
+        }
+
         // Scalar facts above, list-shaped content last — a fixed
         // yes/no fact (PickedUp) still sorts before a variable-length list
         // (CustomData) within that "new content" tier. PickedUp only shown
@@ -757,9 +775,11 @@ public sealed class InventoryTabModule : ITabModule
     private static bool CanEditAmount(ItemDto item) =>
         SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxStack: > 1 };
 
+    // No upper bound: Valheim's own Forge of Potential mechanic exceeds
+    // MaxQuality legitimately, and Norn shouldn't enforce a ceiling the
+    // real game doesn't have.
     private static bool CanQualityUp(ItemDto item) =>
-        SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxQuality: > 1 } shared
-        && item.Quality < shared.MaxQuality;
+        SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxQuality: > 1 };
 
     private static bool CanQualityDown(ItemDto item) =>
         SharedItemDataCatalog.TryFind(item.PrefabName) is { MaxQuality: > 1 }
@@ -929,4 +949,6 @@ public sealed class InventoryTabModule : ITabModule
         && item.CrafterId != editor.View.Meta.PlayerId;
 
     private static bool CanClearCrafter(ItemDto item) => item.CrafterId != 0;
+
+    private static bool CanClearCheated(ItemDto item) => item.Cheated;
 }

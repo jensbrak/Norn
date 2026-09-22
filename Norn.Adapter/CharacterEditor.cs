@@ -517,9 +517,11 @@ public sealed class CharacterEditor
         p => View = View with { Inventory = InventoryMapper.Map(p) });
 
     /// <summary>
-    /// Sets one item's quality, clamped to <c>[1, SharedData.MaxQuality]</c>
-    /// (matches <see cref="SetSkillLevel"/>'s existing clamp-to-bound shape).
-    /// No-op if the slot is empty or the item has no quality levels at all.
+    /// Sets one item's quality, floored at 1 — no enforced ceiling.
+    /// Valheim's own Forge of Potential refinement mechanic (an idol-based,
+    /// probabilistic upgrade path) legitimately exceeds a catalog's
+    /// <c>MaxQuality</c>; Norn doesn't invent a cap the real game doesn't
+    /// have. No-op if the slot is empty or the item has no quality levels at all.
     /// Auto-repairs to the item's new max durability afterward — replicates a
     /// real workbench quality upgrade, which always fully repairs; decoupling
     /// them would let an edit produce a durability/quality combination the
@@ -535,7 +537,7 @@ public sealed class CharacterEditor
                 return false;
             }
 
-            var clamped = Math.Clamp(quality, 1, shared.MaxQuality);
+            var clamped = Math.Max(quality, 1);
             var qualityChanged = item.m_quality != clamped;
             item.m_quality = clamped;
 
@@ -671,6 +673,27 @@ public sealed class CharacterEditor
 
             item.m_crafterID = 0;
             item.m_crafterName = "";
+            return true;
+        },
+        p => View = View with { Inventory = InventoryMapper.Map(p) });
+
+    /// <summary>
+    /// Clears one item's cheated taint. No in-game action ever clears
+    /// <c>m_cheated</c> once set — same editor-exclusive precedent as
+    /// <see cref="ClearUsedCheats"/>: there's no legitimate reason to
+    /// programmatically mark something cheated that wasn't, so this only
+    /// ever clears the flag, never sets it. No-op if already unset.
+    /// </summary>
+    public void ClearItemCheatedAt(int x, int y) => MutateInnerBlob(
+        p =>
+        {
+            var item = FindItem(p, x, y);
+            if (item is null || !item.m_cheated)
+            {
+                return false;
+            }
+
+            item.m_cheated = false;
             return true;
         },
         p => View = View with { Inventory = InventoryMapper.Map(p) });
