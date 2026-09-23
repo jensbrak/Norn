@@ -3,7 +3,7 @@ namespace Norn.GameCore;
 public partial class Player
 {
     // mirrors: Player.Food (fields relevant to the wire format only)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    `m_item` (a live ItemDrop.ItemData reference, assigned by
     //          reference from the resolved prefab's ObjectDB entry) and
     //          `m_eitr` (derived at runtime from m_item.m_shared.m_foodEitr,

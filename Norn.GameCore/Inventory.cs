@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: Inventory
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    LOCATION DIVERGENCE. m_inventory (the Inventory instance) is
 //          declared on Humanoid in source, not Player; Player inherits it.
 //          GameCore's Player holds an Inventory instance directly, since
@@ -16,7 +16,7 @@ public partial class Inventory
     public List<ItemData> m_inventory = new List<ItemData>();
 
     // mirrors: Inventory.Load(ZPackage)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    OMISSION, accepted. Two distinct things source does before an
     //          item lands in a real inventory, neither mirrored here: an
     //          inline empty-prefab-name skip in Load's own loop body (source
@@ -78,7 +78,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.Save(ZPackage)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    COLLAPSED TO THREE LINES AT 1.0.7. The per-item field sequence
     //          that used to live here moved onto ItemData.Save when the
     //          compact record landed; this method now writes only the version
@@ -105,7 +105,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.LoadOld(ZPackage, Version.Item)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    NEW METHOD AT 1.0.7 in name only — this is the 0.221.10 read
     //          loop, extracted into its own method when the compact path
     //          landed. Every gate below is unchanged from the previous mirror;

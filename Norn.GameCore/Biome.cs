@@ -2,7 +2,7 @@ namespace Norn.GameCore;
 
 // mirrors: Heightmap.Biome (nested enum only — Heightmap itself, the Unity
 // terrain component, is not mirrored)
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    [Flags], explicit values. Gap at 128 is in source too — All (895)
 //          is the sum of the nine single-bit members and does not include it.
 //          Stored values are single-bit identities, not masks; nothing in the

@@ -116,7 +116,7 @@ public partial class Player
     public int PlayerDataVersion { get; private set; }
 
     // mirrors: Player.Load(ZPackage)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    OMISSION, accepted. `m_isLoading` (set true at entry, false near
     //          the end), unequipping all items at entry, and three runtime
     //          refresh calls at the tail are all runtime/UI bookkeeping with no
@@ -439,7 +439,7 @@ public partial class Player
     }
 
     // mirrors: Player.Save(ZPackage)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    One writer-only side effect the game performs is NOT
     //          replicated: it strips U+0016 (SYN) from both key and value of
     //          m_knownTexts — a lossy, one-way transform with no read-side

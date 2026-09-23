@@ -1,7 +1,7 @@
 namespace Norn.GameCore;
 
 // mirrors: StringExtensionMethods (assembly_utils)
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    STUB, NEW ON THIS PATH AT 1.0.7. Only GetStableHashCode is carried.
 //          The type also declares AllIndicesOf and several other string helpers
 //          in source; none are reachable from any load/save path.
@@ -21,7 +21,7 @@ namespace Norn.GameCore;
 public static class StringExtensionMethods
 {
     // mirrors: StringExtensionMethods.GetStableHashCode(string)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    A two-lane djb2 variant over UTF-16 code units, combined at the
     //          end with a fixed multiplier. Transcribed operation for
     //          operation: the shift-add-xor form, the two independent

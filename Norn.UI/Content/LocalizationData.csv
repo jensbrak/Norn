@@ -3657,8 +3657,8 @@ item_bellfragment,Bell Fragment
 item_bellfragment_description,This ancient fragment appears to be a piece of a broken bell...
 item_bell,Bell
 item_bell_description,For whom does the bell toll?
-item_fader_drop,Fader Relic
-item_fader_drop_description,The mystical power will be revealed another day.
+item_fader_drop,Kindled Ribs
+item_fader_drop_description,The smouldering remains of a patriarch.
 deadspeak_fader,"I followed a false destiny, and it gave me nothing but ruin. Forgive me, my love..."
 item_trophy_fader,Fader Trophy
 item_trophy_fader_description,"The green dragon, corrupted beyond redemption.
@@ -4417,111 +4417,6 @@ settings_radialclose,Close (Radial)
 settings_radial_big,Big
 settings_radial_small,Small
 settings_radial_small_edge,Small Edge
-menu_storageused,Storage used: $1
-menu_storagefull,Your storage is full!
-menu_storagefulloperationfailed,This operation failed because save data storage is full. Please remove unused save data and try again.
-item_cultivator_remove_description,"Retrieve the seeds from the soil, to plant another time."
-piece_rock_01,Ornamental Boulder
-piece_rock_01_description,Adds a rustic touch to any garden.
-piece_rock_02,Decorative Boulder
-piece_rock_02_description,That is a nice boulder.
-piece_stavegate,Timberwood Gate
-piece_stavegate_description,"Not quite as glorious as the gates of Valhalla, but awfully close!"
-item_shield_roots,Shield of Roots
-item_shield_roots_description,Malleable roots have been twisted into a surprisingly sturdy shield.
-item_writhanroots,Writhan Roots
-item_writhanroots_description,"The gnarled body parts of a strange, offputting creature."
-item_trophy_writhan,Writhan Trophy
-item_trophy_writhan_description,"Tough dead, it should probably be handled delicately."
-item_trophy_writhan_lore,"It remains dormant, at least for now..."
-item_helmet_rootcrown,Crown of Roots
-item_helmet_rootcrown_description,"A painful, yet intricate headpiece."
-piece_upgradestation,Forge of Potential
-item_upgrader_name,Idol
-item_upgrader_armor,Protection
-item_upgrader_weapon,Battle
-item_upgrader_tier0,Wooden
-item_upgrader_tier1,Bronze
-item_upgrader_tier2,Iron
-item_upgrader_tier3,Silver
-item_upgrader_tier4,Black Metal
-item_upgrader_tier5,Black Marble
-item_upgrader_tier6,Flametal
-item_upgrader_tier7,Bloodgold
-item_upgrader_description,"This mysterious idol is brimming with the potential of the gods. It could grant a powerful boon, or demand a great sacrifice."
-inventory_upgraderwarning,Maximum safe quality. Refinement may break your item.
-inventory_upgraderbutton,Attempt Refinement
-inventory_needspace,You need more free inventory space
-msg_upgrader_success,$1 refined successfully to level $2
-msg_upgrader_broke,$1 refinement failed and broke on level $2
-msg_upgrader_fail,"Refining of $1 failed, downgraded to level $2"
-tutorial_upgrader_hugin_topic,"Hear ye, wanderer!"
-tutorial_upgrader_hugin_label,Hugin: Forge of Potential
-tutorial_upgrader_hugin_text,"Finding this place of ancient power is no easy feat, and those who have done so stand to gain a great deal! A word of warning, however – while the Forge may work brilliantly in your favour, it may just as easily shatter that which you seek to refine..."
-customization_hair38,Masculine
-item_pulledbear,Pulled Bear
-item_pulledbear_description,"Tender meat cooked for hours upon hours, until it practically falls apart."
-lore_upgradestation_label,Lore: Forge of Potential
-lore_upgradestation_description,"Ingrid and Torgunn decided to honour the gods in this place. They smiled upon Ingrid, granting her a great boon. Torgunn on the other hand, was made all too aware of the risk she was taking, as her blade shattered into pieces upon the altar. She raised this stone to warn others of the risk attempting refinement at this forge!"
-piece_birdnest_extract,Pick up feathers
-piece_birdnest_check,Check Birds' Nest
-piece_birdnest_area,The birds don't like it here
-piece_birdnest_freespace,The birds need more open space
-piece_birdnest_sleep,The birds are sleeping
-piece_birdnest_happy,The birds are roosting
-piece_birdnest,Birds' Nest
-piece_birdnest_description,Healthy and happy birds might shed a feather or two.
-piece_stonefence,Stone Fence
-piece_stonefence_description,Stones carefully pieced together into a sturdy fence.
-hud_categories,Categories
-hud_materials,Materials
-location_bearcave,Bear Cave
-settings_simulationdistance,Draw distance
-piece_woodfencegate,Roundpole Gate
-piece_woodfencegate_description,A gate is far more practical than jumping over the fence every time.
-tutorial_prison_topic,One last trial...
-tutorial_prison_label,Hugin: The Prison
-tutorial_prison_text,"Be wary! The being imprisoned beyond this gate is mighty, more so than any other to be found in all of Valheim. You would do well to prepare accordingly before you venture forth to this final foe."
-tutorial_sacrificialblood_topic,It is time...
-tutorial_sacrificialblood_label,Hugin: Kall Fimbulbringer defeated
-tutorial_sacrificialblood_text,"Well done, warrior! You have found the sacrificial blood, the final key to restoring this realm. Now the All-Father has one last task for you – prove yourself worthy by journeying back to where it all began!"
-piece_drawbridge_log,"Rustic Drawbridge "
-piece_drawbridge_log_description,"Convenient for crossing chasms, or for keeping enemies out."
-settings_graphics_preset_low_description,Looks good and runs well even on weak systems
-settings_graphics_preset_medium_description,Strikes a good balance between graphics quality and performance
-settings_graphics_preset_high_description,Stunning graphics for powerful systems
-settings_graphics_preset_performance_description,Targets 60 fps with standard graphics quality
-settings_graphics_preset_balanced_description,"Targets 40 fps with higher graphics quality if 120 Hz is supported and enabled, otherwise uses the 60 fps preset"
-settings_graphics_preset_quality_description,Targets 30 fps with the highest graphics quality
-settings_graphics_preset,Graphics preset
-location_dnbossroomnew,The Prison
-settings_simulationdistance_warning,Increasing the draw distance may severly degrade performance!
-settings_ultra,Ultra
-settings_extreme,Extreme
-se_crowned_name,Royalty
-se_crowned_start,You pass by unchallenged.
-se_crowned_tooltip,The creatures of Valheim will not harm the one who has mastered them.
-piece_ironwoodbeam67,Wood Iron Beam 67°
-piece_woodlog67,Log Beam 67°
-piece_drawbridge_dn,Timberwood Drawbridge
-item_helmet_crown_of_valheim,Crown of Valheim
-item_helmet_crown_of_valheim_description,A glorious reward for the truly worthy.
-item_crownjewel,Crown Jewel
-item_crownjewel_description,"A strange power surges within this gem, unlike anything you've felt before."
-settings_simulationdistance_square,square $1 m
-settings_simulationdistance_circular,circular $1 m
-settings_lod2,Level of detail
-item_helmet_lox,Lox Fur Hood
-item_helmet_lox_description,See the world like a lox might.
-item_chest_lox,Lox Fur Jacket
-item_chest_lox_description,A heavy musk still clings to it.
-item_legs_lox,Lox Fur Trousers
-item_legs_lox_description,"Soft, silent and flexible."
-se_loxseteffect_name,Boon of the Lox
-se_loxseteffect_tooltip,The fur allows you to blend in with the wilderness and move about unseen.
-stat_DeathByDrawBridge,Death by drawbridge
-playstation_activity_name,Exploring the 10th world
-playstation_trophy_set_online_only,Multiplayer-only trophies
 piece_darkwoodroof67,Shingle Roof 67°
 piece_darkwoodrooficorner67,Shingle Roof Inner Corner 67°
 piece_darkwoodroofocorner67,Shingle Roof Outer Corner 67°
@@ -5914,10 +5809,12 @@ ach_grindsailhelm_desc,"Sail far enough to circle the world, while manning the h
 achievement_details,Achievement details
 achievements_confirm_cheat,"That command is a cheat, please enter 'confirmcheats' in the console to use cheats. <color=red>Using cheats will permanently disable the ability to unlock achievements for this character and this world.</color>"
 achievements_temporarily_cheated,Achievement progress is temporarily disabled for this character due to possession of cheated items.
-achievements_permanently_cheated_character,Achievement progress is permanently disabled for this character due to having cheated.
-achievements_permanently_cheated_world,Achievement progress is permanently disabled for this world due to using cheated world modifiers.
-achievements_picked_up_cheated_item,Picked up cheated item. Achievement progress is temporarily disabled.
-achievements_cheated_item_inventory,This item was summoned through cheating means.
+achievements_permanently_cheated_character,Achievement progress is permanently disabled for this character due to dev command usage.
+achievements_permanently_cheated_world,Achievement progress is permanently disabled for this world due to using dev command world modifiers.
+achievements_permanently_cheated_bypass,Achievement progress is enabled for this character even though dev commands have been used.
+achievements_picked_up_cheated_item,Picked up an item affected by dev commands. Achievement progress is temporarily disabled.
+achievements_dropped_cheated_item,No more dev command items in inventory. Achievement progress is re-enabled.
+achievements_cheated_item_inventory,This item was summoned through dev commands.
 ach_everyachievement,The Most Worthy
 ach_everyachievement_desc,Unlock every other achievement.
 tutorial_faderember_label,Hugin: Eternal Pyre
@@ -5932,8 +5829,126 @@ largebone,Large Bone
 tutorial_jotuninvasion_hugin_topic,Strange forces are invading!
 tutorial_jotuninvasion_hugin_label,Hugin: Jotun Invasions
 tutorial_jotuninvasion_hugin_text,"""Beware the approach of the Jotun army. You must meet them at their point of invasion and halt their advances, if you are to ever set the tenth world right..."""
+menu_storageused,Storage used: $1
+menu_storagefull,Your storage is full!
+menu_storagefulloperationfailed,This operation failed because save data storage is full. Please remove unused save data and try again.
 piece_portal_censored_warning,"Censored words found, potential crossplay issue."
 cinematics_intro,Intro
 cinematics_outro,Outro
 cinematics_end_credits,End Credits
 menu_removefavoritecategory,Remove favorite category?
+item_cultivator_remove_description,"Retrieve the seeds from the soil, to plant another time."
+piece_rock_01,Ornamental Boulder
+piece_rock_01_description,Adds a rustic touch to any garden.
+piece_rock_02,Decorative Boulder
+piece_rock_02_description,That is a nice boulder.
+piece_stavegate,Timberwood Gate
+piece_stavegate_description,"Not quite as glorious as the gates of Valhalla, but awfully close!"
+item_shield_roots,Shield of Roots
+item_shield_roots_description,Malleable roots have been twisted into a surprisingly sturdy shield.
+item_writhanroots,Writhan Roots
+item_writhanroots_description,"The gnarled body parts of a strange, offputting creature."
+item_trophy_writhan,Writhan Trophy
+item_trophy_writhan_description,"Tough dead, it should probably be handled delicately."
+item_trophy_writhan_lore,"It remains dormant, at least for now..."
+item_helmet_rootcrown,Crown of Roots
+item_helmet_rootcrown_description,"A painful, yet intricate headpiece."
+piece_upgradestation,Forge of Potential
+item_upgrader_name,Idol
+item_upgrader_armor,Protection
+item_upgrader_weapon,Battle
+item_upgrader_tier0,Wooden
+item_upgrader_tier1,Bronze
+item_upgrader_tier2,Iron
+item_upgrader_tier3,Silver
+item_upgrader_tier4,Black Metal
+item_upgrader_tier5,Black Marble
+item_upgrader_tier6,Flametal
+item_upgrader_tier7,Bloodgold
+item_upgrader_description,"This mysterious idol is brimming with the potential of the gods. It could grant a powerful boon, or demand a great sacrifice."
+inventory_upgraderwarning,Maximum safe quality. Refinement may break your item.
+inventory_upgraderbutton,Attempt Refinement
+inventory_needspace,You need more free inventory space
+msg_upgrader_success,$1 refined successfully to level $2
+msg_upgrader_broke,$1 refinement failed and broke on level $2
+msg_upgrader_fail,"Refining of $1 failed, downgraded to level $2"
+tutorial_upgrader_hugin_topic,"Hear ye, wanderer!"
+tutorial_upgrader_hugin_label,Hugin: Forge of Potential
+tutorial_upgrader_hugin_text,"Finding this place of ancient power is no easy feat, and those who have done so stand to gain a great deal! A word of warning, however – while the Forge may work brilliantly in your favour, it may just as easily shatter that which you seek to refine..."
+customization_hair38,Masculine
+item_pulledbear,Pulled Bear
+item_pulledbear_description,"Tender meat cooked for hours upon hours, until it practically falls apart."
+lore_upgradestation_label,Lore: Forge of Potential
+lore_upgradestation_description,"Ingrid and Torgunn decided to honour the gods in this place. They smiled upon Ingrid, granting her a great boon. Torgunn on the other hand, was made all too aware of the risk she was taking, as her blade shattered into pieces upon the altar. She raised this stone to warn others of the risk attempting refinement at this forge!"
+piece_birdnest_extract,Pick up feathers
+piece_birdnest_check,Check Birds' Nest
+piece_birdnest_area,The birds don't like it here
+piece_birdnest_freespace,The birds need more open space
+piece_birdnest_sleep,The birds are sleeping
+piece_birdnest_happy,The birds are roosting
+piece_birdnest,Birds' Nest
+piece_birdnest_description,Healthy and happy birds might shed a feather or two.
+piece_stonefence,Stone Fence
+piece_stonefence_description,Stones carefully pieced together into a sturdy fence.
+hud_categories,Categories
+hud_materials,Materials
+location_bearcave,Bear Cave
+settings_simulationdistance,Draw distance
+piece_woodfencegate,Roundpole Gate
+piece_woodfencegate_description,A gate is far more practical than jumping over the fence every time.
+tutorial_prison_topic,One last trial...
+tutorial_prison_label,Hugin: The Prison
+tutorial_prison_text,"Be wary! The being imprisoned beyond this gate is mighty, more so than any other to be found in all of Valheim. You would do well to prepare accordingly before you venture forth to this final foe."
+tutorial_sacrificialblood_topic,It is time...
+tutorial_sacrificialblood_label,Hugin: Kall Fimbulbringer defeated
+tutorial_sacrificialblood_text,"Well done, warrior! You have found the sacrificial blood, the final key to restoring this realm. Now the All-Father has one last task for you – prove yourself worthy by journeying back to where it all began!"
+piece_drawbridge_log,"Rustic Drawbridge "
+piece_drawbridge_log_description,"Convenient for crossing chasms, or for keeping enemies out."
+settings_graphics_preset_low_description,Looks good and runs well even on weak systems
+settings_graphics_preset_medium_description,Strikes a good balance between graphics quality and performance
+settings_graphics_preset_high_description,Stunning graphics for powerful systems
+settings_graphics_preset_performance_description,Targets 60 fps with standard graphics quality
+settings_graphics_preset_balanced_description,"Targets 40 fps with higher graphics quality if 120 Hz is supported and enabled, otherwise uses the 60 fps preset"
+settings_graphics_preset_quality_description,Targets 30 fps with the highest graphics quality
+settings_graphics_preset,Graphics preset
+location_dnbossroomnew,The Prison
+settings_simulationdistance_warning,Increasing the draw distance may severly degrade performance!
+settings_ultra,Ultra
+settings_extreme,Extreme
+se_crowned_name,Royalty
+se_crowned_start,You pass by unchallenged.
+se_crowned_tooltip,The creatures of Valheim will not harm the one who has mastered them.
+piece_ironwoodbeam67,Wood Iron Beam 67°
+piece_woodlog67,Log Beam 67°
+piece_drawbridge_dn,Timberwood Drawbridge
+item_helmet_crown_of_valheim,Crown of Valheim
+item_helmet_crown_of_valheim_description,A glorious reward for the truly worthy.
+item_crownjewel,Crown Jewel
+item_crownjewel_description,"A strange power surges within this gem, unlike anything you've felt before."
+settings_simulationdistance_square,square $1 m
+settings_simulationdistance_circular,circular $1 m
+settings_lod2,Level of detail
+item_helmet_lox,Lox Fur Hood
+item_helmet_lox_description,See the world like a lox might.
+item_chest_lox,Lox Fur Jacket
+item_chest_lox_description,A heavy musk still clings to it.
+item_legs_lox,Lox Fur Trousers
+item_legs_lox_description,"Soft, silent and flexible."
+se_loxseteffect_name,Boon of the Lox
+se_loxseteffect_tooltip,The fur allows you to blend in with the wilderness and move about unseen.
+stat_DeathByDrawBridge,Death by drawbridge
+enemy_writhan,Writhan
+enemy_root,Root
+settings_skip_intro_cinematic,Skip intro cinematic
+settings_toggleblock,Toggle block
+settings_altdodge,Alternative dodge
+settings_open_radial_wheel,Open Radial Wheel
+settings_hotbar1,Hotbar 1
+settings_hotbar2,Hotbar 2
+settings_hotbar3,Hotbar 3
+settings_hotbar4,Hotbar 4
+settings_hotbar5,Hotbar 5
+settings_hotbar6,Hotbar 6
+settings_hotbar7,Hotbar 7
+settings_hotbar8,Hotbar 8
+settings_clearkeyinfo,Press delete to clear

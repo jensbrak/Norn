@@ -1,7 +1,7 @@
 namespace Norn.GameCore;
 
 // mirrors: BiomeSector
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    STUB, NEW AT 1.0.7. BiomeSector is a gameplay type (biome sectors,
 //          alt-biome overrides, world-level naming) and none of it is on a
 //          load/save path. It exists here for exactly one static method, which
@@ -16,7 +16,7 @@ namespace Norn.GameCore;
 public static class BiomeSector
 {
     // mirrors: BiomeSector.GetBiomeName(Heightmap.Biome)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    THIS IS A READ MIGRATION, NOT A DISPLAY HELPER, and that
     //          distinction is why it lives in GameCore rather than under
     //          a presentation-only constant. 1.0.7 changed Player.m_knownBiome's wire type

@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: ItemDrop.ItemData (fields on the .fch wire path only)
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    LOCATION DIVERGENCE. Declared nested inside ItemDrop (a
 //          MonoBehaviour not otherwise mirrored) in source; nested inside
 //          Inventory here instead.
@@ -94,7 +94,7 @@ public partial class Inventory
         public bool m_cheated;
 
         // mirrors: ItemDrop.ItemData.Save(ZPackage)
-        // source:  Valheim 1.0.7
+        // source:  Valheim 1.0.15
         // note:    NEW METHOD AT 1.0.7. Through 0.221.10 the item record was
         //          written inline by Inventory.Save; the per-item write moved
         //          onto ItemData when the compact layout landed at item
@@ -186,7 +186,7 @@ public partial class Inventory
 
         // mirrors: ItemDrop.ItemData.Load(ZPackage, Version.Item) [static, and
         // the ValueTuple-returning overload that wraps it]
-        // source:  Valheim 1.0.7
+        // source:  Valheim 1.0.15
         // note:    SIGNATURE DIVERGENCE, two overloads collapsed to one.
         //          Source has `static (int, ItemData) Load(ZPackage,
         //          Version.Item)` whose entire body is `new ItemData()` plus a

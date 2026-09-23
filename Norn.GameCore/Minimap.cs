@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: Minimap (decode and encode)
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    WorldPlayerData.m_mapData is still opaque byte[] on the ordinary
 //          PlayerProfile Read/Write round trip and is re-emitted verbatim for
 //          every world a caller doesn't explicitly touch (R3) — that default
@@ -47,7 +47,7 @@ public static partial class Minimap
     private const int MaxSaneTextureSize = 8192;
 
     // mirrors: Minimap.SetMapData(byte[])
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    NAME/SIGNATURE DIVERGENCE. private void SetMapData(byte[]) in
     //          source, mutates a live Minimap component's fields in place and
     //          returns nothing. Here: public static MapData Decode(byte[]),
@@ -247,7 +247,7 @@ public static partial class Minimap
     }
 
     // mirrors: Minimap.GetMapData()
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    NAME/SIGNATURE DIVERGENCE, same reasoning as Decode above:
     //          private byte[] GetMapData() in source reads from a live
     //          Minimap component's own fields; there is no live component to

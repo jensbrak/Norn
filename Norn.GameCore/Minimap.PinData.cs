@@ -5,7 +5,7 @@ namespace Norn.GameCore;
 public static partial class Minimap
 {
     // mirrors: Minimap.PinData (wire-persisted fields only)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    Source declares sixteen fields; only six reach the wire —
     //          m_name, m_type, m_pos, m_ownerID, m_author, m_checked, the
     //          six declared below. The other ten (m_icon, m_save,

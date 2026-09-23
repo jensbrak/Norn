@@ -5,7 +5,7 @@ namespace Norn.GameCore;
 public partial class PlayerProfile
 {
     // mirrors: PlayerProfile.WorldPlayerData
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    VISIBILITY DIVERGENCE. Private in source; every public accessor
     //          (GetLogoutPoint, HaveDeathPoint, ...) routes through
     //          ZNet.instance.GetWorldUID(), which a standalone reader has no

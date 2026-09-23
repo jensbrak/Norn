@@ -3,7 +3,7 @@ namespace Norn.GameCore;
 public static partial class Minimap
 {
     // mirrors: Minimap.PinType
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    Memorial is NEW at 1.0.7, appended after Hildir3. Purely
     //          additive — every existing ordinal is unchanged, so no stored
     //          pin changes meaning.

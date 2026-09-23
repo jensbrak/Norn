@@ -3,7 +3,7 @@ namespace Norn.GameCore;
 public partial class PlayerProfile
 {
     // mirrors: PlayerProfile.PlayerStats
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    RESTRUCTURED AT 1.0.7, AND IT IS THE LARGEST CHANGE IN THIS FILE.
     //          Through 0.221.10 this class held exactly one member, m_stats, and
     //          the six metadata dictionaries lived directly on PlayerProfile.

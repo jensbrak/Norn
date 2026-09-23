@@ -4,7 +4,7 @@ namespace Norn.GameCore;
 
 // mirrors: World field declarations (identity-relevant subset) +
 //          World.LoadWorld(SaveWithBackups)
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    NOT AN EXHAUSTIVE FIELD LIST. Only fields reachable from
 //          LoadWorld's read path are carried, per the same rule
 //          PlayerProfile.cs already applies to its own load path. Not
@@ -97,7 +97,7 @@ public class World
     public List<ZNet.CrossNetworkUserInfo> m_playerHistory = new List<ZNet.CrossNetworkUserInfo>();
 
     // mirrors: World.LoadWorld(SaveWithBackups)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    SIGNATURE DIVERGENCE. static World LoadWorld(SaveWithBackups)
     //          in source, resolving its own file paths from a
     //          SaveWithBackups value Norn has no counterpart for
@@ -217,7 +217,7 @@ public class World
     // frame, prior to any ZPackage parsing) — not a named source method of
     // its own, same "frame reading kept separate from payload parsing" shape
     // as PlayerProfile.LoadPlayerDataFromDisk.
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    FRAME DIVERGENCE FROM .fch. Confirmed directly: a .fwl is
     //          length-prefixed payload, then EOF — no
     //          trailing hash pair, unlike PlayerProfile's envelope. Nothing

@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: ZNet
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    STUB. ZNet is the game's networking singleton and nothing else about
 //          it is on any load/save path this project mirrors. It exists here
 //          solely to host CrossNetworkUserInfo, which 1.0.7 made reachable from
@@ -14,7 +14,7 @@ namespace Norn.GameCore;
 public partial class ZNet
 {
     // mirrors: ZNet.CrossNetworkUserInfo
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    NEW ON THIS PATH AT 1.0.7. Reached only from World.Load's
     //          m_playerHistory block (world version >= 41).
     // note:    NOT AN EXHAUSTIVE MEMBER LIST. Only Read and the four fields it

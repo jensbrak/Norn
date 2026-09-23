@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: nothing — this type has no counterpart in the game.
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    The game is not a round-tripper. PlayerProfile.LoadPlayerDataFromDisk
 //          reads the hash length and the hash purely to consume them and throws
 //          both away, and it never looks past the hash at all. A byte-identity

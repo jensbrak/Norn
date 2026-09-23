@@ -7,6 +7,21 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.2.0
+
+Inventory tab improvements and tweaks:
+
+- Cheated flag can now be cleared from items (right-click menu). Better visual emphasis on cheated items (red background).
+- Support for "Forge of Potential": items above "max" are shown as "max + X" and quality can now be increased beyond "max".
+- Drag and drop support, just like game do it: move, merge or swap items, and Shift + click to split a stack.
+- Buttons now grouped by scope, subtly renamed for consistency and also have tooltips.
+- Quick repair / fill stack is now Alt + left click, since left click now picks an item up.
+
+Compatibility adjustments:
+
+- Tested with Valheim 1.0.15.
+- Updated item data for some items.
+
 ## 1.1.0
 
 World- and inventory tab improvements:

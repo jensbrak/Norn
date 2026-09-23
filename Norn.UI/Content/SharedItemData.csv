@@ -18,8 +18,8 @@ ArmorBronzeChest,True,True,1000,200,1,Bronze Plate Tunic,4,7,10,0,True
 ArmorBronzeLegs,True,True,1000,200,1,Bronze Plate Leggings,4,11,10,0,True
 ArmorCarapaceChest,True,True,1200,200,1,Carapace Breastplate,4,7,10,0,True
 ArmorCarapaceLegs,True,True,1200,200,1,Carapace Greaves,4,11,10,0,True
-ArmorDeepNorthHeavyChest,True,True,1000,200,1,Breastplate of the Protector,4,7,5,0,False
-ArmorDeepNorthHeavylegs,True,True,1000,200,1,Trousers of the Protector,4,11,5,0,False
+ArmorDeepNorthHeavyChest,True,True,1000,200,1,Breastplate of the Protector,4,7,5,0,True
+ArmorDeepNorthHeavylegs,True,True,1000,200,1,Trousers of the Protector,4,11,5,0,True
 ArmorDeepNorthMageChest,True,True,1000,200,1,Robes of the Caller,4,7,5,0,True
 ArmorDeepNorthMagelegs,True,True,1000,200,1,Trousers of the Caller,4,11,5,0,True
 ArmorDeepNorthMediumChest,True,True,1000,200,1,Chestpiece of the Vanguard,4,7,5,0,True
@@ -323,7 +323,7 @@ ElakingHairBundle,True,False,100,50,50,Elaking Hair Bundle,1,1,1,0,False
 ElderBark,True,False,100,50,50,Ancient Bark,1,1,2,0,False
 Entrails,True,False,100,50,50,Entrails,1,1,0.5,0,False
 Eyescream,True,False,100,50,10,Eyescream,1,2,0.5,0,True
-FaderDrop,True,False,100,50,30,Fader Relic,1,1,1,0,False
+FaderDrop,True,False,100,50,30,Kindled Ribs,1,1,1,0,False
 FaderEmber,True,False,100,50,50,Embers,1,1,0.5,0,False
 FeastAshlands,True,False,100,50,1,Ashlands Gourmet Bowl,1,2,1,0,False
 FeastAshlands_Material,True,False,100,50,5,Ashlands Gourmet Bowl,1,1,10,0,True
@@ -542,7 +542,7 @@ HelmetBronze,True,True,1000,200,1,Bronze Helmet,4,6,3,0,True
 HelmetCarapace,True,True,1200,200,1,Carapace Helmet,4,6,3,0,True
 HelmetCelebration,True,True,800,100,1,Celebratory Cap,4,6,3,0,True
 HelmetCrownofValheim,True,True,1000,200,1,Crown of Valheim,1,6,1,0,True
-HelmetDNHeavy,True,True,1000,200,1,Helmet of the Protector,4,6,1,0,False
+HelmetDNHeavy,True,True,1000,200,1,Helmet of the Protector,4,6,1,0,True
 HelmetDNMage,True,True,1000,200,1,Headdress of the Caller,4,6,1,0,True
 HelmetDNMediumHood,True,True,1000,200,1,Hood of the Vanguard,4,6,1,0,True
 HelmetDrake,True,True,1000,200,1,Drake Helmet,4,6,3,0,True

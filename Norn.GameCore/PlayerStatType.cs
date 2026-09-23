@@ -1,7 +1,7 @@
 namespace Norn.GameCore;
 
 // mirrors: PlayerStatType
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    Purely positional on the wire — no member
 //          carries an explicit numeric literal in source either; values here
 //          are implicit sequential from 0, exactly as declared.

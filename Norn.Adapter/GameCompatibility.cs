@@ -18,5 +18,5 @@ public static class GameCompatibility
     // game-derived: the Valheim version confirmed against during the last
     // full patch-day pass. Bump by hand as part of that same pass, not
     // independently of it.
-    public const string TestedValheimVersion = "1.0.7";
+    public const string TestedValheimVersion = "1.0.15";
 }

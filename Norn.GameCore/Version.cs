@@ -1,7 +1,7 @@
 namespace Norn.GameCore;
 
 // mirrors: Version
-// source:  Valheim 1.0.7
+// source:  Valheim 1.0.15
 // note:    NOT AN EXHAUSTIVE FIELD LIST. Only the fields, enums and methods
 //          reachable from the .fch load path plus the .fwl2 load path are
 //          carried, per the rule "only fields reachable from Load/Save"
@@ -67,7 +67,7 @@ public static class Version
     }
 
     // mirrors: Version.Player
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     public enum Player
     {
         Stats = 28,
@@ -90,7 +90,7 @@ public static class Version
     }
 
     // mirrors: Version.World
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     public enum World
     {
         SupportNetTime = 4,
@@ -128,7 +128,7 @@ public static class Version
     }
 
     // mirrors: Version.Item
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     public enum Item
     {
         Quality = 101,
@@ -144,7 +144,7 @@ public static class Version
     }
 
     // mirrors: Version.PlayerData
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     public enum PlayerData
     {
         Original = 2,
@@ -180,7 +180,7 @@ public static class Version
     }
 
     // mirrors: Version.Map
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    Lived on Minimap as `private static int MAPVERSION = 8` through
     //          0.221.10 and moved here at 1.0.7. The value did not change; the
     //          home and the type did, and every Minimap gate that read an int

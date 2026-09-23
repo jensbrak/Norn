@@ -9,7 +9,7 @@ namespace Norn.GameCore;
 public partial class PlayerProfile
 {
     // mirrors: PlayerProfile..ctor(string)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    OMISSION, partially accepted. Source's constructor also sets
     //          m_playerID = Utils.GenerateUID() after m_playerName. Both fields
     //          are read ungated at every supported version, so a loaded profile
@@ -35,7 +35,7 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile field declarations, in source's own declaration
     // order (which differs from LoadPlayerFromDisk's read order below).
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    NOT AN EXHAUSTIVE FIELD LIST. Only fields reachable from
     //          LoadPlayerFromDisk/SavePlayerToDisk are carried. Source declares
     //          several more with no bearing on the byte format at all, none
@@ -140,7 +140,7 @@ public partial class PlayerProfile
     public int ProfileVersion { get; private set; }
 
     // mirrors: PlayerProfile.LoadPlayerDataFromDisk()
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    m_filename holds a full path here, where the game holds a bare
     //          character name and composes the path through
     //          SaveSystem.GetCharacterPath(m_fileSource, m_filename) — called
@@ -202,7 +202,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.Load()
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     /// <summary>Loads the profile envelope. The inner player-data blob stays opaque.</summary>
     public bool Load()
     {
@@ -210,7 +210,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.LoadPlayerFromDisk()
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    BEHAVIOURAL DIVERGENCE, same as LoadPlayerDataFromDisk above: the
     //          game wraps this whole body in a try/catch that logs and swallows,
     //          still returning true. Exceptions propagate here instead.
@@ -461,7 +461,7 @@ public partial class PlayerProfile
         return true;
 
         // mirrors: <LoadPlayerFromDisk>g__GetFirstSpawnFromPlayerData|10_0
-        // source:  Valheim 1.0.7
+        // source:  Valheim 1.0.15
         // note:    Decompiler-surfaced local function; source name restated per
         //          the source reading. Peeks into the m_playerData blob without
         //          disturbing the real parse of it — a fresh ZPackage is
@@ -498,7 +498,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SetName(string)
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     public void SetName(string name)
     {
         m_playerName = name;
@@ -506,7 +506,7 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile.SavePlayerToDisk() [profile-level fields; the
     // envelope frame below carries the final hash + length prefixes]
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    Writer-only side effects the game performs are NOT replicated,
     //          and they grew at 1.0.7: the game now increments the current
     //          world's play seconds in TWO stat slots (slot 0 and the current
@@ -671,7 +671,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SavePlayerToDisk(), envelope only
-    // source:  Valheim 1.0.7
+    // source:  Valheim 1.0.15
     // note:    Only the final four writes are mirrored — GenerateHash, GetArray,
     //          then length/payload/length/hash. Everything else in the game's
     //          method is either payload serialisation or
