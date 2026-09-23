@@ -585,6 +585,160 @@ public sealed class CharacterEditor
         },
         p => View = View with { Inventory = InventoryMapper.Map(p) });
 
+    // game-derived: InventoryGrid.DropItem / Inventory.AddItem(item, amount,
+    // x, y, skipValidPositionCheck) (Valheim 1.0.7) — the real game's own
+    // click-to-carry placement logic. Same slot is a no-op; an empty
+    // destination is a move, or, for a partial amount, a split; an occupied
+    // destination is a swap when the whole held amount doesn't match the
+    // target (different item, or different quality on an upgradeable item,
+    // or the target isn't stackable at all) or a merge when it does and
+    // there's room, capped at the target's remaining stack space with the
+    // excess staying on the source (mirrors the real game's own "still
+    // holding the remainder" overflow behavior). A merge only ever writes
+    // m_stack on either side — crafter tag, cheated flag, custom data,
+    // picked-up, and durability all come from whichever stack was already
+    // at the destination, exactly matching source.
+    // note:    Keyed on PrefabHash, not PrefabName — Norn's whole catalog is
+    //          already keyed on prefab identity (via ItemPrefabHashes), and
+    //          the real game's own SharedData-display-name identity wasn't
+    //          confirmed to ever matter for a shipped item. PrefabName
+    //          specifically must NOT be used for this comparison: item
+    //          version 108+ (i.e. any current
+    //          save) leaves it empty on every item, carrying identity only
+    //          in PrefabHash — comparing on PrefabName instead would treat
+    //          every pair of items as identical on a real save, forcing
+    //          drops between different item types into a destructive merge
+    //          instead of a swap. See the regression test in
+    //          Norn.Tests/CharacterEditorDragDropTests.cs, which deliberately
+    //          exercises real corpus items rather than AddItemAt-manufactured
+    //          ones (AddItemAt sets a real PrefabName, which would mask this
+    //          class of bug).
+    // note:    A worldLevel mismatch between two otherwise-matching stacks
+    //          is a genuine dead no-op in the real game — neither the swap
+    //          nor the merge condition fires — replicated deliberately here,
+    //          not smoothed over.
+    /// <summary>
+    /// Moves/merges/swaps/splits <paramref name="amount"/> units of the item
+    /// at <paramref name="fromX"/>/<paramref name="fromY"/> onto <paramref
+    /// name="toX"/>/<paramref name="toY"/>. Returns how much of <paramref
+    /// name="amount"/> actually landed — 0 on a dead no-op (same slot, a
+    /// full target of the same type, or a worldLevel mismatch), up to
+    /// <paramref name="amount"/> on an ordinary placement, less than that on
+    /// a merge capped by the target's remaining stack space. The caller
+    /// (<c>Norn.UI</c>'s carry state) uses the shortfall to decide whether to
+    /// keep carrying the leftover.
+    /// </summary>
+    public int MoveItemAt(int fromX, int fromY, int amount, int toX, int toY)
+    {
+        var moved = 0;
+
+        MutateInnerBlob(
+            p =>
+            {
+                if (toX < 0 || toX >= InventoryLayout.Width || toY < 0 || toY >= InventoryLayout.Height)
+                {
+                    return false;
+                }
+
+                var source = FindItem(p, fromX, fromY);
+                if (source is null || amount <= 0 || amount > source.m_stack)
+                {
+                    return false;
+                }
+
+                if (fromX == toX && fromY == toY)
+                {
+                    return false;
+                }
+
+                var target = FindItem(p, toX, toY);
+
+                if (target is null)
+                {
+                    if (amount == source.m_stack)
+                    {
+                        source.m_gridPos = new Vector2i(toX, toY);
+                    }
+                    else
+                    {
+                        p.m_inventory.m_inventory.Add(CloneWithStack(source, amount, toX, toY));
+                        source.m_stack -= amount;
+                    }
+
+                    moved = amount;
+                    return true;
+                }
+
+                var sourceShared = ItemPrefabHashes.TryFindShared(source);
+                var upgradeable = sourceShared is { MaxQuality: > 1 };
+                var targetShared = ItemPrefabHashes.TryFindShared(target);
+
+                var canSwap = amount == source.m_stack
+                    && (target.PrefabHash != source.PrefabHash
+                        || (upgradeable && target.m_quality != source.m_quality)
+                        || (targetShared?.MaxStack ?? 1) <= 1);
+
+                if (canSwap)
+                {
+                    (source.m_gridPos, target.m_gridPos) = (target.m_gridPos, source.m_gridPos);
+                    moved = amount;
+                    return true;
+                }
+
+                var sameIdentity = target.PrefabHash == source.PrefabHash
+                    && target.m_worldLevel == source.m_worldLevel
+                    && (!upgradeable || target.m_quality == source.m_quality);
+
+                if (!sameIdentity || targetShared is null)
+                {
+                    return false;
+                }
+
+                var space = targetShared.MaxStack - target.m_stack;
+                if (space <= 0)
+                {
+                    return false;
+                }
+
+                moved = Math.Min(space, amount);
+                target.m_stack += moved;
+                source.m_stack -= moved;
+                if (source.m_stack <= 0)
+                {
+                    p.m_inventory.m_inventory.Remove(source);
+                }
+
+                return true;
+            },
+            p => View = View with { Inventory = InventoryMapper.Map(p) });
+
+        return moved;
+    }
+
+    /// <summary>Copies every field but <c>m_stack</c>/<c>m_gridPos</c> from
+    /// <paramref name="source"/> — the split-to-empty-slot half of
+    /// <see cref="MoveItemAt"/>, matching the real game's own clone-on-place
+    /// semantics (quality, durability, variant, crafter id/name, custom
+    /// data, world level, picked-up, cheated, and equipped all carry over
+    /// untouched).</summary>
+    private static Inventory.ItemData CloneWithStack(Inventory.ItemData source, int stack, int x, int y) => new()
+    {
+        PrefabName = source.PrefabName,
+        PrefabHash = source.PrefabHash,
+        m_stack = stack,
+        m_durability = source.m_durability,
+        m_gridPos = new Vector2i(x, y),
+        m_equipped = source.m_equipped,
+        m_quality = source.m_quality,
+        m_variant = source.m_variant,
+        m_crafterID = source.m_crafterID,
+        m_crafterName = source.m_crafterName,
+        m_customData = new List<KeyValuePair<string, string>>(source.m_customData),
+        m_worldLevel = source.m_worldLevel,
+        m_pickedUp = source.m_pickedUp,
+        m_cheated = source.m_cheated,
+    };
+
     // game-derived: InventoryGui.DoCrafting (Valheim 0.221.10/0.221.4,
     // confirmed identical in both trees) is the game's only call
     // site that stamps a real identity onto m_crafterID/m_crafterName — it

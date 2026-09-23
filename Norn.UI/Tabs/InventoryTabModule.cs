@@ -14,16 +14,21 @@ namespace Norn.UI;
 /// as a functionality/visuals target, not a build template — see that
 /// document for where Norn's mechanism deliberately diverges and why.
 /// <para>
-/// Action model, revised again after the tile-interaction pass:
-/// right-click opens a context menu (Repair /
-/// Quality Up / Quality Down / Fill Stack / Edit Amount / Delete);
-/// left-click on a tile
-/// fires whichever single quick action the item actually supports (repair or
-/// fill-stack — never both), cued by the tile's own cursor changing to a hand
-/// when one applies; Ctrl+left-click deletes outright, mirroring the game's
-/// own drop gesture rather than being a Norn invention. No hover highlighting
-/// and no per-tile keyboard shortcuts — both were found to rest on
-/// an implicit "what's the target" signal that didn't hold up.
+/// Action model, revised again once real click-to-carry drag-and-drop
+/// landed (2026-09-22 — see <see cref="InventoryCarry"/>, which owns all of
+/// this interaction's state and rendering): right-click opens a context menu
+/// (Repair / Quality Up / Quality Down / Fill Stack / Edit Amount / Delete)
+/// — or, while something's being carried, cancels the carry instead;
+/// Ctrl+left-click deletes outright, mirroring the game's own drop gesture;
+/// Alt+left-click fires whichever single quick action the item supports
+/// (repair or fill-stack — never both, cued by the cursor changing to a hand)
+/// — moved off plain left-click to make room for it as the pickup/place
+/// gesture below; Shift+left-click (nothing held, a stack of more than one)
+/// opens a split popup. Plain left-click is Valheim's own click-to-carry
+/// mechanic: pick up a tile's contents, click again to move/merge/swap it
+/// onto another — not a held mouse-drag, and not real data mutation until
+/// the placing click (matches the real game's own <c>SetupDragItem</c>,
+/// which mutates nothing on pickup either). Escape also cancels a carry.
 /// </para>
 /// <para>
 /// Exact stack entry is back, quality and durability remain
@@ -57,12 +62,8 @@ namespace Norn.UI;
 /// it is a separate, deliberately deferred pass.
 /// </para>
 /// <para>
-/// Not in this slice: browsing/adding a new item, and toggling equip state
-/// (read-only equippable classification only, no write path).
-/// Shift+left-click stack-splitting (the game's own gesture) was considered
-/// alongside Ctrl+left-click delete and deliberately deferred — it implies a
-/// drag-and-drop landing mechanism Norn has nowhere else, and a split with no
-/// sane landing rule would be a worse feature than no split at all.
+/// Not in this slice: toggling equip state (read-only equippable
+/// classification only, no write path).
 /// </para>
 /// </summary>
 public sealed class InventoryTabModule : ITabModule
@@ -88,12 +89,18 @@ public sealed class InventoryTabModule : ITabModule
         var container = new StackPanel { Orientation = Orientation.Vertical, Spacing = 8 };
         panel.Children.Add(container);
 
-        Rebuild(container, editor, onEdited, onMessage);
+        // One carry instance per Build call — must outlive a single Rebuild
+        // (an overflow merge keeps carrying the leftover across one), but a
+        // fresh character load starts clean. See InventoryCarry's own doc
+        // comment for why this interaction lives in its own file rather than
+        // growing inline here.
+        var carry = new InventoryCarry();
+        Rebuild(container, editor, onEdited, onMessage, carry);
 
-        return new ScrollViewer { Content = panel };
+        return carry.WithOverlay(new ScrollViewer { Content = panel });
     }
 
-    private static void Rebuild(StackPanel container, CharacterEditor editor, Action onEdited, Action<string> onMessage)
+    private static void Rebuild(StackPanel container, CharacterEditor editor, Action onEdited, Action<string> onMessage, InventoryCarry carry)
     {
         container.Children.Clear();
 
@@ -109,7 +116,7 @@ public sealed class InventoryTabModule : ITabModule
             editor.RepairAllItems();
             onMessage($"Repaired {repairableCount} {(repairableCount == 1 ? "item" : "items")}");
             onEdited();
-            Rebuild(container, editor, onEdited, onMessage);
+            Rebuild(container, editor, onEdited, onMessage, carry);
         };
 
         var fillableCount = items.Count(CanFillStack);
@@ -120,7 +127,7 @@ public sealed class InventoryTabModule : ITabModule
             editor.FillAllStacks();
             onMessage($"Filled {fillableCount} {(fillableCount == 1 ? "stack" : "stacks")}");
             onEdited();
-            Rebuild(container, editor, onEdited, onMessage);
+            Rebuild(container, editor, onEdited, onMessage, carry);
         };
 
         var addItem = new Button { Content = "Add items" };
@@ -135,7 +142,7 @@ public sealed class InventoryTabModule : ITabModule
             // inside AddItem itself. Unanchored also means AddItemWindow's
             // "keep window open" checkbox is offered — plural "Add items"
             // reflects that a click here can add more than one.
-            await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage));
+            await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage, carry));
         };
 
         buttonRow.Children.Add(repairAll);
@@ -152,7 +159,7 @@ public sealed class InventoryTabModule : ITabModule
                 editor.FillStacksOfType(typeSet);
                 onMessage($"Filled {quickFillCount} {(quickFillCount == 1 ? "stack" : "stacks")}");
                 onEdited();
-                Rebuild(container, editor, onEdited, onMessage);
+                Rebuild(container, editor, onEdited, onMessage, carry);
             };
             buttonRow.Children.Add(quickFill);
         }
@@ -160,7 +167,7 @@ public sealed class InventoryTabModule : ITabModule
         buttonRow.Children.Add(addItem);
         container.Children.Add(buttonRow);
 
-        container.Children.Add(BuildGrid(editor, () => Rebuild(container, editor, onEdited, onMessage), onEdited, onMessage));
+        container.Children.Add(BuildGrid(editor, () => Rebuild(container, editor, onEdited, onMessage, carry), onEdited, onMessage, carry));
     }
 
     // Logical, content-independent tile edge length. Fixed (not Min) and paired
@@ -175,7 +182,7 @@ public sealed class InventoryTabModule : ITabModule
     // per-tile content never gets a vote in how big the grid or its tiles are.
     private const double TileSize = 96;
 
-    private static Control BuildGrid(CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage)
+    private static Control BuildGrid(CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage, InventoryCarry carry)
     {
         // Last-one-wins rather than ToDictionary (found in review): two items
         // can legitimately occupy the same grid position in a real save, and
@@ -186,6 +193,12 @@ public sealed class InventoryTabModule : ITabModule
         // newly selected character while later ones still showed the previous
         // one. The tile below can only render one item per cell regardless;
         // which one it picks is arbitrary either way, and no longer fatal.
+        // Cleared and re-populated fresh every rebuild via RegisterTile
+        // below, so InventoryCarry's own tile registry (used to suppress
+        // every tile's ContextMenu for the duration of a carry) never holds
+        // a stale Border from a previous rebuild.
+        carry.ResetTiles();
+
         var byPosition = new Dictionary<(int, int), ItemDto>();
         foreach (var item in editor.View.Inventory.Items)
         {
@@ -205,7 +218,7 @@ public sealed class InventoryTabModule : ITabModule
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
                 byPosition.TryGetValue((x, y), out var item);
-                grid.Children.Add(BuildTile(x, y, item, editor, rebuild, onEdited, onMessage));
+                grid.Children.Add(BuildTile(x, y, item, editor, rebuild, onEdited, onMessage, carry));
             }
         }
 
@@ -216,7 +229,7 @@ public sealed class InventoryTabModule : ITabModule
         };
     }
 
-    private static Control BuildTile(int x, int y, ItemDto? item, CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage)
+    private static Control BuildTile(int x, int y, ItemDto? item, CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage, InventoryCarry carry)
     {
         var border = new Border
         {
@@ -260,7 +273,9 @@ public sealed class InventoryTabModule : ITabModule
             var addHere = new MenuItem { Header = "Add item" };
             addHere.Click += async (_, _) => await AddItem((x, y), editor, border, onEdited, onMessage, rebuild);
             emptyMenu.Items.Add(addHere);
-            border.ContextMenu = emptyMenu;
+            carry.RegisterTile(border, emptyMenu);
+
+            WireCarryInput(border, x, y, null, null, "", false, false, editor, rebuild, onEdited, onMessage, carry);
 
             return border;
         }
@@ -406,17 +421,75 @@ public sealed class InventoryTabModule : ITabModule
             border.Cursor = new Cursor(StandardCursorType.Hand);
         }
 
+        carry.RegisterTile(border, BuildContextMenu(border, x, y, item, displayName, shared, editor, rebuild, onEdited, onMessage));
+
+        WireCarryInput(border, x, y, item, shared, displayName, canRepair, canFillStack, editor, rebuild, onEdited, onMessage, carry);
+
+        return border;
+    }
+
+    /// <summary>
+    /// Shared left/right-click dispatch for both an occupied and an empty
+    /// tile — one place so a plain tile and the click-to-carry interaction
+    /// (<see cref="InventoryCarry"/>) don't drift apart between the two
+    /// branches <see cref="BuildTile"/> already has. Modifier priority:
+    /// Ctrl deletes (unchanged, the game's own drop gesture); Alt gates the
+    /// old plain-click quick-action (repair-or-fill — moved off plain click
+    /// to make room for pickup/place, deliberately a "hidden" gesture
+    /// already); Shift opens a split
+    /// popup when nothing's currently held; anything else routes to
+    /// <see cref="InventoryCarry.HandleClick"/>. Right-click cancels an
+    /// active carry instead of opening the tile's own <c>ContextMenu</c>
+    /// (already assigned by the caller before this runs).
+    /// </summary>
+    private static void WireCarryInput(
+        Border border, int x, int y, ItemDto? item, SharedItemDataDto? shared, string displayName,
+        bool canRepair, bool canFillStack,
+        CharacterEditor editor, Action rebuild, Action onEdited, Action<string> onMessage, InventoryCarry carry)
+    {
+        carry.ApplySourceHighlight(border, x, y);
+
+        border.PointerEntered += (_, _) => carry.SetHover(border, true);
+        border.PointerExited += (_, _) => carry.SetHover(border, false);
+
+        border.ContextRequested += (_, e) =>
+        {
+            if (carry.CancelIfCarrying())
+            {
+                e.Handled = true;
+            }
+        };
+
         border.PointerPressed += (_, e) =>
         {
-            if (!e.GetCurrentPoint(border).Properties.IsLeftButtonPressed)
+            var props = e.GetCurrentPoint(border).Properties;
+
+            // Cancels here on PointerPressed for the earliest possible
+            // response; the actual menu suppression for this same click is
+            // InventoryCarry.RegisterTile's ContextMenu.Opening subscription
+            // (see its own doc comment), not this handler marking anything
+            // as handled — PointerPressed and the PointerReleased that
+            // triggers ContextMenu-opening are separate input events, so
+            // nothing done here can pre-empt that later step by itself.
+            // The ContextRequested handler below stays too, as a second line
+            // of defense for whatever gesture (keyboard menu key, touch)
+            // doesn't route through a right mouse button press.
+            if (props.IsRightButtonPressed)
+            {
+                if (carry.CancelIfCarrying())
+                {
+                    e.Handled = true;
+                }
+
+                return;
+            }
+
+            if (!props.IsLeftButtonPressed)
             {
                 return;
             }
 
-            // Ctrl+left-click deletes outright — the game's own drop gesture,
-            // borrowed for recognition rather than invented; always available,
-            // same as the menu's Delete, no CanX gate.
-            if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+            if (item is not null && e.KeyModifiers.HasFlag(KeyModifiers.Control))
             {
                 editor.RemoveItemAt(x, y);
                 onMessage($"Deleted {displayName}");
@@ -425,28 +498,37 @@ public sealed class InventoryTabModule : ITabModule
                 return;
             }
 
-            if (canRepair)
+            if (item is not null && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
             {
-                editor.RepairItemAt(x, y);
-                onMessage($"Repaired {displayName}");
-            }
-            else if (canFillStack)
-            {
-                editor.FillItemStack(x, y);
-                onMessage($"Filled {displayName} to {shared!.MaxStack}");
-            }
-            else
-            {
+                if (canRepair)
+                {
+                    editor.RepairItemAt(x, y);
+                    onMessage($"Repaired {displayName}");
+                }
+                else if (canFillStack)
+                {
+                    editor.FillItemStack(x, y);
+                    onMessage($"Filled {displayName} to {shared!.MaxStack}");
+                }
+                else
+                {
+                    return;
+                }
+
+                onEdited();
+                rebuild();
                 return;
             }
 
-            onEdited();
-            rebuild();
+            if (item is not null && shared is { MaxStack: > 1 } && item.Stack > 1
+                && e.KeyModifiers.HasFlag(KeyModifiers.Shift) && !carry.IsCarrying)
+            {
+                carry.BeginSplit(border, x, y, item, shared, displayName);
+                return;
+            }
+
+            carry.HandleClick(border, x, y, item, shared, displayName, editor, onEdited, onMessage, rebuild);
         };
-
-        border.ContextMenu = BuildContextMenu(border, x, y, item, displayName, shared, editor, rebuild, onEdited, onMessage);
-
-        return border;
     }
 
     private const string Ellipsis = "…";

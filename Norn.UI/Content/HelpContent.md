@@ -45,8 +45,10 @@ Not a rule, just a guideline. Use more or less as needed.
 
 ## Tab: Inventory
 
-- Right click on a slot to interact with it. Actions available depend on slot contents.
-- Left click: fill stack/repair item directly. Ctrl + Left click: delete slot contents.
+- Right click on a slot to interact with it. Actions available depend on slot contents. While carrying an item, right click (or Esc) cancels instead.
+- Left click: pick up a slot's contents, click again on another slot to move/merge/swap it there — click the original slot again to cancel.
+- Alt + Left click: fill stack/repair item directly. Ctrl + Left click: delete slot contents.
+- Shift + Left click on a stack: split off part of it before picking up.
 - Crafter tag can only be applied to items the game itself would tag with crafter name.
 - Rearm: fill ammo stacks only, restock: fill consumable stacks only.
 
