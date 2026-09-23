@@ -90,7 +90,7 @@ public sealed class Settings
     [Setting(Group = "Worlds", Description = "Show the explanation of where world names/seeds come from.")]
     public bool ShowWorldsIdentityInfo { get; set; } = true;
 
-    [Setting(Group = "Worlds", Description = "Show the warning about what \"Explore All\" does to a world's map.")]
+    [Setting(Group = "Worlds", Description = "Show the warning about what \"Reveal world\" does to a world's map.")]
     public bool ShowExploreWorldWarning { get; set; } = true;
 
     // Moved off AppState, 2026-09-02: a stuck-checked last-used value and a

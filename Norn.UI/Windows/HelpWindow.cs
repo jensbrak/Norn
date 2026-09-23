@@ -33,7 +33,7 @@ internal sealed class HelpWindow : Window
 
     private HelpWindow(string? section)
     {
-        Title = $"{AppInfo.Name} Help";
+        Title = $"{AppInfo.Name} help";
         Icon = AppIcon.Default;
         Width = 640;
         Height = 680;

@@ -139,7 +139,7 @@ internal sealed class AddItemWindow : Window
         _allowKeepOpen = allowKeepOpen;
         _onPick = onPick;
 
-        Title = "Add Item";
+        Title = "Add item";
         Icon = AppIcon.Default;
         Width = 420;
         Height = 520;

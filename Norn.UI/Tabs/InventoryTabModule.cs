@@ -76,11 +76,12 @@ public sealed class InventoryTabModule : ITabModule
     /// small data table rather than two bespoke button blocks so a future
     /// "N configurable quick-fill buttons" extension (Settings-driven
     /// label/category mapping) is a data change here, not a redesign.
+    /// <c>Scope</c> is the plural noun the button's tooltip names.
     /// </summary>
-    private static readonly (string Label, ItemType[] Types)[] QuickFillPresets =
+    private static readonly (string Label, string Scope, ItemType[] Types)[] QuickFillPresets =
     [
-        ("Rearm", [ItemType.Ammo, ItemType.AmmoNonEquipable]),
-        ("Restock", [ItemType.Consumable]),
+        ("Rearm", "ammo", [ItemType.Ammo, ItemType.AmmoNonEquipable]),
+        ("Restock", "consumables", [ItemType.Consumable]),
     ];
 
     public Control Build(CharacterEditor editor, Action onEdited, Action<string> onMessage)
@@ -106,11 +107,12 @@ public sealed class InventoryTabModule : ITabModule
 
         var items = editor.View.Inventory.Items;
 
-        var buttonRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        var buttonRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
 
         var repairableCount = items.Count(CanRepair);
-        var repairAll = new Button { Content = "Repair All" };
+        var repairAll = new Button { Content = "Repair all items" };
         repairAll.IsEnabled = repairableCount > 0;
+        SetActionTip(repairAll, "Repairs every damaged item to full durability.", "No damaged items.");
         repairAll.Click += (_, _) =>
         {
             editor.RepairAllItems();
@@ -120,8 +122,9 @@ public sealed class InventoryTabModule : ITabModule
         };
 
         var fillableCount = items.Count(CanFillStack);
-        var fillAll = new Button { Content = "Fill All Stacks" };
+        var fillAll = new Button { Content = "Fill all stacks" };
         fillAll.IsEnabled = fillableCount > 0;
+        SetActionTip(fillAll, "Tops up every stack that isn't full to its maximum size.", "No stacks to fill.");
         fillAll.Click += (_, _) =>
         {
             editor.FillAllStacks();
@@ -130,9 +133,12 @@ public sealed class InventoryTabModule : ITabModule
             Rebuild(container, editor, onEdited, onMessage, carry);
         };
 
-        var addItem = new Button { Content = "Add items" };
+        // Ellipsis: the click opens a picker that needs input before anything
+        // is added.
+        var addItem = new Button { Content = "Add items…" };
         var emptySlot = FindFirstEmptySlot(items);
         addItem.IsEnabled = emptySlot is not null || items.Any(CanFillStack);
+        SetActionTip(addItem, "Opens the item picker to add items to the inventory.", "Inventory is full.");
         addItem.Click += async (_, _) =>
         {
             // No anchor — the toolbar button never targets one specific
@@ -145,15 +151,25 @@ public sealed class InventoryTabModule : ITabModule
             await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage, carry));
         };
 
-        buttonRow.Children.Add(repairAll);
-        buttonRow.Children.Add(fillAll);
+        // Grouped by scope, general to specific, with a thin divider between
+        // groups: Add items (the one action that brings in new content), the
+        // whole-inventory actions, then the category presets — their own
+        // group because they're the part slated to become user-configurable,
+        // and last so new presets extend the row at its natural end.
+        var presetGroup = ButtonGroup();
+        buttonRow.Children.Add(ButtonGroup(addItem));
+        buttonRow.Children.Add(GroupDivider());
+        buttonRow.Children.Add(ButtonGroup(repairAll, fillAll));
+        buttonRow.Children.Add(GroupDivider());
+        buttonRow.Children.Add(presetGroup);
 
-        foreach (var (label, types) in QuickFillPresets)
+        foreach (var (label, scope, types) in QuickFillPresets)
         {
             var typeSet = new HashSet<ItemType>(types);
             var quickFillCount = items.Count(i => CanFillStackOfType(i, typeSet));
             var quickFill = new Button { Content = label };
             quickFill.IsEnabled = quickFillCount > 0;
+            SetActionTip(quickFill, $"Tops up {scope} stacks only.", $"No {scope} stacks to fill.");
             quickFill.Click += (_, _) =>
             {
                 editor.FillStacksOfType(typeSet);
@@ -161,14 +177,42 @@ public sealed class InventoryTabModule : ITabModule
                 onEdited();
                 Rebuild(container, editor, onEdited, onMessage, carry);
             };
-            buttonRow.Children.Add(quickFill);
+            presetGroup.Children.Add(quickFill);
         }
 
-        buttonRow.Children.Add(addItem);
         container.Children.Add(buttonRow);
 
         container.Children.Add(BuildGrid(editor, () => Rebuild(container, editor, onEdited, onMessage, carry), onEdited, onMessage, carry));
     }
+
+    private static StackPanel ButtonGroup(params Button[] buttons)
+    {
+        var group = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        foreach (var button in buttons)
+        {
+            group.Children.Add(button);
+        }
+
+        return group;
+    }
+
+    /// <summary>
+    /// Sets a toolbar button's tooltip, shown even while disabled so a greyed
+    /// button explains why. Call after setting <c>IsEnabled</c>.
+    /// </summary>
+    private static void SetActionTip(Button button, string action, string disabledReason)
+    {
+        ToolTip.SetTip(button, button.IsEnabled ? action : $"{action}\n{disabledReason}");
+        ToolTip.SetShowOnDisabled(button, true);
+    }
+
+    private static Border GroupDivider() => new()
+    {
+        Width = 1,
+        Background = Brushes.Gray,
+        Opacity = 0.5,
+        Margin = new Thickness(0, 4),
+    };
 
     // Logical, content-independent tile edge length. Fixed (not Min) and paired
     // with the Viewbox below: a tile's actual desired size used to be driven by
