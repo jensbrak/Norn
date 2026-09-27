@@ -53,8 +53,52 @@ public class PlayerRoundTripTests
         var rewritten = new ZPackage();
         player.Save(rewritten);
 
-        var diff = ByteDiff.Describe(original, rewritten.GetArray());
+        var diff = ByteDiff.Describe(WithGameDurabilityDrift(original), rewritten.GetArray());
         Assert.True(diff is null, $"R1 failed for {fileName}.\n{diff}");
+    }
+
+    /// <summary>
+    /// The bytes the game itself would write back for <paramref name="original"/>:
+    /// identical, except each compact item's stored durability n becomes
+    /// <c>(int)(n * 0.01f * 100f)</c>. That one step is the format's own
+    /// lossy quantisation (see FORMAT.md) — a game-written save can hold a
+    /// value that doesn't survive it, because the game writes durability
+    /// straight from play, not from a prior load. Everything else must still
+    /// match byte for byte, and the drift itself is checked exactly, not
+    /// skipped. Only called at the current player-data version, whose prefix
+    /// before the inventory is fixed; the items are walked with GameCore's
+    /// own <see cref="Inventory.ItemData.Load"/>.
+    /// </summary>
+    private static byte[] WithGameDurabilityDrift(byte[] original)
+    {
+        var expected = (byte[])original.Clone();
+        var pkg = new ZPackage(original);
+
+        pkg.ReadInt();    // player-data version
+        pkg.ReadSingle(); // max health
+        pkg.ReadSingle(); // health
+        pkg.ReadSingle(); // max stamina
+        pkg.ReadSingle(); // time since death
+        pkg.ReadString(); // guardian power
+        pkg.ReadSingle(); // guardian power cooldown
+
+        var itemVersion = (GameVersion.Item)pkg.ReadInt();
+        if (itemVersion < GameVersion.Item.Smaller)
+        {
+            return expected; // the legacy record stores a full float — no quantisation
+        }
+
+        int count = pkg.ReadUShort();
+        for (var i = 0; i < count; i++)
+        {
+            // Durability is the compact record's first field, a fixed-width Int32.
+            var offset = pkg.GetPos();
+            var stored = BitConverter.ToInt32(original, offset);
+            BitConverter.GetBytes((int)(stored * 0.01f * 100f)).CopyTo(expected, offset);
+            Inventory.ItemData.Load(pkg, new Inventory.ItemData(), itemVersion);
+        }
+
+        return expected;
     }
 
     [Theory]

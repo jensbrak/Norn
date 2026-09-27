@@ -313,7 +313,7 @@ public class CharacterEditorCatalogTests
 
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
         (int X, int Y)? emptySlot = null;
-        for (var y = 0; y < InventoryLayout.Height && emptySlot is null; y++)
+        for (var y = 0; y < editor.View.Inventory.Height && emptySlot is null; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
@@ -387,7 +387,7 @@ public class CharacterEditorCatalogTests
 
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
         (int X, int Y)? emptySlot = null;
-        for (var y = 0; y < InventoryLayout.Height && emptySlot is null; y++)
+        for (var y = 0; y < editor.View.Inventory.Height && emptySlot is null; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
@@ -570,7 +570,7 @@ public class CharacterEditorCatalogTests
         Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
 
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
-        var hasEmptySlot = Enumerable.Range(0, InventoryLayout.Height)
+        var hasEmptySlot = Enumerable.Range(0, editor.View.Inventory.Height)
             .SelectMany(y => Enumerable.Range(0, InventoryLayout.Width).Select(x => (x, y)))
             .Any(pos => !occupied.Contains(pos));
         Assert.SkipWhen(!hasEmptySlot, $"{fileName}'s inventory is already full.");
@@ -622,7 +622,7 @@ public class CharacterEditorCatalogTests
         Assert.SkipWhen(target is null, $"{fileName} has no below-max stackable item resolvable against the catalog.");
 
         var occupiedCount = editor.View.Inventory.Items.Count;
-        Assert.SkipWhen(occupiedCount >= InventoryLayout.Width * InventoryLayout.Height,
+        Assert.SkipWhen(occupiedCount >= InventoryLayout.Width * editor.View.Inventory.Height,
             $"{fileName}'s inventory has no room for a new stack.");
 
         var shared = SharedItemDataCatalog.TryFind(target!.PrefabName)!;
@@ -678,7 +678,7 @@ public class CharacterEditorCatalogTests
 
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
         (int X, int Y)? anchor = null;
-        for (var y = 0; y < InventoryLayout.Height && anchor is null; y++)
+        for (var y = 0; y < editor.View.Inventory.Height && anchor is null; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
@@ -746,7 +746,7 @@ public class CharacterEditorCatalogTests
         editor.FillAllStacks();
 
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
-        for (var y = 0; y < InventoryLayout.Height; y++)
+        for (var y = 0; y < editor.View.Inventory.Height; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {

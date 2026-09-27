@@ -37,9 +37,10 @@ public sealed class MainWindow : Window
         Icon = AppIcon.Default;
         // Widened/heightened from 1120x640: descriptions (TabRows.RowGroup's
         // fourth column) get more room before wrapping, and General - the
-        // default first tab - fits without scrolling at this height.
+        // default first tab - fits without scrolling at this height, as does
+        // an Inventory grid with one extra row (8 x 5).
         Width = 1366;
-        Height = 820;
+        Height = 854;
 
         _cliMode = initialFilePath is not null;
         List<string> rawFiles = initialFilePath is not null

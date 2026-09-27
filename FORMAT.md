@@ -491,6 +491,13 @@ on write:**
   behaviour — Valheim's own save/load cycle drifts a partially-worn item's
   durability downward by hundredths across repeated saves, settling after
   two or three cycles. Not a bug to work around; see section 8.
+  **Consequence for byte identity:** a save the game wrote mid-play can hold
+  a durability that isn't yet settled, so re-writing it — by the game or
+  by a faithful writer — changes those four bytes. Byte identity for the
+  player-data blob is therefore claimed *modulo this one step*: the
+  expected bytes are the original with each compact record's durability n
+  replaced by `(int)(n * 0.01f * 100f)`, and everything else must match
+  exactly.
 - Grid position, world level: truncated to `byte` on write.
 - Quality, stack: truncated to `ushort` on write.
 - Item count itself: truncated to `ushort` on write.

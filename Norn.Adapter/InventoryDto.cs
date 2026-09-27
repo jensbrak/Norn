@@ -18,5 +18,7 @@ public sealed record ItemDto(
     bool PickedUp,
     bool Cheated);
 
-/// <summary>Read-only view for the Inventory tab.</summary>
-public sealed record InventoryDto(IReadOnlyList<ItemDto> Items);
+/// <summary>Read-only view for the Inventory tab. <see cref="Height"/> is the
+/// player's row count, <see cref="InventoryLayout.DefaultHeight"/> unless Haldor's
+/// extra-row upgrades have raised it.</summary>
+public sealed record InventoryDto(IReadOnlyList<ItemDto> Items, int Height);

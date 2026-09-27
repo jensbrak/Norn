@@ -30,6 +30,6 @@ public static class InventoryMapper
                 item.m_cheated))
             .ToList();
 
-        return new InventoryDto(items);
+        return new InventoryDto(items, InventoryLayout.HeightOf(player));
     }
 }

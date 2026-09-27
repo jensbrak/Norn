@@ -9,7 +9,7 @@ namespace Norn.Adapter;
 public static class CharacterLoader
 {
     private static readonly SkillsDto EmptySkills = new([]);
-    private static readonly InventoryDto EmptyInventory = new([]);
+    private static readonly InventoryDto EmptyInventory = new([], InventoryLayout.DefaultHeight);
     private static readonly VitalsDto EmptyVitals = new(0, 0, 0, 0, 0, 0, 0, string.Empty, 0, []);
     private static readonly UnlockablesDto EmptyUnlockables = new([], [], [], [], [], [], [], []);
 

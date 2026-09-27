@@ -56,7 +56,7 @@ public class CharacterEditorDragDropTests
     private static List<(int X, int Y)> EmptySlots(CharacterEditor editor)
     {
         var occupied = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
-        return Enumerable.Range(0, InventoryLayout.Height)
+        return Enumerable.Range(0, editor.View.Inventory.Height)
             .SelectMany(y => Enumerable.Range(0, InventoryLayout.Width).Select(x => (x, y)))
             .Where(pos => !occupied.Contains(pos))
             .ToList();

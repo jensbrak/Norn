@@ -635,7 +635,7 @@ public sealed class CharacterEditor
         MutateInnerBlob(
             p =>
             {
-                if (toX < 0 || toX >= InventoryLayout.Width || toY < 0 || toY >= InventoryLayout.Height)
+                if (toX < 0 || toX >= InventoryLayout.Width || toY < 0 || toY >= InventoryLayout.HeightOf(p))
                 {
                     return false;
                 }
@@ -877,7 +877,7 @@ public sealed class CharacterEditor
             // with FindItem's scan below, so it would otherwise insert
             // silently off-grid and round-trip with no range filter, a shape
             // the real game's own inventory-grid logic never produces.
-            if (x < 0 || x >= InventoryLayout.Width || y < 0 || y >= InventoryLayout.Height)
+            if (x < 0 || x >= InventoryLayout.Width || y < 0 || y >= InventoryLayout.HeightOf(p))
             {
                 return false;
             }
@@ -996,7 +996,7 @@ public sealed class CharacterEditor
 
             if (anchor is { X: var anchorX, Y: var anchorY })
             {
-                if (anchorX < 0 || anchorX >= InventoryLayout.Width || anchorY < 0 || anchorY >= InventoryLayout.Height)
+                if (anchorX < 0 || anchorX >= InventoryLayout.Width || anchorY < 0 || anchorY >= InventoryLayout.HeightOf(p))
                 {
                     return false;
                 }
@@ -1039,8 +1039,9 @@ public sealed class CharacterEditor
             if (remaining > 0)
             {
                 var occupied = p.m_inventory.m_inventory.Select(i => (i.m_gridPos.x, i.m_gridPos.y)).ToHashSet();
+                var height = InventoryLayout.HeightOf(p);
 
-                for (var y = 0; y < InventoryLayout.Height && remaining > 0; y++)
+                for (var y = 0; y < height && remaining > 0; y++)
                 {
                     for (var x = 0; x < InventoryLayout.Width && remaining > 0; x++)
                     {

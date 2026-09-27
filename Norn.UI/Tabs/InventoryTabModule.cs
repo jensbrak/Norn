@@ -10,9 +10,12 @@ using Norn.Adapter;
 namespace Norn.UI;
 
 /// <summary>
-/// The 8×4 inventory grid. Loki's own grid was consulted directly
-/// as a functionality/visuals target, not a build template — see that
-/// document for where Norn's mechanism deliberately diverges and why.
+/// The inventory grid: 8 columns, and exactly as many rows as the character
+/// has (<see cref="InventoryDto.Height"/>) — rows not yet bought from Haldor
+/// are never drawn, so the upgrade isn't spoiled. Loki's own grid was
+/// consulted directly as a functionality/visuals target, not a build
+/// template — see that document for where Norn's mechanism deliberately
+/// diverges and why.
 /// <para>
 /// Action model, revised again once real click-to-carry drag-and-drop
 /// landed (2026-09-22 — see <see cref="InventoryCarry"/>, which owns all of
@@ -136,7 +139,7 @@ public sealed class InventoryTabModule : ITabModule
         // Ellipsis: the click opens a picker that needs input before anything
         // is added.
         var addItem = new Button { Content = "Add items…" };
-        var emptySlot = FindFirstEmptySlot(items);
+        var emptySlot = FindFirstEmptySlot(editor.View.Inventory);
         addItem.IsEnabled = emptySlot is not null || items.Any(CanFillStack);
         SetActionTip(addItem, "Opens the item picker to add items to the inventory.", "Inventory is full.");
         addItem.Click += async (_, _) =>
@@ -249,15 +252,18 @@ public sealed class InventoryTabModule : ITabModule
             byPosition[(item.GridX, item.GridY)] = item;
         }
 
+        // At least one row, so a console-cheated "invrows 0" can't produce a
+        // zero aspect ratio; the editor's own bounds checks still refuse it.
+        var height = Math.Max(1, editor.View.Inventory.Height);
         var grid = new UniformGrid
         {
             Columns = InventoryLayout.Width,
-            Rows = InventoryLayout.Height,
+            Rows = height,
             Width = InventoryLayout.Width * TileSize,
-            Height = InventoryLayout.Height * TileSize,
+            Height = height * TileSize,
         };
 
-        for (var y = 0; y < InventoryLayout.Height; y++)
+        for (var y = 0; y < height; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
@@ -268,7 +274,7 @@ public sealed class InventoryTabModule : ITabModule
 
         return new AspectRatioBox
         {
-            AspectRatio = (double)InventoryLayout.Width / InventoryLayout.Height,
+            AspectRatio = (double)InventoryLayout.Width / height,
             Child = new Viewbox { Child = grid },
         };
     }
@@ -915,11 +921,11 @@ public sealed class InventoryTabModule : ITabModule
     /// iteration order) for the first unoccupied slot, or <c>null</c> if the
     /// grid is full. Drives the toolbar "Add Item" button's target slot and
     /// its own enabled state.</summary>
-    private static (int X, int Y)? FindFirstEmptySlot(IReadOnlyList<ItemDto> items)
+    private static (int X, int Y)? FindFirstEmptySlot(InventoryDto inventory)
     {
-        var occupied = items.Select(i => (i.GridX, i.GridY)).ToHashSet();
+        var occupied = inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
 
-        for (var y = 0; y < InventoryLayout.Height; y++)
+        for (var y = 0; y < inventory.Height; y++)
         {
             for (var x = 0; x < InventoryLayout.Width; x++)
             {
@@ -972,8 +978,7 @@ public sealed class InventoryTabModule : ITabModule
 
             // Same "is there room for anything" formula the toolbar button's
             // own IsEnabled already uses — no new capacity concept.
-            var items = editor.View.Inventory.Items;
-            return FindFirstEmptySlot(items) is not null || items.Any(CanFillStack);
+            return FindFirstEmptySlot(editor.View.Inventory) is not null || editor.View.Inventory.Items.Any(CanFillStack);
         });
     }
 
@@ -995,7 +1000,7 @@ public sealed class InventoryTabModule : ITabModule
             // empty slot: the anchor tile when the caller targeted one, or a
             // freshly found one otherwise (re-scanned here, not any earlier
             // pick's snapshot, so a keep-open session re-targets correctly).
-            var target = anchor ?? FindFirstEmptySlot(editor.View.Inventory.Items);
+            var target = anchor ?? FindFirstEmptySlot(editor.View.Inventory);
             if (target is not { X: var x, Y: var y })
             {
                 onMessage($"No room for {displayName}");
