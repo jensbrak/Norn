@@ -7,6 +7,12 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.2.1
+
+Bugfix: did not display rows of inventories with more than 4 rows.
+(Did, however, load and save characters with > 4 rows properly).
+Now characters with inventory having > 4 rows are displayed properly.
+
 ## 1.2.0
 
 Inventory tab improvements and tweaks:
