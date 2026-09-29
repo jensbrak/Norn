@@ -60,6 +60,30 @@ internal static class TestPaths
         }
     }
 
+    /// <summary>The bundled recipe data — same treatment as
+    /// <see cref="SharedItemDataCsvPath"/>.</summary>
+    internal static string? RecipeDataJsonPath
+    {
+        get
+        {
+            if (RepositoryRoot is null) return null;
+            var path = Path.Combine(RepositoryRoot, "Norn.UI", "Content", "RecipeData.json");
+            return File.Exists(path) ? path : null;
+        }
+    }
+
+    /// <summary>The bundled build-piece data — same treatment as
+    /// <see cref="SharedItemDataCsvPath"/>.</summary>
+    internal static string? PieceDataJsonPath
+    {
+        get
+        {
+            if (RepositoryRoot is null) return null;
+            var path = Path.Combine(RepositoryRoot, "Norn.UI", "Content", "PieceData.json");
+            return File.Exists(path) ? path : null;
+        }
+    }
+
     /// <summary>
     /// The localization-string export — an ordinary tracked resource
     /// under <c>Norn.UI/Content/</c>, same treatment as <see cref="SharedItemDataCsvPath"/>.

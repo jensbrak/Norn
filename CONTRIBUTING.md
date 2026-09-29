@@ -141,10 +141,11 @@ under an hour, verified mechanically.
    with `// game-derived:` comments naming their source and the version they
    were confirmed against. Grep for that tag and re-verify each one; a patch can
    invalidate these without changing a single byte of the save format.
-7. **Regenerate the item catalog if Valheim's item roster changed.**
-   `Norn.UI/Content/SharedItemData.csv`/`LocalizationData.csv` are extracted,
-   not hand-maintained — a new patch's new or renamed items won't show up
-   correctly until these are refreshed. `Tools/Vade` does the extraction; see
+7. **Regenerate the game data if Valheim's content changed.**
+   `Norn.UI/Content/SharedItemData.csv`, `LocalizationData.csv`,
+   `RecipeData.json` and `PieceData.json` are extracted, not hand-maintained
+   — a new patch's new or renamed items, recipes or build pieces won't show
+   up correctly until these are refreshed. `Tools/Vade` writes all four; see
    [its README](Tools/README.md) for the ripping checklist and usage.
 8. **Run the full suite against as many save versions as you have.** New gates
    for versions absent from your corpus are untestable, so review them

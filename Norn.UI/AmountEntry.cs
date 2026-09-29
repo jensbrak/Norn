@@ -1,3 +1,6 @@
+using System.Globalization;
+using Avalonia.Controls;
+
 namespace Norn.UI;
 
 // game-derived: the amount-entry NumericUpDown's own Maximum is deliberately
@@ -15,4 +18,13 @@ namespace Norn.UI;
 public static class AmountEntry
 {
     public const decimal Ceiling = 999;
+
+    /// <summary>Makes <paramref name="field"/> whole-numbers-only: no decimal
+    /// input, and no ".0" shown after a spin.</summary>
+    public static NumericUpDown Integer(NumericUpDown field)
+    {
+        field.FormatString = "0";
+        field.ParsingNumberStyle = NumberStyles.Integer;
+        return field;
+    }
 }

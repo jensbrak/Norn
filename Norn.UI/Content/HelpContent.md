@@ -51,6 +51,7 @@ Not a rule, just a guideline. Use more or less as needed.
 - Shift + Left click on a stack: split off part of it before picking up.
 - Crafter tag can only be applied to items the game itself would tag with crafter name.
 - Rearm: fill ammo stacks only, restock: fill consumable stacks only.
+- Add materials: pick a recipe or a build piece to add everything it needs. For a recipe, Level picks the quality the materials are for — everything from crafting up to that level, or just the last upgrade step with "Upgrade only". Times multiplies it all. Seasonal recipes and pieces are included, marked with their season. Materials are only added if all of them fit.
 
 ## Tab: Skills
 

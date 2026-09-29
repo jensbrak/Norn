@@ -56,7 +56,7 @@
     <AvaloniaResource Include="Assets\norn-logo-perspective.png" />
   </ItemGroup>
 
-  <!-- Content/ groups the four files below: bundled, read-only-at-the-app-
+  <!-- Content/ groups the files below: bundled, read-only-at-the-app-
        level resources shipped next to the executable, as opposed to
        Norn.UI root's own runtime-generated data (AppState, Settings,
        SessionCache). All four share the same mechanism regardless of
@@ -76,6 +76,9 @@
          tracked-resource treatment as SharedItemData.csv above, resolved by
          LocalizationCatalogShim. -->
     <None Include="Content\LocalizationData.csv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Vade's recipe and piece exports, resolved by RecipeCatalogShim/PieceCatalogShim. -->
+    <None Include="Content\RecipeData.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Content\PieceData.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- The in app Help window's content, resolved by HelpShim. Same
          bundled resource treatment as the two entries above; no per user
          override path exists for this one, since there is nothing for a

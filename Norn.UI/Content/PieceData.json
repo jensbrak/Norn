@@ -1,0 +1,7620 @@
+{
+  "pieces": [
+    {
+      "name": "ArmorStand",
+      "nameToken": "$piece_armorstand",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 8
+        },
+        {
+          "item": "IronNails",
+          "amount": 4
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "BatteringRam",
+      "nameToken": "$tool_batteringram",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 20
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 10
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Beech_Sapling",
+      "nameToken": "$prop_beech_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "BeechSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Birch_Sapling",
+      "nameToken": "$prop_birch_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "BirchSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Candle_resin",
+      "nameToken": "$piece_candle",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Resin",
+          "amount": 1
+        },
+        {
+          "item": "CandleWick",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "nameToken": "$tool_cart",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 20
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "Catapult",
+      "nameToken": "$tool_catapult",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 20
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 10
+        },
+        {
+          "item": "CharredCogwheel",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "FirTree_Sapling",
+      "nameToken": "$prop_fir_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "FirCone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "FirTree_big_Sapling",
+      "nameToken": "$prop_fir_big_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "FirConeFrost",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Karve",
+      "nameToken": "$ship_karve",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 30
+        },
+        {
+          "item": "DeerHide",
+          "amount": 10
+        },
+        {
+          "item": "Resin",
+          "amount": 20
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 80
+        }
+      ]
+    },
+    {
+      "name": "Oak_Sapling",
+      "nameToken": "$prop_oak_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Acorn",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Piece_flametal_beam",
+      "nameToken": "$piece_flametal_beam",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_flametal_pillar",
+      "nameToken": "$piece_flametal_pillar",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_floor_1x1",
+      "nameToken": "$piece_grausten_floor1x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_floor_2x2",
+      "nameToken": "$piece_grausten_floor2x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_floor_4x4",
+      "nameToken": "$piece_grausten_floor4x4",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillar_arch",
+      "nameToken": "$piece_grausten_archmedium",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillar_arch_small",
+      "nameToken": "$piece_grausten_archsmall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbase_medium",
+      "nameToken": "$piece_grausten_pillarmedium",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbase_small",
+      "nameToken": "$piece_grausten_pillarsmall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbase_tapered",
+      "nameToken": "$piece_grausten_pillartapered",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbase_tapered_inverted",
+      "nameToken": "$piece_grausten_pillartaperedinverted",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbeam_medium",
+      "nameToken": "$piece_grausten_beammedium",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_pillarbeam_small",
+      "nameToken": "$piece_grausten_beamsmall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_stone_ladder",
+      "nameToken": "$piece_grausten_stoneladder",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_wall_1x2",
+      "nameToken": "$piece_grausten_wall1x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_wall_2x2",
+      "nameToken": "$piece_grausten_wall2x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_wall_4x2",
+      "nameToken": "$piece_grausten_wall4x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 12
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_wall_arch",
+      "nameToken": "$piece_grausten_wallarch",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_wall_arch_inverted",
+      "nameToken": "$piece_grausten_wallarchinv",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_window_2x2",
+      "nameToken": "$piece_grausten_window2x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "Piece_grausten_window_4x2",
+      "nameToken": "$piece_grausten_window4x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "PineTree_Sapling",
+      "nameToken": "$prop_pine_sapling",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "PineCone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Placeable_HardRock",
+      "nameToken": "$item_hardrock",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "StoneRock",
+          "amount": 1
+        },
+        {
+          "item": "Coal",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Placeable_Stone",
+      "nameToken": "$item_stone",
+      "tool": "Hoe",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Raft",
+      "nameToken": "$ship_raft",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 20
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "Resin",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "VikingShip",
+      "nameToken": "$ship_longship",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "IronNails",
+          "amount": 100
+        },
+        {
+          "item": "DeerHide",
+          "amount": 10
+        },
+        {
+          "item": "FineWood",
+          "amount": 40
+        },
+        {
+          "item": "ElderBark",
+          "amount": 40
+        }
+      ]
+    },
+    {
+      "name": "VikingShip_Ashlands",
+      "nameToken": "$ship_longship_ashlands",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "IronNails",
+          "amount": 100
+        },
+        {
+          "item": "CeramicPlate",
+          "amount": 30
+        },
+        {
+          "item": "FineWood",
+          "amount": 50
+        },
+        {
+          "item": "YggdrasilWood",
+          "amount": 25
+        }
+      ]
+    },
+    {
+      "name": "VineAsh_sapling",
+      "nameToken": "$piece_sapling_vineash",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "VineberrySeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "VineGreen_sapling",
+      "nameToken": "$piece_sapling_vinegreen",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "VineGreenSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "artisan_ext1",
+      "nameToken": "$piece_artisan_ext1",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_artisanstation",
+      "stationToken": "$piece_artisanstation",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 5
+        },
+        {
+          "item": "Bronze",
+          "amount": 5
+        },
+        {
+          "item": "QueenDrop",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_arch_big",
+      "nameToken": "$piece_ashwoodarch_big",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_beam_1m",
+      "nameToken": "$piece_ashwood_beam_1m",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_beam_2m",
+      "nameToken": "$piece_ashwood_beam_2m",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_bed",
+      "nameToken": "$piece_ashwood_bed",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 8
+        },
+        {
+          "item": "LoxPelt",
+          "amount": 2
+        },
+        {
+          "item": "AskHide",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_deco_floor",
+      "nameToken": "$piece_ashwood_floor_deco",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "ashwood_decowall_2x2",
+      "nameToken": "$piece_ashwood_decowall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "ashwood_decowall_divider",
+      "nameToken": "$piece_ashwood_decowall_divider",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_decowall_tree",
+      "nameToken": "$piece_ashwood_decowall_tree",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_door",
+      "nameToken": "$piece_ashwood_door",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 1
+        },
+        {
+          "item": "Blackwood",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "ashwood_floor_1x1",
+      "nameToken": "$piece_ashwood_floor_1x1",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_floor_2x2",
+      "nameToken": "$piece_ashwood_floor_2x2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_halfwall_1x2",
+      "nameToken": "$piece_ashwood_halfwall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_pole_1m",
+      "nameToken": "$piece_ashwood_pole_1m",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_pole_2m",
+      "nameToken": "$piece_ashwood_pole_2m",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_quarterwall_1x1",
+      "nameToken": "$piece_ashwood_quarterwall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "ashwood_stair",
+      "nameToken": "$piece_ashwoodstair",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_2x2",
+      "nameToken": "$piece_ashwood_wall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_arch",
+      "nameToken": "$piece_ashwood_archedwall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_beam_26",
+      "nameToken": "$piece_ashwoodbeam26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_beam_45",
+      "nameToken": "$piece_ashwoodbeam45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_beam_67",
+      "nameToken": "$piece_ashwoodbeam67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_cross_26",
+      "nameToken": "$piece_ashwoodcross26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_cross_45",
+      "nameToken": "$piece_ashwoodcross45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_cross_67",
+      "nameToken": "$piece_ashwoodwallrooftop67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_26",
+      "nameToken": "$piece_ashwoodwallroof_26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_26_upsidedown",
+      "nameToken": "$piece_ashwoodwallroof_26_upsidedown",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_45",
+      "nameToken": "$piece_ashwoodwallroof_45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_45_upsidedown",
+      "nameToken": "$piece_ashwoodwallroof_45_upsidedown",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_67_a",
+      "nameToken": "$piece_ashwoodwallroof67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "ashwood_wall_roof_67_upsidedown",
+      "nameToken": "$piece_ashwoodwallroof67upsidedown",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "bar_blackmetal_stack",
+      "nameToken": "$piece_blackmetalbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMetal",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_bronze_stack",
+      "nameToken": "$piece_bronzebarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Bronze",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_copper_stack",
+      "nameToken": "$piece_copperbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Copper",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_flametal_stack",
+      "nameToken": "$piece_flametalbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_gold_stack",
+      "nameToken": "$piece_bloodgoldbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Gold",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_iron_stack",
+      "nameToken": "$piece_ironbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_silver_stack",
+      "nameToken": "$piece_silverbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Silver",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bar_tin_stack",
+      "nameToken": "$piece_tinbarstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Tin",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "bed",
+      "nameToken": "$piece_bed",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "blackforge",
+      "nameToken": "$piece_blackforge",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 10
+        },
+        {
+          "item": "YggdrasilWood",
+          "amount": 10
+        },
+        {
+          "item": "BlackCore",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "blackforge_ext1",
+      "nameToken": "$piece_blackforge_ext1",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 5
+        },
+        {
+          "item": "BlackMarble",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "blackforge_ext2_vise",
+      "nameToken": "$piece_blackforge_ext2",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 8
+        },
+        {
+          "item": "MechanicalSpring",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "blackforge_ext3_metalcutter",
+      "nameToken": "$piece_blackforge_ext3",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 5
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 5
+        },
+        {
+          "item": "Blackwood",
+          "amount": 5
+        },
+        {
+          "item": "CharredBone",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "blackforge_ext4_gemcutter",
+      "nameToken": "$piece_blackforge_ext4",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 5
+        },
+        {
+          "item": "Blackwood",
+          "amount": 8
+        },
+        {
+          "item": "MorgenSinew",
+          "amount": 2
+        },
+        {
+          "item": "GemstoneRed",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "blackforge_ext5_apron",
+      "nameToken": "$piece_blackforge_ext5",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Gold",
+          "amount": 5
+        },
+        {
+          "item": "Frostwood",
+          "amount": 8
+        },
+        {
+          "item": "MooseHide",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_1x1",
+      "nameToken": "$piece_blackmarble1x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_2x1x1",
+      "nameToken": "$piece_blackmarble2x1x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_2x2x2",
+      "nameToken": "$piece_blackmarble2x2x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_arch",
+      "nameToken": "$piece_blackmarble_arch",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_base_1",
+      "nameToken": "$piece_blackmarble_base1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_basecorner",
+      "nameToken": "$piece_blackmarble_basecorner",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_column_1",
+      "nameToken": "$piece_blackmarble_column_1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_column_2",
+      "nameToken": "$piece_blackmarble_column_2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_floor",
+      "nameToken": "$piece_blackmarble_floor",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_floor_triangle",
+      "nameToken": "$piece_blackmarble_floor_triangle",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_out_1",
+      "nameToken": "$piece_blackmarble_out1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_outcorner",
+      "nameToken": "$piece_blackmarble_outcorner",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_pile",
+      "nameToken": "$piece_marblepile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_stair",
+      "nameToken": "$piece_blackmarble_stair",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "blackmarble_tip",
+      "nameToken": "$piece_blackmarble_tip",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "blackwood_stack",
+      "nameToken": "$piece_blackwoodstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "blastfurnace",
+      "nameToken": "$piece_blastfurnace",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_artisanstation",
+      "stationToken": "$piece_artisanstation",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 5
+        },
+        {
+          "item": "Iron",
+          "amount": 10
+        },
+        {
+          "item": "FineWood",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "name": "bone_stack",
+      "nameToken": "$piece_bonestack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "BoneFragments",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "bonfire",
+      "nameToken": "$piece_bonfire",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "SurtlingCore",
+          "amount": 1
+        },
+        {
+          "item": "ElderBark",
+          "amount": 5
+        },
+        {
+          "item": "FineWood",
+          "amount": 5
+        },
+        {
+          "item": "RoundLog",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext1_spice",
+      "nameToken": "$piece_cauldron_ext1_spice",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Dandelion",
+          "amount": 3
+        },
+        {
+          "item": "Carrot",
+          "amount": 2
+        },
+        {
+          "item": "Mushroom",
+          "amount": 5
+        },
+        {
+          "item": "Thistle",
+          "amount": 3
+        },
+        {
+          "item": "Turnip",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext3_butchertable",
+      "nameToken": "$piece_cauldron_ext3_butchertable",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "ElderBark",
+          "amount": 2
+        },
+        {
+          "item": "RoundLog",
+          "amount": 4
+        },
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "Silver",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext4_pots",
+      "nameToken": "$piece_cauldron_ext4_pans",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 5
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 5
+        },
+        {
+          "item": "FineWood",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext5_mortarandpestle",
+      "nameToken": "$piece_cauldron_ext5_mortarandpestle",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 8
+        },
+        {
+          "item": "FineWood",
+          "amount": 6
+        },
+        {
+          "item": "RoundLog",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext6_rollingpins",
+      "nameToken": "$piece_cauldron_ext6_rollingpins",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 8
+        },
+        {
+          "item": "FineWood",
+          "amount": 6
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "cauldron_ext7_smoker",
+      "nameToken": "$piece_cauldron_ext7_smoker",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Gold",
+          "amount": 5
+        },
+        {
+          "item": "Frostwood",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "charcoal_kiln",
+      "nameToken": "$piece_charcoalkiln",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "coal_pile",
+      "nameToken": "$piece_coalpile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Coal",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "crystal_wall_1x1",
+      "nameToken": "$piece_crystalwall1x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Crystal",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "darkwood_arch",
+      "nameToken": "$piece_darkwoodarch",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_beam",
+      "nameToken": "$piece_darkwoodbeam",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_beam4x4",
+      "nameToken": "$piece_darkwoodbeam4",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_beam_26",
+      "nameToken": "$piece_darkwoodbeam_26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_beam_45",
+      "nameToken": "$piece_darkwoodbeam_45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_beam_67",
+      "nameToken": "$piece_darkwoodbeam67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_decowall",
+      "nameToken": "$piece_darkwooddecowall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_gate",
+      "nameToken": "$piece_darkwoodgate",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 16
+        },
+        {
+          "item": "Iron",
+          "amount": 4
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "darkwood_pole",
+      "nameToken": "$piece_darkwoodpole",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_pole4",
+      "nameToken": "$piece_darkwoodpole4",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_raven",
+      "nameToken": "$piece_darkwoodraven",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof",
+      "nameToken": "$piece_darkwoodroof26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_45",
+      "nameToken": "$piece_darkwoodroof45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_67",
+      "nameToken": "$piece_darkwoodroof67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_icorner",
+      "nameToken": "$piece_darkwoodrooficorner",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_icorner_45",
+      "nameToken": "$piece_darkwoodrooficorner45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_icorner_67",
+      "nameToken": "$piece_darkwoodrooficorner67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_ocorner",
+      "nameToken": "$piece_darkwoodroofocorner",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_ocorner_45",
+      "nameToken": "$piece_darkwoodroofocorner45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_ocorner_67",
+      "nameToken": "$piece_darkwoodroofocorner67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_top",
+      "nameToken": "$piece_darkwoodrooftop",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_top_45",
+      "nameToken": "$piece_darkwoodrooftop45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_roof_top_67",
+      "nameToken": "$piece_darkwoodrooftop67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "darkwood_wolf",
+      "nameToken": "$piece_darkwoodwolf",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "eitrrefinery",
+      "nameToken": "$piece_eitrrefinery",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 20
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 5
+        },
+        {
+          "item": "YggdrasilWood",
+          "amount": 10
+        },
+        {
+          "item": "BlackCore",
+          "amount": 5
+        },
+        {
+          "item": "Sap",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "fermenter",
+      "nameToken": "$piece_fermenter",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 30
+        },
+        {
+          "item": "Bronze",
+          "amount": 5
+        },
+        {
+          "item": "Resin",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "fire_pit",
+      "nameToken": "$piece_firepit",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 5
+        },
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "fire_pit_iron",
+      "nameToken": "$piece_firepit_iron",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Ironpit",
+          "amount": 1
+        },
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "flametal_gate",
+      "nameToken": "$piece_flametalgate",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 16
+        }
+      ]
+    },
+    {
+      "name": "flint_pile",
+      "nameToken": "$piece_flintpile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Flint",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "forge",
+      "nameToken": "$piece_forge",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 4
+        },
+        {
+          "item": "Coal",
+          "amount": 4
+        },
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Copper",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "forge_ext1",
+      "nameToken": "$piece_forge_ext1",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 5
+        },
+        {
+          "item": "DeerHide",
+          "amount": 5
+        },
+        {
+          "item": "Chain",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "forge_ext2",
+      "nameToken": "$piece_forge_ext2",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 5
+        },
+        {
+          "item": "Bronze",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "forge_ext3",
+      "nameToken": "$piece_forge_ext3",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 25
+        },
+        {
+          "item": "SharpeningStone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "forge_ext4",
+      "nameToken": "$piece_forge_ext4",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 20
+        },
+        {
+          "item": "Wood",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "forge_ext5",
+      "nameToken": "$piece_forge_ext5",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 25
+        },
+        {
+          "item": "Copper",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "forge_ext6",
+      "nameToken": "$piece_forge_ext6",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 15
+        },
+        {
+          "item": "Wood",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "grausten_pile",
+      "nameToken": "$piece_graustenpile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "guard_stone",
+      "nameToken": "$piece_guardstone",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 5
+        },
+        {
+          "item": "GreydwarfEye",
+          "amount": 5
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "hearth",
+      "nameToken": "$piece_hearth",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "name": "incinerator",
+      "nameToken": "$piece_incinerator",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 8
+        },
+        {
+          "item": "Copper",
+          "amount": 4
+        },
+        {
+          "item": "Thunderstone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "iron_floor_1x1_v2",
+      "nameToken": "$piece_ironfloorSmall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "iron_floor_2x2",
+      "nameToken": "$piece_ironfloor",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "iron_grate",
+      "nameToken": "$piece_irongate",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "iron_wall_1x1",
+      "nameToken": "$piece_ironwallSmall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "iron_wall_2x2",
+      "nameToken": "$piece_ironwall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "itemstand",
+      "nameToken": "$piece_itemstand",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "itemstandh",
+      "nameToken": "$piece_itemstand",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "jute_carpet",
+      "nameToken": "$piece_jute_carpet",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "JuteRed",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "jute_carpet_blue",
+      "nameToken": "$piece_juteblue_carpet",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "JuteBlue",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "paved_road_v2",
+      "nameToken": "$piece_pavedroad",
+      "tool": "Hoe",
+      "category": 0,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_ArcheryTarget",
+      "nameToken": "$piece_archerytarget",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_CelebrationGarland",
+      "nameToken": "$piece_celebrationgarland",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Dandelion",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_EternalPyre",
+      "nameToken": "$piece_faderember",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 10
+        },
+        {
+          "item": "FaderDrop",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_FairylightGarland",
+      "nameToken": "$piece_fairylightgarland",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Thistle",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_FrostFoundry",
+      "nameToken": "$piece_frostfoundry",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 15
+        },
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "FrostCore",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_FrostKiln",
+      "nameToken": "$piece_frostkiln",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "FrostCore",
+          "amount": 10
+        },
+        {
+          "item": "Ice",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_Lavalantern",
+      "nameToken": "$piece_lavalantern",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 1
+        },
+        {
+          "item": "ProustitePowder",
+          "amount": 1
+        },
+        {
+          "item": "SulfurStone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_MeadCauldron",
+      "nameToken": "$piece_meadcauldron",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Tin",
+          "amount": 4
+        },
+        {
+          "item": "Copper",
+          "amount": 6
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_TrainingDummy",
+      "nameToken": "$piece_trainingdummy",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 5
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 10
+        },
+        {
+          "item": "Ectoplasm",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_artisanstation",
+      "nameToken": "$piece_artisanstation",
+      "tool": "Hammer",
+      "category": 1,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "DragonTear",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_asksvinskeleton",
+      "nameToken": "$piece_asksvinskeleton",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BoneFragments",
+          "amount": 50
+        },
+        {
+          "item": "AsksvinCarrionNeck",
+          "amount": 1
+        },
+        {
+          "item": "AsksvinCarrionPelvic",
+          "amount": 1
+        },
+        {
+          "item": "AsksvinCarrionRibcage",
+          "amount": 1
+        },
+        {
+          "item": "AsksvinCarrionSkull",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_banner01",
+      "nameToken": "$piece_banner01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Coal",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_banner02",
+      "nameToken": "$piece_banner02",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Blueberries",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_banner03",
+      "nameToken": "$piece_banner03",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Raspberry",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_banner04",
+      "nameToken": "$piece_banner04",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Bloodbag",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_banner05",
+      "nameToken": "$piece_banner05",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Guck",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_banner06",
+      "nameToken": "$piece_banner06",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Blueberries",
+          "amount": 2
+        },
+        {
+          "item": "Raspberry",
+          "amount": 2
+        },
+        {
+          "item": "Cloudberry",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_banner07",
+      "nameToken": "$piece_banner07",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Blueberries",
+          "amount": 2
+        },
+        {
+          "item": "Cloudberry",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_banner08",
+      "nameToken": "$piece_banner08",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Dandelion",
+          "amount": 4
+        },
+        {
+          "item": "Coal",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_banner09",
+      "nameToken": "$piece_banner09",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Blueberries",
+          "amount": 2
+        },
+        {
+          "item": "Raspberry",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_banner10",
+      "nameToken": "$piece_banner10",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Carrot",
+          "amount": 2
+        },
+        {
+          "item": "Cloudberry",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_banner11",
+      "nameToken": "$piece_banner11",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LeatherScraps",
+          "amount": 6
+        },
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "Coal",
+          "amount": 2
+        },
+        {
+          "item": "Cloudberry",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_barber",
+      "nameToken": "$piece_barber",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "BarberKit",
+          "amount": 1
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 5
+        },
+        {
+          "item": "TrollHide",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_bathtub",
+      "nameToken": "$piece_bathtub",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 20
+        },
+        {
+          "item": "Tar",
+          "amount": 6
+        },
+        {
+          "item": "Iron",
+          "amount": 10
+        },
+        {
+          "item": "Stone",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_bed02",
+      "nameToken": "$piece_bed02",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 40
+        },
+        {
+          "item": "DeerHide",
+          "amount": 7
+        },
+        {
+          "item": "WolfPelt",
+          "amount": 4
+        },
+        {
+          "item": "Feathers",
+          "amount": 10
+        },
+        {
+          "item": "IronNails",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "name": "piece_beehive",
+      "nameToken": "$piece_beehive",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "QueenBee",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_bench01",
+      "nameToken": "$piece_bench01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_bench_runed",
+      "nameToken": "$piece_bench_runed",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 6
+        },
+        {
+          "item": "MooseHide",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_birdnest",
+      "nameToken": "$piece_birdnest",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "WrithanRoots",
+          "amount": 2
+        },
+        {
+          "item": "Acorn",
+          "amount": 3
+        },
+        {
+          "item": "Thistle",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_blackmarble_bench",
+      "nameToken": "$piece_blackmarble_bench",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 6
+        },
+        {
+          "item": "Copper",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_blackmarble_table",
+      "nameToken": "$piece_blackmarble_table",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 6
+        },
+        {
+          "item": "Copper",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_blackmarble_throne",
+      "nameToken": "$piece_blackmarble_throne",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 20
+        },
+        {
+          "item": "ScaleHide",
+          "amount": 4
+        },
+        {
+          "item": "DeerHide",
+          "amount": 2
+        },
+        {
+          "item": "Copper",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_blackwood_bench01",
+      "nameToken": "$piece_blackwoodbench01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_bone_throne",
+      "nameToken": "$piece_bone_throne",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "CharredBone",
+          "amount": 15
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 4
+        },
+        {
+          "item": "Grausten",
+          "amount": 20
+        },
+        {
+          "item": "Charredskull",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_brazierceiling01",
+      "nameToken": "$piece_brazierceiling01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Bronze",
+          "amount": 5
+        },
+        {
+          "item": "Coal",
+          "amount": 2
+        },
+        {
+          "item": "Chain",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_brazierfloor01",
+      "nameToken": "$piece_brazierfloor01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Bronze",
+          "amount": 5
+        },
+        {
+          "item": "Coal",
+          "amount": 2
+        },
+        {
+          "item": "WolfClaw",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_brazierfloor02",
+      "nameToken": "$piece_brazierfloor02",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Bronze",
+          "amount": 5
+        },
+        {
+          "item": "GreydwarfEye",
+          "amount": 5
+        },
+        {
+          "item": "WolfClaw",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_cartographytable",
+      "nameToken": "$piece_cartographytable",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "BoneFragments",
+          "amount": 10
+        },
+        {
+          "item": "Bronze",
+          "amount": 2
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 5
+        },
+        {
+          "item": "Raspberry",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_cauldron",
+      "nameToken": "$piece_cauldron",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Tin",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_chair",
+      "nameToken": "$piece_stool",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_chair02",
+      "nameToken": "$piece_chair",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_chair03",
+      "nameToken": "$piece_darkwoodchair",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        },
+        {
+          "item": "IronNails",
+          "amount": 5
+        },
+        {
+          "item": "DeerHide",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_chair_runed",
+      "nameToken": "$piece_chair_runed",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 4
+        },
+        {
+          "item": "MooseSinew",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_chest",
+      "nameToken": "$piece_chest",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Iron",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_barrel",
+      "nameToken": "$piece_chestbarrel",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "BarrelRings",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_blackmetal",
+      "nameToken": "$piece_chestblackmetal",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_grausten",
+      "nameToken": "$piece_chestgrausten",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 10
+        },
+        {
+          "item": "TrophyCharredMelee",
+          "amount": 5
+        },
+        {
+          "item": "FlametalNew",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_private",
+      "nameToken": "$piece_chestprivate",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Iron",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_treasure",
+      "nameToken": "$piece_chesttreasure",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Coins",
+          "amount": 99
+        },
+        {
+          "item": "Ruby",
+          "amount": 5
+        },
+        {
+          "item": "SilverNecklace",
+          "amount": 2
+        },
+        {
+          "item": "FineWood",
+          "amount": 8
+        },
+        {
+          "item": "Silver",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_warderobe",
+      "nameToken": "$piece_chestwarderobe",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 10
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_chest_wood",
+      "nameToken": "$piece_chestwood",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_cloth_hanging_door",
+      "nameToken": "$piece_clothdoor",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "JuteRed",
+          "amount": 4
+        },
+        {
+          "item": "FineWood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_cloth_hanging_door_blue",
+      "nameToken": "$piece_hanging_cloth_blue1",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "JuteBlue",
+          "amount": 4
+        },
+        {
+          "item": "FineWood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_cloth_hanging_door_blue2",
+      "nameToken": "$piece_hanging_cloth_blue2",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "JuteBlue",
+          "amount": 4
+        },
+        {
+          "item": "FineWood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_cookingstation",
+      "nameToken": "$piece_cookingstation",
+      "tool": "Hammer",
+      "category": 1,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_cookingstation_iron",
+      "nameToken": "$piece_cookingstation_iron",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 3
+        },
+        {
+          "item": "Chain",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_drawbridge",
+      "nameToken": "$piece_drawbridge_dn",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FlametalNew",
+          "amount": 2
+        },
+        {
+          "item": "Gold",
+          "amount": 2
+        },
+        {
+          "item": "Frostwood",
+          "amount": 24
+        }
+      ]
+    },
+    {
+      "name": "piece_drawbridge_log",
+      "nameToken": "$piece_drawbridge_log",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Silver",
+          "amount": 2
+        },
+        {
+          "item": "TrophyWolf",
+          "amount": 2
+        },
+        {
+          "item": "RoundLog",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_lantern",
+      "nameToken": "$piece_dvergr_lantern",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Copper",
+          "amount": 2
+        },
+        {
+          "item": "Lantern",
+          "amount": 1
+        },
+        {
+          "item": "Chain",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_lantern_pole",
+      "nameToken": "$piece_dvergr_lantern_pole",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Copper",
+          "amount": 3
+        },
+        {
+          "item": "Lantern",
+          "amount": 1
+        },
+        {
+          "item": "Chain",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_metal_wall_2x2",
+      "nameToken": "$piece_dvergr_metal_wall",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Copper",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_sharpstakes",
+      "nameToken": "$piece_dvergr_sharpstakes",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 5
+        },
+        {
+          "item": "Iron",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_spiralstair",
+      "nameToken": "$piece_dvergr_spiralstair",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_spiralstair_right",
+      "nameToken": "$piece_dvergr_spiralstair_right",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_dvergr_stake_wall",
+      "nameToken": "$piece_dvergr_stake_wall",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 8
+        },
+        {
+          "item": "Iron",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_gift1",
+      "nameToken": "$piece_yuleklapp",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "BoneFragments",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_gift2",
+      "nameToken": "$piece_yuleklapp",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 3
+        },
+        {
+          "item": "Dandelion",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_gift3",
+      "nameToken": "$piece_yuleklapp",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 4
+        },
+        {
+          "item": "Raspberry",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45",
+      "nameToken": "$piece_grausten_roof45",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45_arch",
+      "nameToken": "$piece_grausten_roof45_arch",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45_arch_corner",
+      "nameToken": "$piece_grausten_roof45_archcorner",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45_arch_corner2",
+      "nameToken": "$piece_grausten_roof45_archcorner2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45_corner",
+      "nameToken": "$piece_grausten_roof45_corner",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_roof_45_corner2",
+      "nameToken": "$piece_grausten_roof45_corner2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_grausten_stonestair",
+      "nameToken": "$piece_grausten_stair",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Grausten",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_groundtorch",
+      "nameToken": "$piece_groundtorch",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 2
+        },
+        {
+          "item": "Resin",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_groundtorch_blue",
+      "nameToken": "$piece_groundtorchblue",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 2
+        },
+        {
+          "item": "GreydwarfEye",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_groundtorch_green",
+      "nameToken": "$piece_groundtorchgreen",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 2
+        },
+        {
+          "item": "Guck",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_groundtorch_mist",
+      "nameToken": "$piece_groundtorchdemister",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 1
+        },
+        {
+          "item": "Wisp",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_groundtorch_wood",
+      "nameToken": "$piece_groundtorchwood",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Resin",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_hexagonal_door",
+      "nameToken": "$piece_hexagonalgate",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "blackforge",
+      "stationToken": "$piece_blackforge",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 8
+        },
+        {
+          "item": "Copper",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_hoodedlantern",
+      "nameToken": "$piece_hoodedlantern",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 3
+        },
+        {
+          "item": "GlowWorm",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_icecube",
+      "nameToken": "$piece_icecube",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Ice",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_jackoturnip",
+      "nameToken": "$piece_jackoturnip",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Halloween",
+      "resources": [
+        {
+          "item": "Turnip",
+          "amount": 4
+        },
+        {
+          "item": "Resin",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_logbench01",
+      "nameToken": "$piece_benchlog",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_magetable",
+      "nameToken": "$piece_magetable",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 20
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 10
+        },
+        {
+          "item": "BlackCore",
+          "amount": 5
+        },
+        {
+          "item": "Eitr",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_magetable_ext",
+      "nameToken": "$piece_magetable_ext",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_magetable",
+      "stationToken": "$piece_magetable",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 10
+        },
+        {
+          "item": "YggdrasilWood",
+          "amount": 5
+        },
+        {
+          "item": "Eitr",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_magetable_ext2",
+      "nameToken": "$piece_magetable_ext2",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_magetable",
+      "stationToken": "$piece_magetable",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMarble",
+          "amount": 10
+        },
+        {
+          "item": "TrophySkeleton",
+          "amount": 3
+        },
+        {
+          "item": "Eitr",
+          "amount": 10
+        },
+        {
+          "item": "Resin",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "name": "piece_magetable_ext3",
+      "nameToken": "$piece_magetable_ext3",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_magetable",
+      "stationToken": "$piece_magetable",
+      "season": null,
+      "resources": [
+        {
+          "item": "CelestialFeather",
+          "amount": 8
+        },
+        {
+          "item": "TrophyAsksvin",
+          "amount": 1
+        },
+        {
+          "item": "Eitr",
+          "amount": 10
+        },
+        {
+          "item": "Blackwood",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_magetable_ext4",
+      "nameToken": "$piece_magetable_ext4",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_magetable",
+      "stationToken": "$piece_magetable",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 5
+        },
+        {
+          "item": "NornThread",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_maypole",
+      "nameToken": "$piece_maypole",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Midsummer",
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Dandelion",
+          "amount": 4
+        },
+        {
+          "item": "Thistle",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_mistletoe",
+      "nameToken": "$piece_mistletoe",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 1
+        },
+        {
+          "item": "JuteRed",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_moose_throne",
+      "nameToken": "$piece_moose_throne",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 15
+        },
+        {
+          "item": "TrophyMoose",
+          "amount": 1
+        },
+        {
+          "item": "MooseHide",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_oven",
+      "nameToken": "$piece_oven",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_artisanstation",
+      "stationToken": "$piece_artisanstation",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 15
+        },
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_pot1",
+      "nameToken": "$piece_pot_medium_green",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Pot_Shard_Green",
+          "amount": 4
+        },
+        {
+          "item": "CharcoalResin",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_pot2",
+      "nameToken": "$piece_pot_large_green",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Pot_Shard_Green",
+          "amount": 5
+        },
+        {
+          "item": "CharcoalResin",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_pot3",
+      "nameToken": "$piece_pot_small_green",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Pot_Shard_Green",
+          "amount": 3
+        },
+        {
+          "item": "CharcoalResin",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_preptable",
+      "nameToken": "$piece_preptable",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 5
+        },
+        {
+          "item": "FineWood",
+          "amount": 20
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "name": "piece_sapcollector",
+      "nameToken": "$piece_sapcollector",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 10
+        },
+        {
+          "item": "BlackMetal",
+          "amount": 5
+        },
+        {
+          "item": "DvergrNeedle",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_sharpstakes",
+      "nameToken": "$piece_sharpstakes",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 6
+        },
+        {
+          "item": "RoundLog",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_shieldgenerator",
+      "nameToken": "$piece_shieldgenerator",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 5
+        },
+        {
+          "item": "Copper",
+          "amount": 5
+        },
+        {
+          "item": "ShieldCore",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_snowlantern",
+      "nameToken": "$piece_snowlantern",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Snowball",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "piece_spinningwheel",
+      "nameToken": "$piece_spinningwheel",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_artisanstation",
+      "stationToken": "$piece_artisanstation",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 20
+        },
+        {
+          "item": "IronNails",
+          "amount": 10
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_stakewall_blackwood",
+      "nameToken": "$piece_BlackwoodStakewall",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Blackwood",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_stonecutter",
+      "nameToken": "$piece_stonecutter",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Iron",
+          "amount": 2
+        },
+        {
+          "item": "Stone",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_table",
+      "nameToken": "$piece_table",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_table_oak",
+      "nameToken": "$piece_table_oak",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 20
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        },
+        {
+          "item": "IronNails",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "name": "piece_table_round",
+      "nameToken": "$piece_table_round",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        },
+        {
+          "item": "IronNails",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "name": "piece_table_runed",
+      "nameToken": "$piece_table_runed",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 20
+        },
+        {
+          "item": "Tar",
+          "amount": 2
+        },
+        {
+          "item": "IronNails",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "name": "piece_table_runed_small",
+      "nameToken": "$piece_table_runed_small",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 6
+        },
+        {
+          "item": "Tar",
+          "amount": 1
+        },
+        {
+          "item": "IronNails",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "piece_throne01",
+      "nameToken": "$piece_throne01",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 20
+        },
+        {
+          "item": "IronNails",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_throne02",
+      "nameToken": "$piece_stonethrone",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "DeerHide",
+          "amount": 2
+        },
+        {
+          "item": "WolfPelt",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_trap_troll",
+      "nameToken": "$piece_trap",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMetal",
+          "amount": 5
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 10
+        },
+        {
+          "item": "MechanicalSpring",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_turret",
+      "nameToken": "$piece_turret",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BlackMetal",
+          "amount": 10
+        },
+        {
+          "item": "YggdrasilWood",
+          "amount": 10
+        },
+        {
+          "item": "MechanicalSpring",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_walltorch",
+      "nameToken": "$piece_sconce",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Copper",
+          "amount": 2
+        },
+        {
+          "item": "Resin",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "piece_wisplure",
+      "nameToken": "$piece_wisplure",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 10
+        },
+        {
+          "item": "YagluthDrop",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_workbench",
+      "nameToken": "$piece_workbench",
+      "tool": "Hammer",
+      "category": 1,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_workbench_ext1",
+      "nameToken": "$piece_workbench_ext1",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Flint",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "piece_workbench_ext2",
+      "nameToken": "$piece_workbench_ext2",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "Flint",
+          "amount": 15
+        },
+        {
+          "item": "LeatherScraps",
+          "amount": 20
+        },
+        {
+          "item": "DeerHide",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "piece_workbench_ext3",
+      "nameToken": "$piece_workbench_ext3",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Bronze",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "piece_workbench_ext4",
+      "nameToken": "$piece_workbench_ext4",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Iron",
+          "amount": 4
+        },
+        {
+          "item": "FineWood",
+          "amount": 10
+        },
+        {
+          "item": "Obsidian",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "piece_xmascrown",
+      "nameToken": "$piece_yulecrown",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "PineCone",
+          "amount": 4
+        },
+        {
+          "item": "JuteRed",
+          "amount": 1
+        },
+        {
+          "item": "FineWood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_xmasgarland",
+      "nameToken": "$piece_yulegarland",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 2
+        },
+        {
+          "item": "PineCone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "piece_xmastree",
+      "nameToken": "$piece_yuletree",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": "Yule",
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 10
+        },
+        {
+          "item": "FirCone",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "placeable_bigrock_01",
+      "nameToken": "$piece_rock_01",
+      "tool": "Hoe",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 25
+        }
+      ]
+    },
+    {
+      "name": "placeable_bigrock_02",
+      "nameToken": "$piece_rock_02",
+      "tool": "Hoe",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "portal_stone",
+      "nameToken": "$piece_portal_stone",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "GreydwarfEye",
+          "amount": 10
+        },
+        {
+          "item": "Grausten",
+          "amount": 30
+        },
+        {
+          "item": "MoltenCore",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "portal_wood",
+      "nameToken": "$piece_portal",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "GreydwarfEye",
+          "amount": 10
+        },
+        {
+          "item": "FineWood",
+          "amount": 20
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "raise_v2",
+      "nameToken": "$piece_raise",
+      "tool": "Hoe",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "rug_Bjorn",
+      "nameToken": "$piece_rug_bjorn",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "BjornHide",
+          "amount": 1
+        },
+        {
+          "item": "BjornPaw",
+          "amount": 2
+        },
+        {
+          "item": "TrophyBjorn",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "rug_asksvin",
+      "nameToken": "$piece_rug_asksvin",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "AskHide",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_deer",
+      "nameToken": "$piece_rug_deer",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "DeerHide",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_fur",
+      "nameToken": "$piece_rug_lox",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "LoxPelt",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_hare",
+      "nameToken": "$piece_rug_hare",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "ScaleHide",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_moose",
+      "nameToken": "$piece_rug_moose",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "MooseHide",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_seal",
+      "nameToken": "$piece_rug_seal",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "SealHide",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "rug_straw",
+      "nameToken": "$piece_rug_straw",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Barley",
+          "amount": 1
+        },
+        {
+          "item": "Flax",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "rug_wolf",
+      "nameToken": "$piece_rug_wolf",
+      "tool": "Hammer",
+      "category": 4,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "WolfPelt",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "sapling_Kale",
+      "nameToken": "$piece_sapling_kale",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "KaleSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_barley",
+      "nameToken": "$piece_sapling_barley",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Barley",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_carrot",
+      "nameToken": "$piece_sapling_carrot",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "CarrotSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_flax",
+      "nameToken": "$piece_sapling_flax",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Flax",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_jotunpuffs",
+      "nameToken": "$item_jotunpuffs",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "MushroomJotunPuffs",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_magecap",
+      "nameToken": "$item_magecap",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "MushroomMagecap",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_oat",
+      "nameToken": "$piece_sapling_oat",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "OatSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_onion",
+      "nameToken": "$piece_sapling_onion",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "OnionSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_poteitr",
+      "nameToken": "$piece_sapling_poteitr",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "PoteitrSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_seedcarrot",
+      "nameToken": "$piece_sapling_seedcarrot",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Carrot",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_seedkale",
+      "nameToken": "$piece_sapling_seedkale",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "KaleSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_seedonion",
+      "nameToken": "$piece_sapling_seedonion",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Onion",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_seedturnip",
+      "nameToken": "$piece_sapling_seedturnip",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Turnip",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "sapling_turnip",
+      "nameToken": "$piece_sapling_turnip",
+      "tool": "Cultivator",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "TurnipSeeds",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "scale_halfwall_1x2",
+      "nameToken": "$piece_scale_halfwall",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "scale_quarterwall_1x1",
+      "nameToken": "$piece_scale_quarterwall",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_2x2",
+      "nameToken": "$piece_scale_wall",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_26",
+      "nameToken": "$piece_scale_26",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_26_flipped",
+      "nameToken": "$piece_scale_26_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_26_upsidedown",
+      "nameToken": "$piece_scale_26_upsidedown",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_26_upsidedown_flipped",
+      "nameToken": "$piece_scale_26_upsidedown_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_45",
+      "nameToken": "$piece_scale_45",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_45_flipped",
+      "nameToken": "$piece_scale_45_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_45_upsidedown",
+      "nameToken": "$piece_scale_45_upsidedown",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_45_upsidedown_flipped",
+      "nameToken": "$piece_scale_45_upsidedown_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_67",
+      "nameToken": "$piece_scale_67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_67_flipped",
+      "nameToken": "$piece_scale_67_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_67_upsidedown",
+      "nameToken": "$piece_scale_67_upsidedown",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "scale_wall_roof_67_upsidedown_flipped",
+      "nameToken": "$piece_scale_67_upsidedown_flipped",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "sign",
+      "nameToken": "$piece_sign",
+      "tool": "Hammer",
+      "category": 4,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Coal",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "skull_pile",
+      "nameToken": "$piece_skullpile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Charredskull",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "smelter",
+      "nameToken": "$piece_smelter",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "SurtlingCore",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "stake_wall",
+      "nameToken": "$piece_stakewall",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_beam_26",
+      "nameToken": "$piece_stavebeam26",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_beam_2m",
+      "nameToken": "$piece_stavebeam2",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_beam_45",
+      "nameToken": "$piece_stavebeam45",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_beam_4m",
+      "nameToken": "$piece_stavebeam4",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_beam_67",
+      "nameToken": "$piece_stavebeam67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_beam_26",
+      "nameToken": "$piece_stavedecobeam26",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_beam_2m",
+      "nameToken": "$piece_stave_deco_beam_2m",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_beam_45",
+      "nameToken": "$piece_stavedecobeam45",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_beam_67",
+      "nameToken": "$piece_stavedecobeam67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_pole_2m",
+      "nameToken": "$piece_stave_deco_pole_2m",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_deco_wall_2x2",
+      "nameToken": "$piece_deco_stave_wall",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_gate",
+      "nameToken": "$piece_stavegate",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 24
+        },
+        {
+          "item": "Gold",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_pole_2m",
+      "nameToken": "$piece_stave_pole_2m",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_pole_4m",
+      "nameToken": "$piece_stave_pole_4m",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_wall_2x2",
+      "nameToken": "$piece_stave_wall",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stave_wall_cross_26",
+      "nameToken": "$piece_stavecross26",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_wall_cross_45",
+      "nameToken": "$piece_stavecross45",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stave_wall_cross_67",
+      "nameToken": "$piece_stavewallrooftop67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "stone_arch",
+      "nameToken": "$piece_stonearch",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stone_fence",
+      "nameToken": "$piece_stonefence",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stone_floor_2x2",
+      "nameToken": "$piece_stonefloor2x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "stone_pile",
+      "nameToken": "$piece_stonepile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "stone_pillar",
+      "nameToken": "$piece_stonepillar",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "stone_stair",
+      "nameToken": "$piece_stonestair",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "name": "stone_wall_1x1",
+      "nameToken": "$piece_stonewall1x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "name": "stone_wall_2x1",
+      "nameToken": "$piece_stonewall2x1",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "stone_wall_4x2",
+      "nameToken": "$piece_stonewall4x2",
+      "tool": "Hammer",
+      "category": 3,
+      "station": "piece_stonecutter",
+      "stationToken": "$piece_stonecutter",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "name": "treasure_pile",
+      "nameToken": "$piece_treasure_pile",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Coins",
+          "amount": 999
+        }
+      ]
+    },
+    {
+      "name": "treasure_stack",
+      "nameToken": "$piece_treasure_stack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Coins",
+          "amount": 99
+        }
+      ]
+    },
+    {
+      "name": "windmill",
+      "nameToken": "$piece_windmill",
+      "tool": "Hammer",
+      "category": 1,
+      "station": "piece_artisanstation",
+      "stationToken": "$piece_artisanstation",
+      "season": null,
+      "resources": [
+        {
+          "item": "Stone",
+          "amount": 20
+        },
+        {
+          "item": "Wood",
+          "amount": 30
+        },
+        {
+          "item": "IronNails",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "name": "wood_beam",
+      "nameToken": "$piece_woodbeam2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_beam_1",
+      "nameToken": "$piece_woodbeam1",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_beam_26",
+      "nameToken": "$piece_woodbeam26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_beam_45",
+      "nameToken": "$piece_woodbeam45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_beam_67",
+      "nameToken": "$piece_woodbeam67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_core_stack",
+      "nameToken": "$piece_woodcorestack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "wood_door",
+      "nameToken": "$piece_wooddoor",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "wood_dragon1",
+      "nameToken": "$piece_wooddragon",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "wood_fence",
+      "nameToken": "$piece_woodfence",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_fence_gate",
+      "nameToken": "$piece_woodfencegate",
+      "tool": "Hammer",
+      "category": 0,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "name": "wood_fine_stack",
+      "nameToken": "$piece_woodfinestack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "FineWood",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "wood_floor",
+      "nameToken": "$piece_woodfloor2x2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_floor_1x1",
+      "nameToken": "$piece_woodfloor1x1",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_frost_stack",
+      "nameToken": "$piece_woodfroststack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Frostwood",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "wood_gate",
+      "nameToken": "$piece_woodgate",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 12
+        }
+      ]
+    },
+    {
+      "name": "wood_log_26",
+      "nameToken": "$piece_woodlog26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_log_45",
+      "nameToken": "$piece_woodlog45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_log_67",
+      "nameToken": "$piece_woodlog67",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_pole",
+      "nameToken": "$piece_woodpole",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_pole2",
+      "nameToken": "$piece_woodpole2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_pole_log",
+      "nameToken": "$piece_logpole2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_pole_log_4",
+      "nameToken": "$piece_logpole4",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof",
+      "nameToken": "$piece_woodroof26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_45",
+      "nameToken": "$piece_woodroof45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_67",
+      "nameToken": "$piece_woodroof67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_icorner",
+      "nameToken": "$piece_woodrooficorner",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_icorner_45",
+      "nameToken": "$piece_woodrooficorner45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_icorner_67",
+      "nameToken": "$piece_woodrooficorner67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_ocorner",
+      "nameToken": "$piece_woodroofocorner",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_ocorner_45",
+      "nameToken": "$piece_woodroofocorner45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_ocorner_67",
+      "nameToken": "$piece_woodroofocorner67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_top",
+      "nameToken": "$piece_woodrooftop",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_top_45",
+      "nameToken": "$piece_woodrooftop45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_roof_top_67",
+      "nameToken": "$piece_woodrooftop67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_stack",
+      "nameToken": "$piece_woodstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "wood_stair",
+      "nameToken": "$piece_woodstair",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_stepladder",
+      "nameToken": "$piece_woodstepladder",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_half",
+      "nameToken": "$piece_woodwallhalf",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_log",
+      "nameToken": "$piece_logbeam2",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_log_4x0.5",
+      "nameToken": "$piece_logbeam4",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "RoundLog",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_quarter",
+      "nameToken": "$piece_woodwallquarter",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_45",
+      "nameToken": "$piece_woodwallroof45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_45_upsidedown",
+      "nameToken": "$piece_woodwallroof45_upsidedown",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_67_a",
+      "nameToken": "$piece_woodwallroof67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_67_upsidedown",
+      "nameToken": "$piece_woodwallroof67upsidedown",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_a",
+      "nameToken": "$piece_woodwallroof",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_top",
+      "nameToken": "$piece_woodwallrooftop",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_top_45",
+      "nameToken": "$piece_woodwallrooftop45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_top_67",
+      "nameToken": "$piece_woodwallrooftop67",
+      "tool": "Hammer",
+      "category": 5,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_wall_roof_upsidedown",
+      "nameToken": "$piece_woodwallroof_upsidedown",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_window",
+      "nameToken": "$piece_woodwindowshutter",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 4
+        },
+        {
+          "item": "BronzeNails",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "name": "wood_yggdrasil_stack",
+      "nameToken": "$piece_yggdrasilstack",
+      "tool": "Hammer",
+      "category": 0,
+      "station": null,
+      "stationToken": null,
+      "season": null,
+      "resources": [
+        {
+          "item": "YggdrasilWood",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "name": "woodiron_beam",
+      "nameToken": "$piece_woodironbeam",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "woodiron_beam_26",
+      "nameToken": "$piece_woodironbeam_26",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "woodiron_beam_45",
+      "nameToken": "$piece_woodironbeam_45",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "woodiron_beam_67",
+      "nameToken": "$piece_ironwoodbeam67",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "woodiron_pole",
+      "nameToken": "$piece_woodironpole",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "forge",
+      "stationToken": "$piece_forge",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        },
+        {
+          "item": "Iron",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "woodwall",
+      "nameToken": "$piece_woodwall",
+      "tool": "Hammer",
+      "category": 2,
+      "station": "piece_workbench",
+      "stationToken": "$piece_workbench",
+      "season": null,
+      "resources": [
+        {
+          "item": "Wood",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

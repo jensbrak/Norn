@@ -56,4 +56,9 @@ public sealed class AppState
     /// would want stable and findable, just workflow continuity worth
     /// resuming silently.</summary>
     public bool AddItemKeepWindowOpen { get; set; }
+
+    /// <summary>Last state of <see cref="AddMaterialsWindow"/>'s "Keep window
+    /// open" checkbox — same reasoning as
+    /// <see cref="AddItemKeepWindowOpen"/>.</summary>
+    public bool AddMaterialsKeepWindowOpen { get; set; }
 }

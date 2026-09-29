@@ -126,7 +126,7 @@ internal sealed class AddItemWindow : Window
     // what actually dims this on disable — see that Style's own comment.
     private const string AmountLabelClass = "amount-label";
     private readonly TextBlock _amountLabel = new() { Text = "Amount:", VerticalAlignment = VerticalAlignment.Center, IsEnabled = false, Classes = { AmountLabelClass } };
-    private readonly NumericUpDown _amount = new() { Minimum = 1, Maximum = AmountEntry.Ceiling, Value = 1, IsEnabled = false, Width = 130 };
+    private readonly NumericUpDown _amount = AmountEntry.Integer(new() { Minimum = 1, Maximum = AmountEntry.Ceiling, Value = 1, IsEnabled = false, Width = 130 });
     private readonly ListBox _list = new();
     private readonly Button _add = new() { Content = "Add", IsEnabled = false };
     private readonly CheckBox _keepOpen = new() { Content = "Keep window open" };

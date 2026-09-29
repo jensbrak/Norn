@@ -154,13 +154,21 @@ public sealed class InventoryTabModule : ITabModule
             await AddItem(null, editor, addItem, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage, carry));
         };
 
+        var hasMaterialsData = RecipeCatalog.Count > 0 || PieceCatalog.Count > 0;
+        var addMaterials = new Button { Content = "Add materials…" };
+        addMaterials.IsEnabled = addItem.IsEnabled && hasMaterialsData;
+        SetActionTip(addMaterials, "Opens the materials picker to add what a recipe or build piece needs.",
+            hasMaterialsData ? "Inventory is full." : "No recipe or build piece data available.");
+        addMaterials.Click += async (_, _) =>
+            await AddMaterials(editor, addMaterials, onEdited, onMessage, () => Rebuild(container, editor, onEdited, onMessage, carry));
+
         // Grouped by scope, general to specific, with a thin divider between
-        // groups: Add items (the one action that brings in new content), the
+        // groups: the two add actions (the ones that bring in new content), the
         // whole-inventory actions, then the category presets — their own
         // group because they're the part slated to become user-configurable,
         // and last so new presets extend the row at its natural end.
         var presetGroup = ButtonGroup();
-        buttonRow.Children.Add(ButtonGroup(addItem));
+        buttonRow.Children.Add(ButtonGroup(addItem, addMaterials));
         buttonRow.Children.Add(GroupDivider());
         buttonRow.Children.Add(ButtonGroup(repairAll, fillAll));
         buttonRow.Children.Add(GroupDivider());
@@ -726,13 +734,13 @@ public sealed class InventoryTabModule : ITabModule
         // reintroduces NumericUpDown's live keystroke-rejection bug. The
         // real bound is still enforced, correctly, once at Commit by
         // CharacterEditor.SetItemStack's own clamp.
-        var numeric = new NumericUpDown
+        var numeric = AmountEntry.Integer(new NumericUpDown
         {
             Minimum = 1,
             Maximum = AmountEntry.Ceiling,
             Value = Math.Clamp(item.Stack, 1, shared.MaxStack),
             Width = 130,
-        };
+        });
         var confirm = new Button { Content = "Set" };
 
         var content = new StackPanel { Orientation = Orientation.Vertical, Spacing = 6, Margin = new Thickness(10) };
@@ -980,6 +988,54 @@ public sealed class InventoryTabModule : ITabModule
             // own IsEnabled already uses — no new capacity concept.
             return FindFirstEmptySlot(editor.View.Inventory) is not null || editor.View.Inventory.Items.Any(CanFillStack);
         });
+    }
+
+    /// <summary>
+    /// The toolbar's "Add materials" entry point: opens
+    /// <see cref="AddMaterialsWindow"/> and adds each pick's materials as one
+    /// all-or-nothing bundle. Never anchored — a bundle has no single tile to
+    /// target.
+    /// </summary>
+    private static async Task AddMaterials(CharacterEditor editor, Control sender, Action onEdited, Action<string> onMessage, Action rebuild)
+    {
+        if (TopLevel.GetTopLevel(sender) is not Window owner)
+        {
+            return;
+        }
+
+        await AddMaterialsWindow.Open(owner, pick =>
+        {
+            if (editor.CanAddItemBundle(pick.Materials))
+            {
+                editor.AddItemBundle(pick.Materials);
+                onEdited();
+                rebuild();
+                onMessage($"Added materials for {pick.DisplayName}{PickQualifier(pick)}");
+            }
+            else
+            {
+                onMessage($"No room for the materials for {pick.DisplayName}");
+            }
+
+            // Same room formula as the toolbar buttons' own enablement.
+            return FindFirstEmptySlot(editor.View.Inventory) is not null || editor.View.Inventory.Items.Any(CanFillStack);
+        }, editor.CanAddItemBundle);
+    }
+
+    private static string PickQualifier(MaterialsPick pick)
+    {
+        var qualifiers = new List<string>();
+        if (pick.HasLevels)
+        {
+            qualifiers.Add(pick.UpgradeOnly ? $"upgrade to level {pick.Level}" : $"level {pick.Level}");
+        }
+
+        if (pick.Times > 1)
+        {
+            qualifiers.Add($"×{pick.Times}");
+        }
+
+        return qualifiers.Count > 0 ? $" ({string.Join(", ", qualifiers)})" : "";
     }
 
     /// <summary>Applies one Add Item pick — the mutation logic <see cref="AddItem"/>

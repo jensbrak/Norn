@@ -944,13 +944,8 @@ public sealed class CharacterEditor
     public void AddItemsAt(int x, int y, string prefabName, int amount, bool setCrafter) =>
         AddItemsCore(prefabName, amount, setCrafter, anchor: (x, y));
 
-    // game-derived: Inventory.AddItem's own real merge-by-grid-position
-    // behavior (see AddItemAt's provenance note above) — this is that
-    // omission, now implemented, plus the split-across-slots extension
-    // AddItemAt never needed as a single-unit-only mechanism. Shares the
-    // same field-setting rules (fixed quality 1, no variant, durability only
-    // when the resolved item uses it) as AddItemAt via the local CreateStack
-    // below, and the same "did it actually change" contract as FillStack.
+    // Same "did it actually change" contract as FillStack. Placement itself
+    // is PlaceItems.
     private void AddItemsCore(string prefabName, int amount, bool setCrafter, (int X, int Y)? anchor) => MutateInnerBlob(
         p =>
         {
@@ -965,101 +960,176 @@ public sealed class CharacterEditor
                 return false;
             }
 
-            var prefabHash = StringExtensionMethods.GetStableHashCode(prefabName);
-            var remaining = amount;
-
-            Inventory.ItemData CreateStack(int x, int y, int stack)
+            if (anchor is { X: var anchorX, Y: var anchorY }
+                && (anchorX < 0 || anchorX >= InventoryLayout.Width || anchorY < 0 || anchorY >= InventoryLayout.HeightOf(p)
+                    || FindItem(p, anchorX, anchorY) is not null))
             {
-                var item = new Inventory.ItemData
-                {
-                    PrefabName = prefabName,
-                    PrefabHash = prefabHash,
-                    m_stack = stack,
-                    m_quality = 1,
-                    m_gridPos = new Vector2i(x, y),
-                    m_pickedUp = true,
-                };
-
-                if (shared.UsesDurability)
-                {
-                    item.m_durability = (float)shared.MaxDurabilityFor(1);
-                }
-
-                if (setCrafter && shared.CanHaveCrafterTag)
-                {
-                    item.m_crafterID = _profile.m_playerID;
-                    item.m_crafterName = _profile.m_playerName;
-                }
-
-                return item;
+                return false;
             }
 
-            if (anchor is { X: var anchorX, Y: var anchorY })
-            {
-                if (anchorX < 0 || anchorX >= InventoryLayout.Width || anchorY < 0 || anchorY >= InventoryLayout.HeightOf(p))
-                {
-                    return false;
-                }
-
-                if (FindItem(p, anchorX, anchorY) is not null)
-                {
-                    return false;
-                }
-
-                var placed = Math.Min(remaining, shared.MaxStack);
-                p.m_inventory.m_inventory.Add(CreateStack(anchorX, anchorY, placed));
-                remaining -= placed;
-            }
-
-            if (remaining > 0)
-            {
-                // The anchor stack just created above (if any) can never
-                // appear here: CreateStack always consumes min(remaining,
-                // MaxStack), so it's either already full (fails the
-                // m_stack < MaxStack check) or remaining hit 0 and this
-                // block doesn't run at all.
-                var partials = p.m_inventory.m_inventory
-                    .Where(i => i.PrefabHash == prefabHash && i.m_quality == 1 && i.m_variant == 0
-                        && i.m_stack < shared.MaxStack)
-                    .OrderBy(i => i.m_gridPos.y).ThenBy(i => i.m_gridPos.x);
-
-                foreach (var item in partials)
-                {
-                    if (remaining <= 0)
-                    {
-                        break;
-                    }
-
-                    var topUp = Math.Min(remaining, shared.MaxStack - item.m_stack);
-                    item.m_stack += topUp;
-                    remaining -= topUp;
-                }
-            }
-
-            if (remaining > 0)
-            {
-                var occupied = p.m_inventory.m_inventory.Select(i => (i.m_gridPos.x, i.m_gridPos.y)).ToHashSet();
-                var height = InventoryLayout.HeightOf(p);
-
-                for (var y = 0; y < height && remaining > 0; y++)
-                {
-                    for (var x = 0; x < InventoryLayout.Width && remaining > 0; x++)
-                    {
-                        if (occupied.Contains((x, y)))
-                        {
-                            continue;
-                        }
-
-                        var placed = Math.Min(remaining, shared.MaxStack);
-                        p.m_inventory.m_inventory.Add(CreateStack(x, y, placed));
-                        remaining -= placed;
-                    }
-                }
-            }
-
-            return remaining != amount;
+            return PlaceItems(p, prefabName, shared, amount, setCrafter, anchor) > 0;
         },
         p => View = View with { Inventory = InventoryMapper.Map(p) });
+
+    /// <summary>
+    /// Whether every entry of <paramref name="items"/> fits in the inventory
+    /// at once, by the same placement rules <see cref="AddItemBundle"/> uses.
+    /// <c>false</c> for an empty bundle, or one naming an item the catalog
+    /// doesn't resolve.
+    /// </summary>
+    public bool CanAddItemBundle(IReadOnlyList<ItemAmount> items) => _player is not null && BundleFits(_player, items);
+
+    /// <summary>
+    /// Adds every entry of <paramref name="items"/> — all of it, or nothing
+    /// when <see cref="CanAddItemBundle"/> says it won't fit. Each entry
+    /// merges and splits the way <see cref="AddItems"/> does; nothing gets a
+    /// crafter tag.
+    /// </summary>
+    public void AddItemBundle(IReadOnlyList<ItemAmount> items) => MutateInnerBlob(
+        p =>
+        {
+            if (!BundleFits(p, items))
+            {
+                return false;
+            }
+
+            foreach (var (itemName, amount) in items)
+            {
+                PlaceItems(p, itemName, SharedItemDataCatalog.TryFind(itemName)!, amount, setCrafter: false, anchor: null);
+            }
+
+            return true;
+        },
+        p => View = View with { Inventory = InventoryMapper.Map(p) });
+
+    // Mirrors PlaceItems without mutating anything: each entry first fills
+    // room in its own partial stacks, and whatever is left needs new stacks
+    // in the free cells, which all entries share.
+    private static bool BundleFits(Player p, IReadOnlyList<ItemAmount> items)
+    {
+        if (items.Count == 0)
+        {
+            return false;
+        }
+
+        var slotsNeeded = 0;
+        foreach (var group in items.GroupBy(i => i.ItemName))
+        {
+            var shared = SharedItemDataCatalog.TryFind(group.Key);
+            if (shared is null)
+            {
+                return false;
+            }
+
+            var prefabHash = StringExtensionMethods.GetStableHashCode(group.Key);
+            var partialRoom = PartialStacks(p, prefabHash, shared).Sum(i => shared.MaxStack - i.m_stack);
+            var rest = group.Sum(i => i.Amount) - partialRoom;
+            if (rest > 0)
+            {
+                slotsNeeded += (rest + shared.MaxStack - 1) / shared.MaxStack;
+            }
+        }
+
+        return slotsNeeded <= FreeCells(p).Count();
+    }
+
+    // game-derived: Inventory.AddItem's own real merge-by-grid-position
+    // behavior (see AddItemAt's provenance note above), plus the
+    // split-across-slots extension AddItemAt never needed as a
+    // single-unit-only mechanism. Same field-setting rules as AddItemAt:
+    // fixed quality 1, no variant, durability only when the item uses it.
+    // The anchor, when given, must already be a valid empty cell. Returns how
+    // many units were placed.
+    private int PlaceItems(Player p, string prefabName, SharedItemDataDto shared, int amount, bool setCrafter, (int X, int Y)? anchor)
+    {
+        var prefabHash = StringExtensionMethods.GetStableHashCode(prefabName);
+        var remaining = amount;
+
+        Inventory.ItemData CreateStack(int x, int y, int stack)
+        {
+            var item = new Inventory.ItemData
+            {
+                PrefabName = prefabName,
+                PrefabHash = prefabHash,
+                m_stack = stack,
+                m_quality = 1,
+                m_gridPos = new Vector2i(x, y),
+                m_pickedUp = true,
+            };
+
+            if (shared.UsesDurability)
+            {
+                item.m_durability = (float)shared.MaxDurabilityFor(1);
+            }
+
+            if (setCrafter && shared.CanHaveCrafterTag)
+            {
+                item.m_crafterID = _profile.m_playerID;
+                item.m_crafterName = _profile.m_playerName;
+            }
+
+            return item;
+        }
+
+        if (anchor is { X: var anchorX, Y: var anchorY })
+        {
+            var placed = Math.Min(remaining, shared.MaxStack);
+            p.m_inventory.m_inventory.Add(CreateStack(anchorX, anchorY, placed));
+            remaining -= placed;
+        }
+
+        // The anchor stack just created above (if any) never shows up here:
+        // it either consumed all of remaining or is already full.
+        foreach (var item in PartialStacks(p, prefabHash, shared).ToList())
+        {
+            if (remaining <= 0)
+            {
+                break;
+            }
+
+            var topUp = Math.Min(remaining, shared.MaxStack - item.m_stack);
+            item.m_stack += topUp;
+            remaining -= topUp;
+        }
+
+        foreach (var (x, y) in FreeCells(p).ToList())
+        {
+            if (remaining <= 0)
+            {
+                break;
+            }
+
+            var placed = Math.Min(remaining, shared.MaxStack);
+            p.m_inventory.m_inventory.Add(CreateStack(x, y, placed));
+            remaining -= placed;
+        }
+
+        return amount - remaining;
+    }
+
+    // Non-full, plain (quality 1, no variant) stacks of one item, row-major.
+    private static IEnumerable<Inventory.ItemData> PartialStacks(Player p, int prefabHash, SharedItemDataDto shared) =>
+        p.m_inventory.m_inventory
+            .Where(i => i.PrefabHash == prefabHash && i.m_quality == 1 && i.m_variant == 0 && i.m_stack < shared.MaxStack)
+            .OrderBy(i => i.m_gridPos.y).ThenBy(i => i.m_gridPos.x);
+
+    // Empty grid cells, row-major.
+    private static IEnumerable<(int X, int Y)> FreeCells(Player p)
+    {
+        var occupied = p.m_inventory.m_inventory.Select(i => (i.m_gridPos.x, i.m_gridPos.y)).ToHashSet();
+        var height = InventoryLayout.HeightOf(p);
+
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < InventoryLayout.Width; x++)
+            {
+                if (!occupied.Contains((x, y)))
+                {
+                    yield return (x, y);
+                }
+            }
+        }
+    }
 
     /// <summary>Removes one item outright, addressed by grid position. Needs
     /// no catalog data at all — matches Loki's own delete, which works even

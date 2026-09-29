@@ -806,4 +806,104 @@ public class CharacterEditorCatalogTests
         var filled = editor.View.Inventory.Items.Single(i => i.GridX == target.GridX && i.GridY == target.GridY);
         Assert.Equal(shared.MaxStack, filled.Stack);
     }
+
+    /// <summary>A bundle that fits lands in full — every entry's total grows by
+    /// exactly its amount — and survives a save and reload.</summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItemBundle_adds_every_entry_and_round_trips(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        ItemAmount[] bundle = [new("Wood", 10), new("Stone", 5)];
+        Assert.SkipWhen(!editor!.CanAddItemBundle(bundle), $"{fileName}'s inventory has no room for the bundle.");
+
+        int Total(CharacterEditor e, string name) => e.View.Inventory.Items.Where(i => i.PrefabName == name).Sum(i => i.Stack);
+        var before = bundle.Select(b => Total(editor, b.ItemName)).ToList();
+
+        editor.AddItemBundle(bundle);
+        Assert.True(editor.IsDirty);
+        Assert.All(bundle.Select((b, i) => (b, i)), x => Assert.Equal(before[x.i] + x.b.Amount, Total(editor, x.b.ItemName)));
+
+        editor.Save();
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        Assert.All(bundle.Select((b, i) => (b, i)), x => Assert.Equal(before[x.i] + x.b.Amount, Total(reopened!, x.b.ItemName)));
+    }
+
+    /// <summary>
+    /// Capacity is exact on both axes, and a bundle that doesn't fit changes
+    /// nothing. With every cell full and every stack at max except one stack
+    /// with room for 3: 3 more of that item fits, 4 doesn't, and neither does
+    /// one unit of anything else. A mixed bundle that doesn't fit leaves even
+    /// its fitting part out.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void AddItemBundle_counts_partial_room_exactly_and_is_all_or_nothing(string? fileName)
+    {
+        var csvPath = TestPaths.SharedItemDataCsvPath;
+        Assert.SkipWhen(csvPath is null, "Norn.UI/Content/SharedItemData.csv not present.");
+        SharedItemDataCatalog.Load(csvPath);
+
+        var corpusPath = Corpus.RequireFile(fileName);
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        const string Filler = "Wood";
+        const string Other = "Stone";
+        var fillerMax = SharedItemDataCatalog.TryFind(Filler)!.MaxStack;
+
+        // Every cell occupied and every stack at max...
+        var occupied = editor!.View.Inventory.Items.Select(i => (i.GridX, i.GridY)).ToHashSet();
+        for (var y = 0; y < editor.View.Inventory.Height; y++)
+        {
+            for (var x = 0; x < InventoryLayout.Width; x++)
+            {
+                if (!occupied.Contains((x, y)))
+                {
+                    editor.AddItemAt(x, y, Filler);
+                }
+            }
+        }
+
+        editor.FillAllStacks();
+
+        // ...except one plain filler stack with room for exactly 3.
+        var partial = editor.View.Inventory.Items.FirstOrDefault(i => i.PrefabName == Filler && i.Quality == 1 && i.Variant == 0);
+        Assert.SkipWhen(partial is null, $"{fileName} had no empty cell to put a filler stack in.");
+        editor.SetItemStack(partial!.GridX, partial.GridY, fillerMax - 3);
+
+        Assert.True(editor.CanAddItemBundle([new(Filler, 3)]));
+        Assert.False(editor.CanAddItemBundle([new(Filler, 4)]));
+        Assert.False(editor.CanAddItemBundle([new(Other, 1)]));
+        Assert.False(editor.CanAddItemBundle([]));
+
+        var snapshot = editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY, i.PrefabName, i.Stack)).ToList();
+        editor.AddItemBundle([new(Filler, 3), new(Other, 1)]);
+        Assert.Equal(snapshot, editor.View.Inventory.Items.Select(i => (i.GridX, i.GridY, i.PrefabName, i.Stack)).ToList());
+
+        editor.AddItemBundle([new(Filler, 3)]);
+        Assert.Equal(fillerMax, editor.View.Inventory.Items.Single(i => i.GridX == partial.GridX && i.GridY == partial.GridY).Stack);
+    }
 }

@@ -5,6 +5,8 @@
 
 using CsvHelper;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 // Debug directories for source/destination, if not null take precedence over command line arguments
 string? SourceDirectoryDebug = null;
@@ -20,10 +22,10 @@ const string RECIPE_FILE_EXTENSION = ".asset";
 const string METAFILE_EXTENSION = ".meta"; // Not recipe-specific: every Unity asset (recipes and items alike) gets one
 const string RECIPE_FILENAME_PREFIX = "Recipe_";
 
-// Holds ObjectDB, the authority for BOTH lists that matter here: m_items (every prefab
-// the game registers as an inventory item) and m_recipes. Was recipe-only until items
-// moved onto it too, so the name lost its "RECIPE" qualifier.
+// Holds ObjectDB, the authority for both lists that matter here: m_items (every prefab
+// the game registers as an inventory item) and m_recipes.
 const string ACTIVE_AUTHORITY_FILENAME = "_GameMain.prefab";
+const string PLAYER_PREFAB_FILENAME = "Player.prefab"; // Lists the seasons (Yule, Midsummer, ...)
 
 // A player-facing item's m_name is a localization token ("$item_amber"); an internal one
 // is a plain literal ("Club" on GoblinClub, "Swingattack" on Abomination_attack1). That
@@ -32,22 +34,28 @@ const string ACTIVE_AUTHORITY_FILENAME = "_GameMain.prefab";
 const string LOCALIZATION_TOKEN_PREFIX = "$";
 const string ITEM_DATA_EXPORT_FILE = "SharedItemData.csv";
 const string LOCALIZATION_DATA_EXPORT_FILE = "LocalizationData.csv";
+const string RECIPE_DATA_EXPORT_FILE = "RecipeData.json";
+const string PIECE_DATA_EXPORT_FILE = "PieceData.json";
+// The Feaster's table is left out: its "pieces" are food set down on a table, and the only
+// resource is the food item itself.
+string[] PIECE_TABLES = ["_HammerPieceTable", "_HoePieceTable", "_CultivatorPieceTable"];
 const string FALLBACK_DIRECTORY = @".\";
 string[] LOCALIZATION_FILES = ["localization.txt", "localization_extra.txt", "localization_celebrationupdate.txt", "localization_deepnorth.txt"];
 
 // Command line argument switch definitions
 string[] SwitchHelp = ["/?", "/h", "--help"];
 string[] SwitchVerbose = ["/v", "--verbose"];
-// Localization is written by DEFAULT and this switch turns it OFF. It was opt-in
-// while this tool served several consumers; Norn needs both CSVs, so producing only
-// one of them is now the unusual case and the one that has to be asked for.
+// Every output is written by default - Norn needs all of them - so the switches opt out.
 string[] SwitchNoLocalization = ["/n", "--no-localization"];
+string[] SwitchNoRecipes = ["/r", "--no-recipes"];
+string[] SwitchNoPieces = ["/p", "--no-pieces"];
 
 // Sanity check constants. A silent collapse is the failure mode worth guarding: an
 // extraction that returns far too little still writes a well-formed CSV, and every
 // consumer downstream then quietly degrades instead of failing.
 int MIN_EXPECTED_RECIPE_COUNT = 300;
 int MIN_EXPECTED_ITEM_COUNT = 900;
+int MIN_EXPECTED_PIECE_COUNT = 350;
 
 // -----------------------------------------------------------------------------------------------
 // Main 
@@ -64,6 +72,9 @@ var ActiveAuthorityFile = Path.GetFullPath(Path.Combine(PrefabDirectory, ACTIVE_
 // Setup containers for data extraction and output
 var LocalizationData = new Dictionary<string, string>();
 var SharedItemData = new List<ItemData>();
+var Recipes = new List<Recipe>();
+var Pieces = new List<Piece>();
+var PrefabsByGuid = new Dictionary<string, Prefab?>();
 
 
 // Needs to go first since console printing depends on it
@@ -83,14 +94,23 @@ EnsureDirectory(PrefabDirectory);
 EnsureDirectory(DestinationDirectory);
 EnsureDirectory(RecipeDirectory);
 EnsureFile(ActiveAuthorityFile);
+var PrefabPathsByGuid = BuildGuidIndex(PrefabDirectory);
+var Seasons = SeasonsByGuid();
 
-// Data extration steps
+// Data extration steps. Everything is validated before anything is written, so a failed
+// run never leaves a mix of fresh and stale files behind.
 Inform("Extracting item data...");
 ExtractLocalizationData();
 ExtractItemData();
+ExtractRecipeData();
 ApplyCrafterTagData();
+ExtractPieceData();
+ValidateRecipeData();
+ValidatePieceData();
 SaveItemData();
 SaveLocalizationData();
+SaveRecipeData();
+SavePieceData();
 Inform("Item data extracted successfully");
 
 // -----------------------------------------------------------------------------------------------
@@ -98,7 +118,7 @@ Inform("Item data extracted successfully");
 // -----------------------------------------------------------------------------------------------
 
 // Switch enabled or not?
-bool SwitchEnabled(string[] sw) => args.Length > 2 && args[^2..].Any(a => sw.Any(s => a.ToLower().Equals(s)));
+bool SwitchEnabled(string[] sw) => args.Length > 2 && args[2..].Any(a => sw.Any(s => a.ToLower().Equals(s)));
 
 // Print information message as verbose or normal
 void Inform(string message, bool isVerbose = false, bool noNewline = false)
@@ -127,11 +147,13 @@ void Exit(string reason, int exitCode = 0)
 // Show help message and then exit program gracefully
 void ShowHelpThenExit() =>
     Exit("Extracts Valheim data from unpacked Unity assets.\n\n" +
-        $"{AppDomain.CurrentDomain.FriendlyName} source destination [{SwitchVerbose[0]}] [{SwitchNoLocalization[0]}]\n\n" +
+        $"{AppDomain.CurrentDomain.FriendlyName} source destination [{SwitchVerbose[0]}] [{SwitchNoLocalization[0]}] [{SwitchNoRecipes[0]}] [{SwitchNoPieces[0]}]\n\n" +
         $"  {"source",-12} Specifies the source directory, ie the assets root directory to extract data from.\n" +
         $"  {"destination",-12} Specifies the destination directory, ie the directory to write data to.\n" +
         $"  {SwitchVerbose[0],-12} Verbose mode: print additional info\n" +
         $"  {SwitchNoLocalization[0],-12} Skip the localization data file, which is written by default\n" +
+        $"  {SwitchNoRecipes[0],-12} Skip the recipe data file, which is written by default\n" +
+        $"  {SwitchNoPieces[0],-12} Skip the piece data file, which is written by default\n" +
         $"\nAsset files has to be unpacked from the game beforehand, using some other tool.\n" +
         $"AssetRipper has been verified to work for this.\n\n");
 
@@ -214,15 +236,11 @@ void ExtractLocalizationData()
 //   2. Is it player-facing?         -> its m_name is a localization token ($-prefixed).
 //   3. What is it called?           -> look the token up; fall back to the token itself.
 //
-// The previous version answered all three with question 3 alone: scan every prefab on
-// disk, keep whatever had item data AND a resolvable translation. That conflates "is an
-// item" with "can be named", and the two come apart in both directions - a missing
-// localization file silently dropped an entire biome's content, while unregistered
-// prefabs that happened to carry item data were picked up.
+// Answering all three with "has a resolvable translation" conflates "is an item" with
+// "can be named": a missing localization file then silently deletes content.
 void ExtractItemData()
 {
     var itemGuids = AuthoritiveItemGuids();
-    var prefabPathsByGuid = BuildGuidIndex(PrefabDirectory);
 
     string[] keys = ["m_name", "m_teleportable", "m_useDurability", "m_maxDurability", "m_durabilityPerLevel", "m_maxStackSize", "m_maxQuality", "m_itemType", "m_weight", "m_scaleWeightByQuality"];
 
@@ -238,7 +256,7 @@ void ExtractItemData()
     {
         // An authoritive guid with no prefab on disk is a broken rip, not a game fact -
         // worth saying out loud rather than quietly producing a smaller catalog.
-        if (!prefabPathsByGuid.TryGetValue(itemGuids[i], out var filename))
+        if (!PrefabPathsByGuid.TryGetValue(itemGuids[i], out var filename))
         {
             unresolvedGuidCount++;
             Inform($"{"",2}[{i + 1,4}] {"WARNING",9}: registered item guid {itemGuids[i]} has no prefab under {PREFAB_DIRECTORY}");
@@ -285,10 +303,8 @@ void ExtractItemData()
             continue;
         }
 
-        // A token with no translation is still a real item. Fall back to the raw token so
-        // it stays in the catalog under a name that is at least distinct and searchable -
-        // dropping it here is what previously cost TrophyDeerWhite, IceShoes and IceSkates,
-        // all three of which the game itself ships without a translation.
+        // A token with no translation is still a real item (the game ships a few, e.g.
+        // TrophyDeerWhite). Fall back to the raw token: distinct and searchable.
         var itemText = ResolveTokenText(itemNameToken);
         if (itemText == null)
         {
@@ -306,7 +322,7 @@ void ExtractItemData()
             continue;
         }
 
-        // Extra sanity check for informational purposes only, replaces old `_0` suffix removal
+        // Informational only
         if (rootName != itemIdCandidate)
         {
             Inform($"{"",2}[{i + 1,4}] {"WARNING",9}: Root GameObject name '{rootName}' does not match prefab filename '{itemIdCandidate}'", isVerbose: false);
@@ -318,12 +334,6 @@ void ExtractItemData()
         // the pair is the registered item.
         var itemName = rootName;
 
-        // The old cave_/gobvill_ name-prefix filter is gone with this rewrite. It existed
-        // to suppress location-piece variants a filesystem scan picked up; ObjectDB
-        // registers none of them, so the filter now has nothing to match and could only
-        // ever exclude a real item by accident.
-
-        // We finally have a valid item data to add. Anonymous type objects will do as records
         var item = new ItemData
         {
             ItemName = itemName,
@@ -385,11 +395,6 @@ List<string> AuthoritiveItemGuids()
     return distinctGuids;
 }
 
-// CollectPrefabFiles is gone with this rewrite. Scanning the prefab directory was how
-// items used to be found, and it asked the wrong question: the directory holds ~9700
-// prefabs of which ObjectDB registers ~1500 as items, so the scan needed a heuristic
-// filter to cut the rest back down. BuildGuidIndex still enumerates the same directory,
-// but only to resolve guids the registry already vouched for.
 string[] CollectRecipeFiles()
 {
     string recipeFilePattern = $"{RECIPE_FILENAME_PREFIX}*{RECIPE_FILE_EXTENSION}";
@@ -402,9 +407,9 @@ string[] CollectRecipeFiles()
     return recipeFiles;
 }
 
+// The recipe half of ObjectDB: the guid of every recipe the game registers.
 List<string> AuthoritiveRecipeUids()
 {
-    // Consult authority recipe file to get a list of all recipes that are active (will give us UIDS for recipe files)
     var fileText = File.ReadAllText(ActiveAuthorityFile);
     var fileSections = GetUnityFileSections(fileText);
     var recipeGameObject = fileSections.Values.FirstOrDefault(b => b.ClassId == "114" && b.Body.Contains("m_recipes"));
@@ -413,11 +418,11 @@ List<string> AuthoritiveRecipeUids()
     // Quick sanity check
     if (recipeLines.Count() < MIN_EXPECTED_RECIPE_COUNT)
     {
-        Inform($"WARNING: Only {recipeLines.Count()} recipes found in authority file '{ActiveAuthorityFile}', No CanHaveCrafterTag data extracted.");
+        Inform($"WARNING: Only {recipeLines.Count()} recipes found in authority file '{ActiveAuthorityFile}', no recipe data extracted.");
         return [];
     }
 
-    // Exctract recipe file UID's. Early fail on bad recipe UID data
+    // Early fail on bad recipe guid data
     var recipeUids = recipeLines.Select(line =>
     {
         var values = line.Split([' ', '-', '{', '}', ':', ','], StringSplitOptions.RemoveEmptyEntries);
@@ -432,59 +437,100 @@ List<string> AuthoritiveRecipeUids()
     return [.. recipeUids];
 }
 
-// Determines which extracted items can legitimately carry a crafter tag, and flips
-// ItemData.CanHaveCrafterTag for each. An item qualifies iff it's the m_item output
-// of a recipe that is both (a) confirmed present in the authoritive recipe list and
-// (b) actually enabled (m_enabled: 1, lowercase — the Recipe script's own field, not
-// the generic Unity MonoBehaviour header's m_Enabled, which is unrelated boilerplate
-// and always 1 for these assets; 51 of the 365 authoritive recipes fail this check).
-void ApplyCrafterTagData()
+// Every enabled recipe ObjectDB registers, with each prefab reference resolved to a name.
+// Guids are never kept: AssetRipper assigns new ones on every rip.
+void ExtractRecipeData()
 {
     var authoritiveRecipeUids = AuthoritiveRecipeUids();
     if (authoritiveRecipeUids.Count == 0)
     {
-        // AuthoritiveRecipeUids already warned; nothing to apply.
-        return;
+        return; // AuthoritiveRecipeUids already warned
     }
 
-    var recipesIn = CollectRecipeFiles();
-
-    // Quick sanity check
-    if (recipesIn.Length < authoritiveRecipeUids.Count)
+    var recipeFiles = CollectRecipeFiles();
+    if (recipeFiles.Length < authoritiveRecipeUids.Count)
     {
-        Exit($"Too few recipe files ({recipesIn.Length}) found in: '{RecipeDirectory}', expected at least {authoritiveRecipeUids.Count}", 8);
+        Exit($"Too few recipe files ({recipeFiles.Length}) found in: '{RecipeDirectory}', expected at least {authoritiveRecipeUids.Count}", 8);
     }
 
-    // Build new list of recipes, discarding those that are not in the authoritive list.
-    // Remove() doubles as the membership check and as bookkeeping: whatever's left in
-    // authoritiveRecipeUids afterward is an authoritive guid that never matched a file.
-    var recipesOut = new List<string>(recipesIn.Length);
-    for (var i = 0; i < recipesIn.Length; i++)
+    var disabledCount = 0;
+    var noItemCount = 0;
+    var unresolvedCount = 0;
+
+    for (var i = 0; i < recipeFiles.Length; i++)
     {
-        var recipe = recipesIn[i];
-        var metafile = $"{recipe}{METAFILE_EXTENSION}";
-        var guid = File.ReadAllText(metafile).Split("guid: ")[1].Split('\n')[0].Trim();
-        if (!authoritiveRecipeUids.Remove(guid))
+        var recipeFile = recipeFiles[i];
+        var recipeName = Path.GetFileNameWithoutExtension(recipeFile);
+
+        // Remove() doubles as the membership check and as bookkeeping: whatever is left
+        // afterward is an authoritive guid that never matched a file.
+        var recipeGuid = MetaGuid($"{recipeFile}{METAFILE_EXTENSION}");
+        if (!authoritiveRecipeUids.Remove(recipeGuid))
         {
-            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {Path.GetFileNameWithoutExtension(recipe)} ({guid}) [Reason: not in authoritive list]", isVerbose: true);
+            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {recipeName} [Reason: not in authoritive list]", isVerbose: true);
+            continue;
         }
-        else
+
+        var (header, requirementBlocks) = SplitRequirements(File.ReadAllText(recipeFile));
+
+        // The Recipe script's own m_enabled (lowercase), not the MonoBehaviour header's m_Enabled.
+        if (FieldValue(header, "m_enabled") != "1" && !Seasons.ContainsKey(recipeGuid))
         {
-            recipesOut.Add(recipe);
+            disabledCount++;
+            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {recipeName} [Reason: recipe disabled]", isVerbose: true);
+            continue;
         }
+
+        var itemGuid = ReferencedGuid(FieldValue(header, "m_item"));
+        if (itemGuid == null)
+        {
+            noItemCount++;
+            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {recipeName} [Reason: m_item is a null reference]", isVerbose: true);
+            continue;
+        }
+
+        var item = ResolvePrefab(itemGuid);
+        var stationGuid = ReferencedGuid(FieldValue(header, "m_craftingStation"));
+        var station = ResolvePrefab(stationGuid);
+        var requirementItems = requirementBlocks.Select(b => ResolvePrefab(ReferencedGuid(FieldValue(b, "m_resItem", depth: 2)))).ToList();
+        if (item == null || (stationGuid != null && station == null) || requirementItems.Any(r => r == null))
+        {
+            unresolvedCount++;
+            Inform($"{"",2}[{i + 1,4}] {"WARNING",9}: {recipeName} [Reason: a prefab reference did not resolve under {PREFAB_DIRECTORY}]");
+            continue;
+        }
+
+        Recipes.Add(new Recipe(
+            Name: FieldValue(header, "m_Name"),
+            Item: item.Name,
+            Amount: int.Parse(FieldValue(header, "m_amount")),
+            Station: station?.Name,
+            StationToken: station?.Token,
+            MinStationLevel: int.Parse(FieldValue(header, "m_minStationLevel")),
+            Craftable: FieldValue(header, "m_noCraftOnlyUpgrade") != "1",
+            RequireOnlyOneIngredient: FieldValue(header, "m_requireOnlyOneIngredient") == "1",
+            Season: Seasons.GetValueOrDefault(recipeGuid),
+            Resources: [.. requirementBlocks.Select((b, r) => new Requirement(
+                Item: requirementItems[r]!.Name,
+                Amount: int.Parse(FieldValue(b, "m_amount", depth: 2)),
+                AmountPerLevel: int.Parse(FieldValue(b, "m_amountPerLevel", depth: 2)),
+                Upgrader: FieldValue(b, "m_upgraderResource", depth: 2) == "1"))]));
+        Inform($"{"",2}[{i + 1,4}] {"Added",9}: {recipeName}", isVerbose: true);
     }
 
     if (authoritiveRecipeUids.Count > 0)
     {
         Inform($"WARNING: {authoritiveRecipeUids.Count} authoritive recipe guid(s) never matched a file on disk.");
     }
+    Inform($"{Recipes.Count} recipes extracted: {disabledCount} disabled, {noItemCount} without an item, {unresolvedCount} unresolved.");
+}
 
-    var taggableItemNames = ResolveTaggableItemNames(recipesOut);
+// An item can carry a crafter tag iff some extracted (enabled, registered) recipe produces it.
+void ApplyCrafterTagData()
+{
+    var taggableItemNames = Recipes.Select(r => r.Item).ToHashSet();
 
-    // Flip CanHaveCrafterTag for every extracted item that's a real, enabled recipe's
-    // output. Index-based read-modify-write since ItemData is a struct: SharedItemData[i]
-    // returns a copy, so mutating it in place and never writing it back would silently
-    // do nothing.
+    // Index-based read-modify-write: ItemData is a struct, so SharedItemData[i] is a copy.
     var taggedCount = 0;
     for (var i = 0; i < SharedItemData.Count; i++)
     {
@@ -496,87 +542,232 @@ void ApplyCrafterTagData()
             taggedCount++;
         }
     }
-    Inform($"{taggedCount} of {SharedItemData.Count} items flagged as CanHaveCrafterTag ({taggableItemNames.Count} distinct taggable item names resolved).");
+    Inform($"{taggedCount} of {SharedItemData.Count} items flagged as CanHaveCrafterTag ({taggableItemNames.Count} distinct recipe outputs).");
 }
 
-// For each already authoritive-filtered, on-disk recipe file: skip if disabled or if
-// its m_item is the null reference ({fileID: 0} — no guid at all, e.g. Recipe_Adze/
-// Recipe_Chisel), otherwise resolve m_item's guid against the item-side guid index
-// and collect the resulting item's ROOT GAMEOBJECT NAME. Returns the set of item names any
-// enabled, authoritive recipe actually produces.
-//
-// The name has to come from inside the prefab, not from its filename, or it will not match
-// what ExtractItemData recorded: a recipe producing Amber resolves to Amber_0.prefab, whose
-// item name is Amber. Matching on the filename silently failed to tag 15 items.
-HashSet<string> ResolveTaggableItemNames(List<string> recipeFiles)
+// Every buildable piece the Hammer, Hoe and Cultivator offer, references resolved to names.
+void ExtractPieceData()
 {
-    var itemGuidIndex = BuildGuidIndex(PrefabDirectory);
-    var taggableNames = new HashSet<string>();
-    var disabledCount = 0;
-    var noItemCount = 0;
-    var unresolvedCount = 0;
-
-    for (var i = 0; i < recipeFiles.Count; i++)
+    if (SwitchEnabled(SwitchNoPieces))
     {
-        var recipeFile = recipeFiles[i];
-        var recipeName = Path.GetFileNameWithoutExtension(recipeFile);
-        var recipeText = File.ReadAllText(recipeFile);
-
-        // Real recipe-enabled flag, lowercase — see this function's own doc comment.
-        if (!recipeText.Contains("m_enabled: 1"))
-        {
-            disabledCount++;
-            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {recipeName} [Reason: recipe disabled]", isVerbose: true);
-            continue;
-        }
-
-        // Bounded to the {fileID: ...} value itself, not an open-ended split on "guid:" —
-        // a null reference ("m_item: {fileID: 0}") has no guid at all, and scanning past
-        // it would silently pick up some unrelated later field's guid instead.
-        var itemRef = recipeText.Split("m_item: {fileID: ")[1].Split('}')[0];
-        if (!itemRef.Contains("guid:"))
-        {
-            noItemCount++;
-            Inform($"{"",2}[{i + 1,4}] {"Discarded",9}: {recipeName} [Reason: m_item is a null reference]", isVerbose: true);
-            continue;
-        }
-
-        var itemGuid = itemRef.Split("guid:")[1].Split(',')[0].Trim();
-        if (!itemGuidIndex.TryGetValue(itemGuid, out var itemPath))
-        {
-            unresolvedCount++;
-            Inform($"{"",2}[{i + 1,4}] {"WARNING",9}: {recipeName} [Reason: item guid {itemGuid} not found under {PREFAB_DIRECTORY}]");
-            continue;
-        }
-
-        var itemName = RootGameObjectName(File.ReadAllText(itemPath));
-        if (itemName == null)
-        {
-            unresolvedCount++;
-            Inform($"{"",2}[{i + 1,4}] {"WARNING",9}: {recipeName} [Reason: item prefab {Path.GetFileName(itemPath)} has no root GameObject]");
-            continue;
-        }
-
-        taggableNames.Add(itemName);
+        return;
     }
 
-    Inform($"{recipeFiles.Count} enabled/authoritive recipes processed: {disabledCount} disabled, {noItemCount} without an item, {unresolvedCount} unresolved.", isVerbose: true);
-    return taggableNames;
+    var disabledCount = 0;
+    var noResourcesCount = 0;
+    var unresolvedCount = 0;
+
+    foreach (var table in PIECE_TABLES)
+    {
+        var tableFile = Path.Combine(PrefabDirectory, $"{table}{PREFAB_FILE_EXTENSION}");
+        EnsureFile(tableFile);
+        var tool = table.Trim('_').Replace("PieceTable", "");
+        var pieceTable = GetUnityFileSections(File.ReadAllText(tableFile)).Values.First(s => s.Body.Contains("\n  m_pieces:"));
+        var pieceGuids = SplitList(pieceTable.Body, "m_pieces").Select(ReferencedGuid).ToList();
+
+        foreach (var guid in pieceGuids)
+        {
+            var piece = ResolvePrefab(guid);
+            if (piece == null)
+            {
+                unresolvedCount++;
+                Inform($"{"",2}{"WARNING",9}: {tool} piece {guid} [Reason: no prefab with a root GameObject under {PREFAB_DIRECTORY}]");
+                continue;
+            }
+
+            // The Piece component: the section carrying the build fields.
+            var pieceSection = GetUnityFileSections(File.ReadAllText(PrefabPathsByGuid[guid!])).Values
+                .First(s => s.Body.Contains("\n  m_resources:") && s.Body.Contains("\n  m_craftingStation:") && s.Body.Contains("\n  m_category:"));
+            var (fields, requirementBlocks) = SplitRequirements(pieceSection.Body);
+
+            if (FieldValue(fields, "m_enabled") != "1" && !Seasons.ContainsKey(guid!))
+            {
+                disabledCount++;
+                Inform($"{"",2}{"Discarded",9}: {piece.Name} [Reason: piece disabled]", isVerbose: true);
+                continue;
+            }
+            if (requirementBlocks.Count == 0)
+            {
+                noResourcesCount++;
+                Inform($"{"",2}{"Discarded",9}: {piece.Name} [Reason: no resources]", isVerbose: true);
+                continue;
+            }
+
+            var stationGuid = ReferencedGuid(FieldValue(fields, "m_craftingStation"));
+            var station = ResolvePrefab(stationGuid);
+            var requirementItems = requirementBlocks.Select(b => ResolvePrefab(ReferencedGuid(FieldValue(b, "m_resItem", depth: 2)))).ToList();
+            if ((stationGuid != null && station == null) || requirementItems.Any(r => r == null))
+            {
+                unresolvedCount++;
+                Inform($"{"",2}{"WARNING",9}: {piece.Name} [Reason: a prefab reference did not resolve under {PREFAB_DIRECTORY}]");
+                continue;
+            }
+
+            Pieces.Add(new Piece(
+                Name: piece.Name,
+                NameToken: FieldValue(fields, "m_name"),
+                Tool: tool,
+                Category: int.Parse(FieldValue(fields, "m_category")),
+                Station: station?.Name,
+                StationToken: station?.Token,
+                Season: Seasons.GetValueOrDefault(guid!),
+                Resources: [.. requirementBlocks.Select((b, r) => new PieceResource(
+                    Item: requirementItems[r]!.Name,
+                    Amount: int.Parse(FieldValue(b, "m_amount", depth: 2))))]));
+            Inform($"{"",2}{"Added",9}: {piece.Name} ({tool})", isVerbose: true);
+        }
+    }
+    Inform($"{Pieces.Count} pieces extracted: {disabledCount} disabled, {noResourcesCount} without resources, {unresolvedCount} unresolved.");
 }
 
-// guid -> full prefab path, built from every *.prefab.meta sibling in the given
-// directory. Only needed on the item side: recipe files are already resolved directly by
-// filename (CollectRecipeFiles), so there's nothing to index there.
-// Paths rather than bare names because both callers need to open the file - the item pass
-// to read its data, the recipe pass only to name it, which it derives from the path.
+// Norn names every recipe item through SharedItemData, so a name missing there is a
+// broken extraction, not a recipe to ship.
+void ValidateRecipeData()
+{
+    if (SwitchEnabled(SwitchNoRecipes))
+    {
+        return;
+    }
+    if (Recipes.Count < MIN_EXPECTED_RECIPE_COUNT)
+    {
+        Exit($"Only {Recipes.Count} recipes extracted, expected at least {MIN_EXPECTED_RECIPE_COUNT}.", 12);
+    }
+
+    var missing = MissingItemNames(Recipes.SelectMany(r => r.Resources.Select(req => req.Item).Prepend(r.Item)));
+    if (missing.Count > 0)
+    {
+        Exit($"{missing.Count} recipe item name(s) missing from {ITEM_DATA_EXPORT_FILE}: {string.Join(", ", missing)}", 13);
+    }
+}
+
+// Same reasoning as ValidateRecipeData.
+void ValidatePieceData()
+{
+    if (SwitchEnabled(SwitchNoPieces))
+    {
+        return;
+    }
+    if (Pieces.Count < MIN_EXPECTED_PIECE_COUNT)
+    {
+        Exit($"Only {Pieces.Count} pieces extracted, expected at least {MIN_EXPECTED_PIECE_COUNT}.", 14);
+    }
+
+    var missing = MissingItemNames(Pieces.SelectMany(p => p.Resources.Select(r => r.Item)));
+    if (missing.Count > 0)
+    {
+        Exit($"{missing.Count} piece resource name(s) missing from {ITEM_DATA_EXPORT_FILE}: {string.Join(", ", missing)}", 15);
+    }
+}
+
+List<string> MissingItemNames(IEnumerable<string> names)
+{
+    var itemNames = SharedItemData.Select(i => i.ItemName).ToHashSet();
+    return [.. names.Where(name => !itemNames.Contains(name)).Distinct()];
+}
+
+// A section's own top-level fields, and its m_resources list as one block per requirement.
+// The list is bounded by the next top-level field, so it needn't be the last one.
+(string Fields, List<string> Requirements) SplitRequirements(string section)
+{
+    var parts = section.Split("\n  m_resources:");
+    var end = NextTopLevelField(parts[1]);
+    var rest = end < 0 ? "" : parts[1][end..];
+    return (parts[0] + rest, SplitList(section, "m_resources"));
+}
+
+// The entries of a top-level YAML list field, each re-indented so its fields sit at
+// depth 2 (the "  - " marker otherwise leaves the first field at depth 0).
+List<string> SplitList(string section, string key)
+{
+    var list = section.Split($"\n  {key}:")[1];
+    var end = NextTopLevelField(list);
+    return [.. (end < 0 ? list : list[..end]).Split("\n  - ").Skip(1).Select(entry => $"    {entry}")];
+}
+
+// Where the next top-level field starts (depth 1, not a list entry), or -1.
+int NextTopLevelField(string yaml) => Regex.Match(yaml, @"\n  [^ -]") is { Success: true } m ? m.Index : -1;
+
+// The season (Yule, Midsummer, ...) that switches on each seasonal recipe and piece, by
+// guid — authoritive list is the Player prefab's own m_seasonalItemGroups. The game offers
+// a disabled recipe or piece whenever the current season lists it
+// (Player.GetAvailableRecipes, PieceTable), so Norn treats "listed by a season" the same
+// as enabled, and records which season.
+Dictionary<string, string> SeasonsByGuid()
+{
+    var playerFile = Path.Combine(PrefabDirectory, PLAYER_PREFAB_FILENAME);
+    EnsureFile(playerFile);
+    var player = GetUnityFileSections(File.ReadAllText(playerFile)).Values.First(s => s.Body.Contains("\n  m_seasonalItemGroups:"));
+    var seasonGuids = SplitList(player.Body, "m_seasonalItemGroups").Select(ReferencedGuid).ToHashSet();
+
+    var seasonFiles = Directory.GetFiles(RecipeDirectory, $"*{RECIPE_FILE_EXTENSION}{METAFILE_EXTENSION}", SearchOption.TopDirectoryOnly)
+        .Where(meta => seasonGuids.Contains(MetaGuid(meta)))
+        .Select(meta => File.ReadAllText(meta[..^METAFILE_EXTENSION.Length]))
+        .ToList();
+    if (seasonFiles.Count != seasonGuids.Count)
+    {
+        Inform($"WARNING: {seasonGuids.Count - seasonFiles.Count} season(s) listed by {PLAYER_PREFAB_FILENAME} not found under {RECIPE_DIRECTORY}.");
+    }
+
+    var seasons = new Dictionary<string, string>();
+    foreach (var season in seasonFiles)
+    {
+        var name = FieldValue(season, "m_Name");
+        foreach (var guid in SplitList(season, "Pieces").Concat(SplitList(season, "Recipes")).Select(ReferencedGuid).OfType<string>())
+        {
+            seasons[guid] = name;
+        }
+    }
+    Inform($"{seasonFiles.Count} seasons switch on {seasons.Count} recipes and pieces.");
+    return seasons;
+}
+
+// A referenced prefab's name (root GameObject) and its first localization-token m_name.
+// Cached: recipes reference the same few hundred prefabs over and over.
+Prefab? ResolvePrefab(string? guid)
+{
+    if (guid == null || !PrefabPathsByGuid.TryGetValue(guid, out var path))
+    {
+        return null;
+    }
+    if (!PrefabsByGuid.TryGetValue(guid, out var prefab))
+    {
+        var fileText = File.ReadAllText(path);
+        var name = RootGameObjectName(fileText);
+        var tokenLine = fileText.Split('\n').Select(l => l.Trim()).FirstOrDefault(l => l.StartsWith($"m_name: {LOCALIZATION_TOKEN_PREFIX}"));
+        prefab = name == null ? null : new Prefab(name, tokenLine?["m_name: ".Length..]);
+        PrefabsByGuid[guid] = prefab;
+    }
+    return prefab;
+}
+
+// The value of the first "key: value" line at the given depth in a block of Unity YAML.
+// Depth matters: a component nests lists whose entries reuse field names (m_enabled).
+string FieldValue(string yaml, string key, int depth = 1)
+{
+    var prefix = $"{new string(' ', 2 * depth)}{key}:";
+    var line = yaml.Split('\n').FirstOrDefault(l => l.StartsWith(prefix));
+    if (line == null)
+    {
+        Exit($"Field '{key}' not found.", 11);
+    }
+    return line![prefix.Length..].Trim();
+}
+
+// The guid of a "{fileID: ..., guid: ..., type: ...}" reference, or null for a null
+// reference ("{fileID: 0}").
+string? ReferencedGuid(string reference) =>
+    reference.Contains("guid:") ? reference.Split("guid:")[1].Split(',')[0].Trim() : null;
+
+string MetaGuid(string metaFile) => File.ReadAllText(metaFile).Split("guid: ")[1].Split('\n')[0].Trim();
+
+// guid -> full prefab path, from every *.prefab.meta sibling in the directory.
 Dictionary<string, string> BuildGuidIndex(string directory)
 {
     var metaFiles = Directory.GetFiles(directory, $"*{PREFAB_FILE_EXTENSION}{METAFILE_EXTENSION}", SearchOption.TopDirectoryOnly);
     var index = new Dictionary<string, string>(metaFiles.Length);
     foreach (var metaFile in metaFiles)
     {
-        var guid = File.ReadAllText(metaFile).Split("guid: ")[1].Split('\n')[0].Trim();
-        index[guid] = metaFile[..^METAFILE_EXTENSION.Length]; // strip .meta, leaving the .prefab path
+        index[MetaGuid(metaFile)] = metaFile[..^METAFILE_EXTENSION.Length]; // strip .meta, leaving the .prefab path
     }
     return index;
 }
@@ -663,7 +854,40 @@ void SaveLocalizationData()
     SaveDataAsCsvFile(localizationData, DestinationDirectory, LOCALIZATION_DATA_EXPORT_FILE);
 }
 
-// Save a collection of data records (anonymous types or, now, ItemData) to a CSV file
+// Save extracted recipe/piece data to JSON files, each sorted by name.
+void SaveRecipeData()
+{
+    if (!SwitchEnabled(SwitchNoRecipes))
+    {
+        SaveDataAsJsonFile(new { Recipes = Recipes.OrderBy(r => r.Name, StringComparer.Ordinal) }, Recipes.Count, "recipes", RECIPE_DATA_EXPORT_FILE);
+    }
+}
+
+void SavePieceData()
+{
+    if (!SwitchEnabled(SwitchNoPieces))
+    {
+        SaveDataAsJsonFile(new { Pieces = Pieces.OrderBy(p => p.Name, StringComparer.Ordinal) }, Pieces.Count, "pieces", PIECE_DATA_EXPORT_FILE);
+    }
+}
+
+// Save data to an indented JSON file with LF line endings regardless of host, so a
+// patch-day diff shows only what changed.
+void SaveDataAsJsonFile(object data, int count, string noun, string filename)
+{
+    try
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true, NewLine = "\n", PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        File.WriteAllText(Path.Combine(DestinationDirectory, filename), JsonSerializer.Serialize(data, options) + "\n");
+        Inform($"{count} {noun} saved to '{filename}'.");
+    }
+    catch (Exception ex)
+    {
+        Exit($"Failed to save file '{filename}'. {ex.Message}", 5);
+    }
+}
+
+// Save a collection of data records to a CSV file
 void SaveDataAsCsvFile<T>(IEnumerable<T> data, string path, string filename)
 {
     try
@@ -706,3 +930,14 @@ struct ItemData
     public decimal ScaleWeightByQuality { get; set; }
     public bool CanHaveCrafterTag { get; set; }
 }
+
+// Recipe data as written to RecipeData.json: game facts only, every reference a name.
+record Recipe(string Name, string Item, int Amount, string? Station, string? StationToken, int MinStationLevel, bool Craftable, bool RequireOnlyOneIngredient, string? Season, IReadOnlyList<Requirement> Resources);
+record Requirement(string Item, int Amount, int AmountPerLevel, bool Upgrader);
+
+// Piece data as written to PieceData.json, same rules. A piece has no quality levels, so its
+// requirements carry only the amount.
+record Piece(string Name, string NameToken, string Tool, int Category, string? Station, string? StationToken, string? Season, IReadOnlyList<PieceResource> Resources);
+record PieceResource(string Item, int Amount);
+
+record Prefab(string Name, string? Token);

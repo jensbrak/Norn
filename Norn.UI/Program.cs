@@ -20,14 +20,15 @@ public static class Program
         App.InitialFilePath = args.FirstOrDefault(a =>
             a.EndsWith(".fch", StringComparison.OrdinalIgnoreCase) && File.Exists(a));
 
-        // Six independent loads, none depending on another's output (found
-        // in review) — ItemCatalogShim/LocalizationCatalogShim in particular
-        // each parse a large bundled CSV via blocking I/O, so running all
-        // six serially summed their latency into the empty-window gap on
-        // every launch. Concurrent instead of sequential now.
+        // Independent loads, none depending on another's output — the
+        // catalog shims each parse a large bundled file via blocking I/O, so
+        // running them serially would sum their latency into the
+        // empty-window gap on every launch.
         Parallel.Invoke(
             ItemCatalogShim.LoadCatalog,
             LocalizationCatalogShim.LoadCatalog,
+            RecipeCatalogShim.LoadCatalog,
+            PieceCatalogShim.LoadCatalog,
             SettingsShim.LoadSettings,
             AppStateShim.Load,
             HelpShim.Load,
