@@ -9,12 +9,18 @@ namespace Norn.GameCore;
 /// </summary>
 public partial class Player
 {
+    // mirrors: Player (serialized fields and their defaults)
+    // source:  Valheim 1.0.16
     // note: NOT IN SOURCE. Declaration order below mostly follows Load's read
-    // order, confirmed against source for every field except the invented
-    // health pair. Two pairs are an exception: m_stamina before m_maxStamina,
-    // and m_eitr before m_maxEitr, follow source's own declaration order
-    // instead — source declares each pair in that order even though Load
-    // reads the max of each pair first.
+    // order, confirmed against source for every field except the ones source
+    // doesn't declare at all (the invented health pair, m_buildUiData,
+    // PlayerDataVersion — each noted where declared). Two pairs are an
+    // exception: m_stamina before m_maxStamina, and m_eitr before m_maxEitr,
+    // follow source's own declaration order instead — source declares each
+    // pair in that order even though Load reads the max of each pair first.
+    // note: VISIBILITY. Fields private (or private readonly) in source are
+    // public and mutable here so Adapter can reach them — same rule as
+    // PlayerProfile's own VISIBILITY note; no bearing on the wire format.
 
     // note: NOT IN SOURCE — INVENTED STORAGE. The game does not keep current
     // or max health in an instance field at all. Character.SetMaxHealth/
@@ -88,6 +94,9 @@ public partial class Player
     // GetFoods() returning the live list; made public and non-readonly here.
     public List<Food> m_foods = new List<Food>();
 
+    // note: DEFAULT DIVERGENCE. Uninitialised in source — a Unity component
+    // assigned in Awake via GetComponent. Allocated eagerly here: a headless
+    // reader has no component model, and Load would otherwise dereference null.
     public Skills m_skills = new Skills();
 
     // note: TYPE DIVERGENCE, same reasoning, for a Dictionary<string, string>
@@ -116,7 +125,7 @@ public partial class Player
     public int PlayerDataVersion { get; private set; }
 
     // mirrors: Player.Load(ZPackage)
-    // source:  Valheim 1.0.15
+    // source:  Valheim 1.0.16
     // note:    OMISSION, accepted. `m_isLoading` (set true at entry, false near
     //          the end), unequipping all items at entry, and three runtime
     //          refresh calls at the tail are all runtime/UI bookkeeping with no
@@ -411,14 +420,17 @@ public partial class Player
                 OrderedCollections.Set(m_customData, pkg.ReadString(), pkg.ReadString());
             }
 
-            float stamina = pkg.ReadSingle();
-            m_stamina = Math.Clamp(stamina, 0f, m_maxStamina);
+            m_stamina = Math.Clamp(pkg.ReadSingle(), 0f, m_maxStamina);
 
             m_maxEitr = pkg.ReadSingle();
 
-            float eitr = pkg.ReadSingle();
-            m_eitr = Math.Clamp(eitr, 0f, m_maxEitr);
+            m_eitr = Math.Clamp(pkg.ReadSingle(), 0f, m_maxEitr);
         }
+
+        // note: OMISSION, deliberate — source's flametal migration sits here
+        // (`v < 27`: renames the flametal entries in m_knownMaterial). Not
+        // applied; see this method's header. Kept as a marker at its source
+        // position so a patch touching the migration has somewhere to land.
 
         // note: NEW AT 1.0.7, read LAST — after the flametal migration, which
         // consumes no bytes. Same non-monotonic gate as the known-biome read
@@ -439,7 +451,7 @@ public partial class Player
     }
 
     // mirrors: Player.Save(ZPackage)
-    // source:  Valheim 1.0.15
+    // source:  Valheim 1.0.16
     // note:    One writer-only side effect the game performs is NOT
     //          replicated: it strips U+0016 (SYN) from both key and value of
     //          m_knownTexts — a lossy, one-way transform with no read-side

@@ -3,7 +3,7 @@ namespace Norn.GameCore;
 public partial class Skills
 {
     // mirrors: Skills.SkillType
-    // source:  Valheim 1.0.15
+    // source:  Valheim 1.0.16
     // note:    Explicit values only on Jump, Ride, and All — the rest are
     //          implicit sequential, exactly as source declares them. Gap at
     //          109 (between Dodge=108 and the explicit Ride=110) is in

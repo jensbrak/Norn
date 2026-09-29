@@ -216,7 +216,7 @@ BoneMawSerpentMeat,True,False,100,50,50,Bonemaw Meat,1,1,10,0,False
 BonemawSerpentScale,True,False,100,50,50,Bonemaw Scale,1,1,2,0,False
 BonemawSerpentTooth,True,False,100,50,50,Bonemaw Tooth,1,1,2,0,False
 Bow,True,True,50,50,1,Crude Bow,4,4,1.5,0,True
-BowAshlands,True,True,300,50,1,Ashlands Bow,4,4,1.5,0,True
+BowAshlands,True,True,300,50,1,Ash Fang,4,4,1.5,0,True
 BowAshlandsBlood,True,True,300,50,1,Blood Fang,4,4,1.5,0,True
 BowAshlandsRoot,True,True,300,50,1,Root Fang,4,4,1.5,0,True
 BowAshlandsStorm,True,True,300,50,1,Storm Fang,4,4,1.5,0,True
@@ -565,10 +565,10 @@ HelmetLeather,True,True,400,100,1,Leather Helmet,4,6,1,0,True
 HelmetLox,True,True,500,200,1,Lox Fur Hood,4,6,1,0,True
 HelmetMage,True,True,1000,200,1,Eitr-weave Hood,4,6,1,0,True
 HelmetMage_Ashlands,True,True,1000,200,1,Hood of Embla,4,6,1,0,True
-HelmetMidsummerCrown,True,False,1000,50,1,Midsummer Crown,1,6,1,0,False
+HelmetMidsummerCrown,True,False,1000,50,1,Midsummer Crown,1,6,1,0,True
 HelmetOdin,True,True,300,100,1,Hood of Oden,4,6,1,0,True
 HelmetPadded,True,True,1000,200,1,Padded Helmet,4,6,3,0,True
-HelmetPointyHat,True,True,800,100,1,Pointy Hat,4,6,3,0,False
+HelmetPointyHat,True,True,800,100,1,Pointy Hat,4,6,3,0,True
 HelmetRoot,True,True,800,100,1,Root Mask,4,6,3,0,True
 HelmetRootCrown,True,True,800,100,1,Crown of Roots,4,6,3,0,False
 HelmetStrawHat,True,True,800,100,1,Straw Hat,4,6,3,0,False

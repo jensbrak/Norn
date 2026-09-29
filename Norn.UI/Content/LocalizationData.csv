@@ -751,7 +751,7 @@ item_axe_iron_description,"Sharp and strong, a woodcutter's friend."
 item_axe_bronze,Bronze Axe
 item_axe_bronze_description,"A bright and burnished blade, curved like a smile."
 item_axe_blackmetal,Black Metal Axe
-item_axe_blackmetal_description,A perfectly-balanced axe forged from dark metal with an emerald sheen.
+item_axe_blackmetal_description,A perfectly balanced axe forged from dark metal with an emerald sheen.
 item_sword_blackmetal,Black Metal Sword
 item_sword_blackmetal_description,A thing of death and beauty. It catches the light with a greenish glow.
 item_atgeir_blackmetal,Black Metal Atgeir
@@ -2296,7 +2296,7 @@ menu_deleted,Deleted
 menu_expand,Expand
 menu_collapse,Collapse
 menu_restorebackup,Restore backup
-menu_cloudstorageused,Cloud storage used: $1/$2
+menu_cloudstorageused,Cloud storage used: $1
 menu_backuprestorefailedheader,Failed to restore backup!
 menu_movefailedheader,Failed to move file!
 menu_tryagainorrestart,Please try again or restart the game if the problem persists.
@@ -3702,8 +3702,6 @@ item_crossbow_ripper_nature,Root Ripper
 item_crossbow_ripper_nature_description,"If the bolt doesn't pin your foe in place, the roots surging up from the ground surely will."
 item_crossbow_ripper_lightning,Storm Ripper
 item_crossbow_ripper_lightning_description,The bolts will tear through your enemies like a particularly nasty gale.
-item_bow_ashlands,Ashlands Bow
-item_bow_ashlands_description,Forged through fire and flames.
 item_charredskull,Charred Skull
 hud_building2,Heavy Build
 piece_skullpile,Pile of Skulls
@@ -3720,6 +3718,8 @@ npc_dvergr_ashlands_random_private_area_alarm1,Hey!
 npc_dvergr_ashlands_random_aggravated1,You really shouldn't have done that!
 npc_dvergr_ashlands_random_aggravated2,I'll get you for that!
 location_morgenhole,Putrid Hole
+item_bow_ashlands,Ash Fang
+item_bow_ashlands_description,"Risen again from the ashes, this bow holds unyielding strength."
 item_bow_ashlandsblood,Blood Fang
 item_bow_ashlandsblood_description,Arrows loosed from this bow will tear into flesh with unmatched ferocity.
 item_bow_ashlandsroot,Root Fang
@@ -5812,9 +5812,9 @@ achievements_temporarily_cheated,Achievement progress is temporarily disabled fo
 achievements_permanently_cheated_character,Achievement progress is permanently disabled for this character due to dev command usage.
 achievements_permanently_cheated_world,Achievement progress is permanently disabled for this world due to using dev command world modifiers.
 achievements_permanently_cheated_bypass,Achievement progress is enabled for this character even though dev commands have been used.
-achievements_picked_up_cheated_item,Picked up an item affected by dev commands. Achievement progress is temporarily disabled.
-achievements_dropped_cheated_item,No more dev command items in inventory. Achievement progress is re-enabled.
-achievements_cheated_item_inventory,This item was summoned through dev commands.
+achievements_picked_up_cheated_item,Picked up cheated item. Achievement progress is temporarily disabled.
+achievements_dropped_cheated_item,No more cheated items in inventory. Achievement progress is re-enabled.
+achievements_cheated_item_inventory,This item was summoned through cheating means.
 ach_everyachievement,The Most Worthy
 ach_everyachievement_desc,Unlock every other achievement.
 tutorial_faderember_label,Hugin: Eternal Pyre
@@ -5902,7 +5902,7 @@ tutorial_prison_text,"Be wary! The being imprisoned beyond this gate is mighty, 
 tutorial_sacrificialblood_topic,It is time...
 tutorial_sacrificialblood_label,Hugin: Kall Fimbulbringer defeated
 tutorial_sacrificialblood_text,"Well done, warrior! You have found the sacrificial blood, the final key to restoring this realm. Now the All-Father has one last task for you – prove yourself worthy by journeying back to where it all began!"
-piece_drawbridge_log,"Rustic Drawbridge "
+piece_drawbridge_log,Rustic Drawbridge
 piece_drawbridge_log_description,"Convenient for crossing chasms, or for keeping enemies out."
 settings_graphics_preset_low_description,Looks good and runs well even on weak systems
 settings_graphics_preset_medium_description,Strikes a good balance between graphics quality and performance
@@ -5939,10 +5939,11 @@ se_loxseteffect_tooltip,The fur allows you to blend in with the wilderness and m
 stat_DeathByDrawBridge,Death by drawbridge
 enemy_writhan,Writhan
 enemy_root,Root
+playstation_activity_name,Exploring the 10th world
+playstation_trophy_set_online_only,Multiplayer-only trophies
 settings_skip_intro_cinematic,Skip intro cinematic
 settings_toggleblock,Toggle block
 settings_altdodge,Alternative dodge
-settings_open_radial_wheel,Open Radial Wheel
 settings_hotbar1,Hotbar 1
 settings_hotbar2,Hotbar 2
 settings_hotbar3,Hotbar 3
@@ -5951,4 +5952,5 @@ settings_hotbar5,Hotbar 5
 settings_hotbar6,Hotbar 6
 settings_hotbar7,Hotbar 7
 settings_hotbar8,Hotbar 8
-settings_clearkeyinfo,Press delete to clear
+settings_clearkeyinfo,Press Delete to clear
+settings_open_radial_wheel,Open Radial Wheel
