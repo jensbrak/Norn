@@ -128,16 +128,22 @@ internal sealed class AddItemWindow : Window
     private readonly TextBlock _amountLabel = new() { Text = "Amount:", VerticalAlignment = VerticalAlignment.Center, IsEnabled = false, Classes = { AmountLabelClass } };
     private readonly NumericUpDown _amount = AmountEntry.Integer(new() { Minimum = 1, Maximum = AmountEntry.Ceiling, Value = 1, IsEnabled = false, Width = 130 });
     private readonly ListBox _list = new();
+    private readonly TextBlock _weight = new() { Margin = new Thickness(12, 8, 12, 0) };
     private readonly Button _add = new() { Content = "Add", IsEnabled = false };
     private readonly CheckBox _keepOpen = new() { Content = "Keep window open" };
 
     private readonly bool _allowKeepOpen;
     private readonly Func<(string PrefabName, bool SetCrafter, int Amount), bool> _onPick;
+    private readonly Func<(CarryLoad Carried, double Capacity)> _carryState;
 
-    private AddItemWindow(bool allowKeepOpen, Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick)
+    private AddItemWindow(
+        bool allowKeepOpen,
+        Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick,
+        Func<(CarryLoad Carried, double Capacity)> carryState)
     {
         _allowKeepOpen = allowKeepOpen;
         _onPick = onPick;
+        _carryState = carryState;
 
         Title = "Add item";
         Icon = AppIcon.Default;
@@ -232,9 +238,12 @@ internal sealed class AddItemWindow : Window
 
         _list.Margin = new Thickness(12, 0, 12, 0);
 
+        DockPanel.SetDock(_weight, Dock.Bottom);
+
         var root = new DockPanel();
         root.Children.Add(topStack);
         root.Children.Add(bottomRow);
+        root.Children.Add(_weight);
         root.Children.Add(_list); // fills the remainder (DockPanel.LastChildFill)
 
         Content = DialogChrome.Wrap(root);
@@ -289,17 +298,35 @@ internal sealed class AddItemWindow : Window
             _amountLabel.IsEnabled = canStack;
             _amount.IsEnabled = canStack;
             _amount.Value = canStack && SettingsStore.Current.DefaultAmountToMaxOnAdd ? selected!.MaxStack : 1;
+            UpdateWeight();
         };
+        _amount.ValueChanged += (_, _) => UpdateWeight();
         _list.DoubleTapped += (_, _) => Confirm();
         _add.Click += (_, _) => Confirm();
         closeButton.Click += (_, _) => Close();
 
         Refresh();
+        UpdateWeight();
     }
 
     private void Refresh()
     {
         _list.ItemsSource = AddItemPickerView.Apply(_allItems, _search.Text ?? "", _categoryValues[_category.SelectedIndex]);
+    }
+
+    private int Amount => (int)(_amount.Value ?? 1);
+
+    // What the current selection and amount would add, and the total that
+    // leads to. The requested amount, not what a nearly full inventory would
+    // actually take — the status bar reports that once it's added.
+    private void UpdateWeight()
+    {
+        var (carried, capacity) = _carryState();
+        CarryLoad? added = _list.SelectedItem is AddItemRow row
+            ? CarryWeight.LoadOf([new ItemAmount(row.Item.ItemName, Math.Max(1, Amount))], SharedItemDataCatalog.TryFind)
+            : null;
+
+        CarryWeightText.ShowAddition(_weight, added, carried, capacity);
     }
 
     private void Confirm()
@@ -309,14 +336,15 @@ internal sealed class AddItemWindow : Window
             return;
         }
 
-        var pick = (row.Item.ItemName, _setCrafterTag.IsChecked == true, (int)(_amount.Value ?? 1));
+        var pick = (row.Item.ItemName, _setCrafterTag.IsChecked == true, Amount);
         var roomRemains = _onPick(pick);
 
         if (_allowKeepOpen && _keepOpen.IsChecked == true && roomRemains)
         {
             // Stay open: selection/search/category/checkbox state is left
             // exactly as it is, so a repeated Add or double-click adds again
-            // immediately.
+            // immediately. Only the weight it leads to has moved on.
+            UpdateWeight();
             return;
         }
 
@@ -334,10 +362,16 @@ internal sealed class AddItemWindow : Window
     /// returns whether room remains for another add; when
     /// <paramref name="allowKeepOpen"/> is true and its own "Keep window
     /// open" checkbox is checked, the window stays open to pick again as
-    /// long as room remains, instead of closing after one pick.</summary>
-    internal static async Task Open(Window owner, bool allowKeepOpen, Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick)
+    /// long as room remains, instead of closing after one pick.
+    /// <paramref name="carryState"/> supplies the inventory's current weight and capacity for the weight
+    /// line, re-read after every pick.</summary>
+    internal static async Task Open(
+        Window owner,
+        bool allowKeepOpen,
+        Func<(string PrefabName, bool SetCrafter, int Amount), bool> onPick,
+        Func<(CarryLoad Carried, double Capacity)> carryState)
     {
-        var window = new AddItemWindow(allowKeepOpen, onPick);
+        var window = new AddItemWindow(allowKeepOpen, onPick, carryState);
         await window.ShowDialog(owner);
     }
 }

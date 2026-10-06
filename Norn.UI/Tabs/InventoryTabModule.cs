@@ -191,9 +191,29 @@ public sealed class InventoryTabModule : ITabModule
             presetGroup.Children.Add(quickFill);
         }
 
-        container.Children.Add(buttonRow);
+        // Right-aligned on the buttons' own line, so its edge meets the
+        // grid's below.
+        var (load, capacity) = CarryState(editor);
+        var weight = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
+        CarryWeightText.ShowTotal(weight, load, capacity);
+        ToolTip.SetTip(weight, CarryWeightText.Explain(load, CarryWeight.HasMegingjordEquipped(items)));
+
+        var toolbar = new DockPanel();
+        DockPanel.SetDock(weight, Dock.Right);
+        toolbar.Children.Add(weight);
+        toolbar.Children.Add(buttonRow); // fills the remainder
+        container.Children.Add(toolbar);
 
         container.Children.Add(BuildGrid(editor, () => Rebuild(container, editor, onEdited, onMessage, carry), onEdited, onMessage, carry));
+    }
+
+    /// <summary>What the inventory weighs right now and what the character can
+    /// carry — re-read on every call, so a picker that stays open sees its
+    /// own earlier adds.</summary>
+    private static (CarryLoad Carried, double Capacity) CarryState(CharacterEditor editor)
+    {
+        var items = editor.View.Inventory.Items;
+        return (CarryWeight.LoadOf(items, SharedItemDataCatalog.TryFind), CarryWeight.CapacityOf(items));
     }
 
     private static StackPanel ButtonGroup(params Button[] buttons)
@@ -987,7 +1007,7 @@ public sealed class InventoryTabModule : ITabModule
             // Same "is there room for anything" formula the toolbar button's
             // own IsEnabled already uses — no new capacity concept.
             return FindFirstEmptySlot(editor.View.Inventory) is not null || editor.View.Inventory.Items.Any(CanFillStack);
-        });
+        }, () => CarryState(editor));
     }
 
     /// <summary>
@@ -1019,7 +1039,7 @@ public sealed class InventoryTabModule : ITabModule
 
             // Same room formula as the toolbar buttons' own enablement.
             return FindFirstEmptySlot(editor.View.Inventory) is not null || editor.View.Inventory.Items.Any(CanFillStack);
-        }, editor.CanAddItemBundle);
+        }, editor.CanAddItemBundle, () => CarryState(editor));
     }
 
     private static string PickQualifier(MaterialsPick pick)

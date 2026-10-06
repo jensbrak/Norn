@@ -21,8 +21,8 @@ internal sealed record MaterialsPick(
 /// <summary>
 /// The "Add materials" picker: pick a recipe or a build piece, get the
 /// materials it needs. Same layout and behavior as <see cref="AddItemWindow"/>
-/// — search, category, list, "Keep window open" — with a row of options and a
-/// preview of exactly what Add will put in the inventory.
+/// — search, category, list, weight line, "Keep window open" — with a row of
+/// options and a preview of exactly what Add will put in the inventory.
 /// <para>
 /// <b>Level</b> is the quality the materials are for, enabled only for a
 /// recipe whose output has quality levels. <b>Upgrade only</b> narrows that to
@@ -60,16 +60,22 @@ internal sealed class AddMaterialsWindow : Window
 
     private readonly ListBox _list = new();
     private readonly TextBlock _preview = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
+    private readonly TextBlock _weight = new() { Margin = new Thickness(12, 8, 12, 0) };
     private readonly Button _add = new() { Content = "Add", IsEnabled = false };
     private readonly CheckBox _keepOpen = new() { Content = "Keep window open" };
 
     private readonly Func<MaterialsPick, bool> _onPick;
     private readonly Func<IReadOnlyList<ItemAmount>, bool> _canFit;
+    private readonly Func<(CarryLoad Carried, double Capacity)> _carryState;
 
-    private AddMaterialsWindow(Func<MaterialsPick, bool> onPick, Func<IReadOnlyList<ItemAmount>, bool> canFit)
+    private AddMaterialsWindow(
+        Func<MaterialsPick, bool> onPick,
+        Func<IReadOnlyList<ItemAmount>, bool> canFit,
+        Func<(CarryLoad Carried, double Capacity)> carryState)
     {
         _onPick = onPick;
         _canFit = canFit;
+        _carryState = carryState;
 
         Title = "Add materials";
         Icon = AppIcon.Default;
@@ -131,11 +137,16 @@ internal sealed class AddMaterialsWindow : Window
         var previewScroll = new ScrollViewer { Content = _preview, Height = 150, Margin = new Thickness(12, 8, 12, 0) };
         DockPanel.SetDock(previewScroll, Dock.Bottom);
 
+        // Its own line under the preview rather than a line inside it, so it
+        // stays in view however long the ingredient list gets.
+        DockPanel.SetDock(_weight, Dock.Bottom);
+
         _list.Margin = new Thickness(12, 0, 12, 0);
 
         var root = new DockPanel();
         root.Children.Add(topStack);
         root.Children.Add(bottomRow);
+        root.Children.Add(_weight);
         root.Children.Add(previewScroll);
         root.Children.Add(_list); // fills the remainder
 
@@ -260,14 +271,27 @@ internal sealed class AddMaterialsWindow : Window
             _ => (null, null, null),
         };
 
-        var lines = new List<string> { "Adds:" };
-        lines.AddRange(materials.Select(m => $"    {SharedItemDataCatalog.TryFind(m.ItemName)?.DisplayName ?? m.ItemName} ×{m.Amount}"));
+        var lines = new List<string> { "Adds (weight in parentheses):" };
+        lines.AddRange(materials.Select(MaterialLine));
         lines.Add($"Station: {(row is null ? "" : stationToken is null ? "None" : LocalizationCatalog.TryFind(stationToken) ?? station ?? stationToken)}");
         lines.Add($"Season: {season}");
         lines.Add($"Fits inventory: {(row is null ? "" : fits ? "Yes" : "No")}");
 
         _preview.Text = string.Join('\n', lines);
         _add.IsEnabled = fits;
+
+        var (carried, capacity) = _carryState();
+        CarryLoad? added = materials.Count > 0 ? CarryWeight.LoadOf(materials, SharedItemDataCatalog.TryFind) : null;
+        CarryWeightText.ShowAddition(_weight, added, carried, capacity);
+    }
+
+    // Name, amount, and what that amount weighs — the last so a heavy
+    // ingredient stands out before it's added.
+    private static string MaterialLine(ItemAmount material)
+    {
+        var shared = SharedItemDataCatalog.TryFind(material.ItemName);
+        var line = $"    {shared?.DisplayName ?? material.ItemName} ×{material.Amount}";
+        return shared is null ? line : $"{line} ({shared.WeightFor(1) * material.Amount:0.0})";
     }
 
     private void Confirm()
@@ -283,7 +307,7 @@ internal sealed class AddMaterialsWindow : Window
         if (_keepOpen.IsChecked == true && roomRemains)
         {
             // Stay open with everything as it was; only whether the same
-            // pick still fits has changed.
+            // pick still fits, and the weight it leads to, have changed.
             UpdatePreview();
             return;
         }
@@ -306,10 +330,15 @@ internal sealed class AddMaterialsWindow : Window
     /// pick invokes <paramref name="onPick"/> immediately, which adds the
     /// materials and returns whether room remains for another add;
     /// <paramref name="canFit"/> drives the preview's fit line and Add's
-    /// enabled state.</summary>
-    internal static async Task Open(Window owner, Func<MaterialsPick, bool> onPick, Func<IReadOnlyList<ItemAmount>, bool> canFit)
+    /// enabled state; <paramref name="carryState"/> supplies the inventory's
+    /// current weight and capacity for the weight line.</summary>
+    internal static async Task Open(
+        Window owner,
+        Func<MaterialsPick, bool> onPick,
+        Func<IReadOnlyList<ItemAmount>, bool> canFit,
+        Func<(CarryLoad Carried, double Capacity)> carryState)
     {
-        var window = new AddMaterialsWindow(onPick, canFit);
+        var window = new AddMaterialsWindow(onPick, canFit, carryState);
         await window.ShowDialog(owner);
     }
 }
