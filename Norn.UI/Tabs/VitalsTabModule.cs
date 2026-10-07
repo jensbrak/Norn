@@ -47,9 +47,8 @@ public sealed class VitalsTabModule : ITabModule
         group.AddDivider();
 
         AddTimeSinceDeathRow(group, editor, onEdited, onMessage);
+        AddGuardianPowerRows(group, editor, onEdited, onMessage);
         var vitals = editor.View.Vitals;
-        group.AddRow("Guardian power", vitals.GuardianPower.Length > 0 ? vitals.GuardianPower : "(none)");
-        group.AddRow("Guardian power cooldown", TabRows.FormatDuration(vitals.GuardianPowerCooldown));
 
         group.AddDivider("Active food");
 
@@ -135,7 +134,7 @@ public sealed class VitalsTabModule : ITabModule
     /// <summary>
     /// Time since death: a formatted duration in the data column, a ✕ reset
     /// button (disabled once already zero) in the button column, and an
-    /// always-visible description explaining the "corpse run" grace mechanic
+    /// always-visible description explaining the "No skill drain" grace mechanic
     /// — genuine context worth always showing, not the button's own
     /// mechanical "what does clicking this do" (that's the button's own
     /// tooltip now; the two aren't substitutes for each other). <c>alignTop: true</c>: the description
@@ -167,13 +166,78 @@ public sealed class VitalsTabModule : ITabModule
             description.Text = FormatDeathTimerDescription(updated);
             button.IsEnabled = false;
             onMessage(wasProtected
-                ? "Time since death reset, corpse run restarted"
-                : "Time since death reset, corpse run started");
+                ? "Time since death reset, 'No skill drain' restarted"
+                : "Time since death reset, 'No skill drain' activated");
             onEdited();
         };
 
         group.AddRow("Time since death", text, button, description, alignTop: true);
     }
+
+    /// <summary>
+    /// The selected power as a drop-down of every power under the game's own
+    /// names, with the game's description of the selected one as its tooltip;
+    /// and the cooldown, with a ✕ that makes the power ready again. The
+    /// cooldown row has no description: the ✕'s own tooltip says it all. No power
+    /// is gated: which ones a character may pick in game is decided by the
+    /// world, which the character file says nothing about. A stored name the
+    /// game has no power for gets its own entry, shown as stored.
+    /// </summary>
+    private static void AddGuardianPowerRows(RowGroup group, CharacterEditor editor, Action onEdited, Action<string> onMessage)
+    {
+        var vitals = editor.View.Vitals;
+
+        var names = new List<string> { "" };
+        names.AddRange(GuardianPowers.Names);
+        if (!names.Contains(vitals.GuardianPower))
+        {
+            names.Add(vitals.GuardianPower);
+        }
+
+        var powers = names.Select(name => GuardianPowers.Find(name, LocalizationCatalog.TryFind)).ToList();
+
+        var combo = new ComboBox { Width = 240 };
+        for (var i = 0; i < names.Count; i++)
+        {
+            combo.Items.Add(powers[i]?.DisplayName ?? (names[i].Length > 0 ? names[i] : "(none)"));
+        }
+
+        combo.SelectedIndex = names.IndexOf(vitals.GuardianPower);
+        ToolTip.SetTip(combo, powers[combo.SelectedIndex]?.Description);
+        combo.SelectionChanged += (_, _) =>
+        {
+            var index = combo.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+
+            editor.SetGuardianPower(names[index]);
+            ToolTip.SetTip(combo, powers[index]?.Description);
+            onMessage(names[index].Length > 0 ? $"Guardian power set to {combo.Items[index]}" : "Guardian power cleared");
+            onEdited();
+        };
+
+        group.AddRow("Guardian power", combo, description: RowGroup.DescriptionText("Changing power won't reset cooldown."));
+
+        var cooldown = new TextBlock { Text = FormatGuardianPowerCooldown(vitals.GuardianPowerCooldown) };
+
+        var button = IconButtons.Create(IconButtons.ClearGlyph, "Makes the guardian power ready to use again.");
+        button.IsEnabled = vitals.GuardianPowerCooldown != 0f;
+        button.Click += (_, _) =>
+        {
+            editor.ResetGuardianPowerCooldown();
+            cooldown.Text = FormatGuardianPowerCooldown(editor.View.Vitals.GuardianPowerCooldown);
+            button.IsEnabled = false;
+            onMessage("Guardian power cooldown reset");
+            onEdited();
+        };
+
+        group.AddRow("Guardian power cooldown", cooldown, button);
+    }
+
+    private static string FormatGuardianPowerCooldown(float seconds) =>
+        seconds > 0f ? TabRows.FormatDuration(seconds) : "Ready";
 
     /// <summary>"Never" rather than a literal ~11.6-day duration, which
     /// would read as nonsense for a fresh character — <see cref="DeathMechanics.NeverDiedSentinel"/>
@@ -182,24 +246,19 @@ public sealed class VitalsTabModule : ITabModule
         seconds >= DeathMechanics.NeverDiedSentinel ? "Never" : TabRows.FormatDuration(seconds);
 
     /// <summary>
-    /// Below <see cref="DeathMechanics.HardDeathCooldownSeconds"/>, the
-    /// character is already inside the grace window, so a reset *prolongs*
-    /// existing protection rather than creating it. Above it (including the
-    /// "Never died" sentinel, which is far above), there is currently no
-    /// protection at all, so a reset *manufactures* it from nothing — a
-    /// different, more consequential action than a top-up. Kept as short as
-    /// the distinction allows — explanations should fit one line
-    /// where possible, though this one still wraps at the default window
-    /// width — see the wider default in <see cref="MainWindow"/>.
+    /// "No skill drain" is the game's own name for the status effect a
+    /// recent death gives. At or below <see cref="DeathMechanics.HardDeathCooldownSeconds"/>
+    /// it is active and a reset restarts it; above it (including the "Never
+    /// died" sentinel) a reset activates it without a death.
     /// </summary>
     private static string FormatDeathTimerDescription(float secondsSinceDeath)
     {
         if (secondsSinceDeath <= DeathMechanics.HardDeathCooldownSeconds)
         {
             var remaining = DeathMechanics.HardDeathCooldownSeconds - secondsSinceDeath;
-            return $"Protected: no skill loss on death right now — {TabRows.FormatDuration(remaining)} left in the grace window. Reset restarts it.";
+            return $"'No skill drain' active: {TabRows.FormatDuration(remaining)} left. Reset to restart timer.";
         }
 
-        return "Not protected: next death applies the full skill penalty. Reset creates the grace window without dying.";
+        return "'No skill drain' inactive. Reset to activate.";
     }
 }

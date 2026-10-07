@@ -641,6 +641,86 @@ public class CharacterEditorTests
         Assert.Equal(0f, reopened!.View.Vitals.TimeSinceDeath);
     }
 
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Set_guardian_power_round_trips_through_save_and_reload(string? fileName)
+    {
+        var corpusPath = Corpus.RequireFile(fileName);
+
+        var probe = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!probe.Load(), $"{fileName} is outside the compatible profile-version range.");
+        Assert.SkipWhen(PlayerLoader.Load(probe) is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        File.Copy(corpusPath, scratch.Path);
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+
+        var original = editor!.View.Vitals;
+        var uniques = editor.View.Unlockables.Uniques;
+
+        // Refused, and the already-selected power, are both genuine no-ops.
+        editor.SetGuardianPower("GP_Ashlands");
+        editor.SetGuardianPower(original.GuardianPower);
+        Assert.False(editor.IsDirty);
+        Assert.Equal(original.GuardianPower, editor.View.Vitals.GuardianPower);
+
+        var target = original.GuardianPower == "GP_Fader" ? "GP_Eikthyr" : "GP_Fader";
+        editor.SetGuardianPower(target);
+        Assert.True(editor.IsDirty);
+        editor.Save();
+
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        Assert.Equal(target, reopened!.View.Vitals.GuardianPower);
+        Assert.Equal(original.GuardianPowerCooldown, reopened.View.Vitals.GuardianPowerCooldown);
+        Assert.Equal(uniques, reopened.View.Unlockables.Uniques);
+
+        reopened.SetGuardianPower("");
+        Assert.Equal("", reopened.View.Vitals.GuardianPower);
+    }
+
+    /// <summary>
+    /// No corpus file was saved mid-cooldown, so each one is first rewritten
+    /// with a running cooldown — otherwise every case would be the no-op.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Corpus.Files), MemberType = typeof(Corpus))]
+    public void Reset_guardian_power_cooldown_round_trips_through_save_and_reload(string? fileName)
+    {
+        var corpusPath = Corpus.RequireFile(fileName);
+
+        var profile = new PlayerProfile(corpusPath);
+        Assert.SkipWhen(!profile.Load(), $"{fileName} is outside the compatible profile-version range.");
+        var player = PlayerLoader.Load(profile);
+        Assert.SkipWhen(player is null, $"{fileName} has no inner player-data blob.");
+
+        using var scratch = TempFile.Create();
+        player!.m_guardianPowerCooldown = 600f;
+        profile.m_playerData = PlayerLoader.Save(player);
+        profile.m_filename = scratch.Path;
+        profile.SavePlayerToDisk();
+
+        var editor = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(editor);
+        Assert.Equal(600f, editor!.View.Vitals.GuardianPowerCooldown);
+
+        editor.ResetGuardianPowerCooldown();
+        Assert.True(editor.IsDirty);
+        Assert.Equal(0f, editor.View.Vitals.GuardianPowerCooldown);
+
+        editor.Save();
+
+        var reopened = CharacterEditor.Open(scratch.Path);
+        Assert.NotNull(reopened);
+        Assert.Equal(0f, reopened!.View.Vitals.GuardianPowerCooldown);
+
+        // Already ready: a genuine no-op, which must not dirty the session.
+        reopened.ResetGuardianPowerCooldown();
+        Assert.False(reopened.IsDirty);
+    }
+
     /// <summary>
     /// Needs a corpus file with at least one active-food entry, which not
     /// every save has — skips otherwise rather than asserting on an entry

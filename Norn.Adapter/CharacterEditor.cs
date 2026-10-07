@@ -391,12 +391,12 @@ public sealed class CharacterEditor
         },
         p => View = View with { Vitals = VitalsMapper.Map(p) });
 
-    // game-derived: Player.HardDeath/OnDeath's "corpse run" grace-window
+    // game-derived: Player.HardDeath/OnDeath's "No skill drain" grace-window
     // behavior (Valheim 0.221.10/0.221.4, confirmed in both trees) —
     // described in prose only, no numeric threshold reproduced here.
     /// <summary>
     /// Sets the death timer to zero. This is a *grant*, not a punishment:
-    /// a low <c>m_timeSinceDeath</c> is the game's own "corpse run" grace
+    /// a low <c>m_timeSinceDeath</c> is the game's own "No skill drain" grace
     /// window (Player.HardDeath/OnDeath — a subsequent death within it costs
     /// no skills), so resetting this field gives the character that
     /// protection without an actual death, rather than pushing the value
@@ -412,6 +412,47 @@ public sealed class CharacterEditor
             }
 
             p.m_timeSinceDeath = 0f;
+            return true;
+        },
+        p => View = View with { Vitals = VitalsMapper.Map(p) });
+
+    // game-derived: Player.SetGuardianPower accepts any string and Player.Load
+    // checks it against nothing in the world; a name with no status effect
+    // behind it gives no power but is still added to the character's unique
+    // keys on the next world load. A stone never changes the cooldown.
+    // Confirmed against Valheim 1.0.16.
+    /// <summary>
+    /// Selects a guardian power by its save name, or none for an empty
+    /// string. Any other name is refused. The cooldown is left as it is.
+    /// </summary>
+    public void SetGuardianPower(string name) => MutateInnerBlob(
+        p =>
+        {
+            if (p.m_guardianPower == name || (name.Length > 0 && !GuardianPowers.Names.Contains(name)))
+            {
+                return false;
+            }
+
+            p.m_guardianPower = name;
+            return true;
+        },
+        p => View = View with { Vitals = VitalsMapper.Map(p) });
+
+    // game-derived: Player.UpdateGuardianPower counts
+    // m_guardianPowerCooldown down to 0 and ActivateGuardianPower refuses
+    // while it is above 0, so 0 is "ready". The game writes 0 itself in
+    // Player.ResetCharacter and the setpower console command. Confirmed
+    // against Valheim 1.0.16.
+    /// <summary>Makes the selected guardian power ready to use again.</summary>
+    public void ResetGuardianPowerCooldown() => MutateInnerBlob(
+        p =>
+        {
+            if (p.m_guardianPowerCooldown == 0f)
+            {
+                return false;
+            }
+
+            p.m_guardianPowerCooldown = 0f;
             return true;
         },
         p => View = View with { Vitals = VitalsMapper.Map(p) });

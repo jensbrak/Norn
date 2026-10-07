@@ -119,5 +119,14 @@ public class LocalizationCatalogTests
         var tutorial = LocalizationCatalog.TryFind("tutorial_start_text");
         Assert.NotNull(tutorial);
         Assert.Contains('\n', tutorial);
+
+        // Every guardian power's name and description come from this file.
+        foreach (var name in GuardianPowers.Names)
+        {
+            var power = GuardianPowers.Find(name, LocalizationCatalog.TryFind);
+            Assert.NotNull(power);
+            Assert.NotEqual(name, power.DisplayName);
+            Assert.DoesNotContain('$', power.Description);
+        }
     }
 }

@@ -33,7 +33,7 @@ public static class DeathMechanics
     //
     // This is Player.HardDeath()'s actual comparison threshold: a death
     // with Player.m_timeSinceDeath <= this value costs no skills (the
-    // "corpse run" grace window; strictly-greater-than is the only case
+    // "No skill drain" grace window; strictly-greater-than is the only case
     // that applies the penalty, so equality still protects).
     public const float HardDeathCooldownSeconds = 600f;
 }
