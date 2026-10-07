@@ -7,6 +7,19 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.3.0
+
+Quality of life improvements:
+
+- Inventory tab: Now possible to add materials for a recipe or a build piece.
+- Inventory tab: Now shows carried weight and carry capacity, and what adding items would do to it.
+- Vitals tab: Now possible to change Guardian Power and reset its cooldown.
+
+Compatibility adjustments:
+
+- Tested with Valheim 1.0.17.
+- Updated item data for some items.
+
 ## 1.2.1
 
 Bugfix: did not display rows of inventories with more than 4 rows.
