@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: Inventory
-// source:  Valheim 1.0.16
+// source:  Valheim 1.0.17
 // note:    LOCATION DIVERGENCE. m_inventory (the Inventory instance) is
 //          declared on Humanoid in source, not Player; Player inherits it.
 //          GameCore's Player holds an Inventory instance directly, since
@@ -16,22 +16,34 @@ public partial class Inventory
     public List<ItemData> m_inventory = new List<ItemData>();
 
     // mirrors: Inventory.Load(ZPackage)
-    // source:  Valheim 1.0.16
-    // note:    OMISSION, accepted. Two distinct things source does before an
-    //          item lands in a real inventory, neither mirrored here: an
-    //          inline empty-prefab-name skip in Load's own loop body (source
-    //          checks `if (text != "")` before ever calling AddItem), and
-    //          AddItem's own post-read semantics for everything that does get
-    //          called — drop on an unresolvable prefab name, clamp stack to
-    //          the prefab's max, truncate world level through a byte cast,
-    //          and merge by grid position when a mergeable stack already
-    //          occupies the slot. An out-of-grid or otherwise non-mergeable
-    //          position is discarded outright, not relocated — there is no
-    //          relocation on this path. Reproducing any of this needs
-    //          ObjectDB, an asset database this standalone reader does not
-    //          have, and is exactly what makes the game's own load path
-    //          non-identity. Every value is kept verbatim instead, including
-    //          ones the game would drop or alter.
+    // source:  Valheim 1.0.17
+    // note:    OMISSION, accepted. Source hands every item it reads to
+    //          AddItem, whose post-read semantics are not mirrored here, on
+    //          this path or LoadOld's. AddItem drops the item when ObjectDB
+    //          cannot resolve the prefab (by hash here, by the hashed stored
+    //          name in LoadOld) or the prefab has no ItemDrop; clamps the
+    //          stack to the prefab's max; assigns quality through SetQuality,
+    //          which keeps the value; resets the variant to 0 when it is
+    //          greater than 0 and greater than or equal to the prefab's
+    //          declared variant count (NEW AT 1.0.17,
+    //          ItemDrop.ResetVariantIfInvalid, no version gate); truncates
+    //          world level through a byte cast; and sets the cheated flag to
+    //          the stored flag OR "total damage exceeds 10000f", so an item
+    //          the file never marked cheated can come out marked. It then
+    //          places the item at its stored grid position: merged into a
+    //          same-type stack already there as far as that stack has room
+    //          (any remainder is lost), otherwise put in that exact slot.
+    //          There is no relocation on either path. An out-of-grid position
+    //          is discarded, with one asymmetry: skipValidPositionCheck
+    //          suppresses only the "y beyond the inventory height" term, and
+    //          this path passes it true while LoadOld passes false, so here
+    //          an item with an out-of-range y is placed rather than
+    //          discarded; a negative coordinate or an out-of-range x is
+    //          discarded on both. Reproducing any of this needs ObjectDB, an
+    //          asset database this standalone reader does not have, and is
+    //          exactly what makes the game's own load path non-identity.
+    //          Every value is kept verbatim instead, including ones the game
+    //          would drop or alter.
     // note:    CLEAR ORDER CHANGED AT 1.0.7. Through 0.221.10 source read the
     //          version and count first and cleared the list afterwards; it now
     //          clears first, before reading anything. No byte-level
@@ -43,8 +55,8 @@ public partial class Inventory
     //          total weight and invokes the m_onChanged delegate — runtime/UI
     //          bookkeeping with no bearing on the byte format, consuming no
     //          bytes. Not carried.
-    // note:    OMISSION, accepted, NEW AT 1.0.7 and the same shape as the
-    //          empty-prefab-name skip above. On the compact path source drops
+    // note:    OMISSION, accepted, NEW AT 1.0.7 and the same shape as
+    //          LoadOld's empty-prefab-name skip. On the compact path source drops
     //          any item whose prefab hash read back as 0, calling AddItem only
     //          when it is non-zero. This mirror keeps every item, for the same
     //          reason it keeps items with an empty legacy name: the bytes have
@@ -78,7 +90,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.Save(ZPackage)
-    // source:  Valheim 1.0.16
+    // source:  Valheim 1.0.17
     // note:    COLLAPSED TO THREE LINES AT 1.0.7. The per-item field sequence
     //          that used to live here moved onto ItemData.Save when the
     //          compact record landed; this method now writes only the version
@@ -105,7 +117,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.LoadOld(ZPackage, Version.Item)
-    // source:  Valheim 1.0.16
+    // source:  Valheim 1.0.17
     // note:    NEW METHOD AT 1.0.7 in name only — this is the 0.221.10 read
     //          loop, extracted into its own method when the compact path
     //          landed. Every gate below is unchanged from the previous mirror;
@@ -118,8 +130,8 @@ public partial class Inventory
     //          is reproduced anyway — a mirror transcribes what is there,
     //          including a branch the caller makes dead, because the next
     //          patch may change which caller reaches it.
-    // note:    SOURCE'S `if (text != "")` SKIP is not mirrored, same as the
-    //          Load note above: an item with an empty prefab name is kept
+    // note:    SOURCE'S `if (text != "")` SKIP is not mirrored, same as
+    //          Load's zero-hash skip above: an item with an empty prefab name is kept
     //          verbatim so it round-trips, rather than dropped as the game
     //          would drop it.
     // note:    PrefabHash IS COMPUTED HERE, from the stored name. Source does

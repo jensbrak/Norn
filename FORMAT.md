@@ -528,8 +528,12 @@ fields individually gated:
 prefab cannot be resolved are dropped; stack counts are clamped to the prefab
 maximum; world level is truncated through a byte cast (300 becomes 44,
 unchanged from pre-1.0, now also the on-wire representation in the compact
-form rather than just a post-read mutation); grid positions may be relocated
-or merged by placement logic. An item with an unresolvable prefab (empty name
+form rather than just a post-read mutation); a variant that is above 0 and at
+or past the prefab's variant count is reset to 0 (new at 1.0.17); the cheated
+flag is OR-ed with "total damage exceeds 10000"; and an item is merged into a
+same-type stack already at its stored grid position, or else placed in that
+exact slot — never relocated, and discarded if the position is outside the
+grid. An item with an unresolvable prefab (empty name
 pre-108; hash `0`, or a hash the game can't resolve, at 108+) is skipped after
 its bytes are consumed either way.
 
@@ -606,7 +610,8 @@ raw bytes through.
 1. Inventory items with an unresolvable prefab are dropped.
 2. Inventory stack counts are clamped to the prefab maximum.
 3. Inventory world level is truncated through a byte cast.
-4. Inventory grid positions may be relocated or merged.
+4. Inventory items sharing a grid position are merged, and one outside the
+   grid is dropped; nothing is relocated.
 5. Foods with an unresolvable prefab are dropped.
 6. Skills with an undefined type are dropped.
 7. Known stations below `v 15` are read and discarded.

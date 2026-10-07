@@ -21,13 +21,12 @@ public static class SkillProgression
     public const float MaxLevel = 100f;
 
     // game-derived: shape from Skills.OnDeath -> LowerAllSkills(factor)
-    // (level -= level * factor, multiplicative); magnitude assumes a 5%
-    // base loss — the widely-observed community figure, NOT a value the
-    // decompiled assembly can confirm. The real factor
-    // (Skills.m_DeathLowerFactor) is Unity-prefab-serialized data outside
-    // assembly_valheim; its code initializer (0.25) is known not to be the
-    // shipped value. Reversing an assumed 5% loss takes 1/0.95 - 1 ≈
-    // 5.263%, not a flat +5%. Just a seeded default; freely adjustable.
+    // (level -= level * factor, multiplicative); magnitude from the asset
+    // value of Skills.m_DeathLowerFactor, 0.05 on every occurrence
+    // (Player.prefab, start.unity, Backgroundscene.prefab; Valheim 1.0.17).
+    // The code initializer (0.25) is not the shipped value. Reversing a 5%
+    // loss takes 1/0.95 - 1 ≈ 5.263%, not a flat +5%. Just a seeded
+    // default; freely adjustable.
     public const float DefaultCompensatePercent = 5.263f;
 
     /// <summary>
