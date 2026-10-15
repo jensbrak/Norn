@@ -10,7 +10,7 @@ namespace Norn.GameCore;
 public partial class Player
 {
     // mirrors: Player (serialized fields and their defaults)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note: NOT IN SOURCE. Declaration order below mostly follows Load's read
     // order, confirmed against source for every field except the ones source
     // doesn't declare at all (the invented health pair, m_buildUiData,
@@ -117,6 +117,22 @@ public partial class Player
     // own Hud-less branch writes an empty array rather than skipping it.
     public byte[] m_buildUiData = Array.Empty<byte>();
 
+    // note: NOT IN SOURCE — LOCATION DIVERGENCE. The pity counters for
+    // low-chance creature drops that 1.0.20 appended to the player data live
+    // in the static CharacterDrop.s_pseudoCounter in source (a
+    // Dictionary<int, int>, indexer insertion) — Player.Load writes straight
+    // into it and Player.Save reads straight out of it. A static would be
+    // shared by every profile a standalone reader opens, so this mirror holds
+    // the pairs per Player under source's name instead. TYPE DIVERGENCE as
+    // for m_knownTexts: an ordered list, OrderedCollections.Set reproducing
+    // the indexer.
+    public List<KeyValuePair<int, int>> s_pseudoCounter = new List<KeyValuePair<int, int>>();
+
+    // note: TYPE DIVERGENCE, same reasoning, for a Dictionary<int, int>
+    // (private in source) whose source insertion is the indexer (overwrite in
+    // place). NEW AT 1.0.20.
+    public List<KeyValuePair<int, int>> m_itemUpgradeSeeds = new List<KeyValuePair<int, int>>();
+
     // note: NOT IN SOURCE. The game reads `v` into a local variable and never
     // retains it — no field. Captured for the same reason as
     // PlayerProfile.ProfileVersion: it decides which R1/R2 doctrine applies
@@ -125,7 +141,7 @@ public partial class Player
     public int PlayerDataVersion { get; private set; }
 
     // mirrors: Player.Load(ZPackage)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    OMISSION, accepted. `m_isLoading` (set true at entry, false near
     //          the end), unequipping all items at entry, and three runtime
     //          refresh calls at the tail are all runtime/UI bookkeeping with no
@@ -448,10 +464,28 @@ public partial class Player
         {
             m_buildUiData = pkg.ReadByteArray();
         }
+
+        // note: NEW AT 1.0.20, read after the build-UI blob. Both counts are
+        // ReadInt, not ReadNumItems. Source reuses one local for both counts;
+        // two are named here.
+        if (v >= Version.PlayerData.PostLaunch)
+        {
+            int pseudoCounterCount = pkg.ReadInt();
+            for (int i = 0; i < pseudoCounterCount; i++)
+            {
+                OrderedCollections.Set(s_pseudoCounter, pkg.ReadInt(), pkg.ReadInt());
+            }
+
+            int itemUpgradeSeedsCount = pkg.ReadInt();
+            for (int i = 0; i < itemUpgradeSeedsCount; i++)
+            {
+                OrderedCollections.Set(m_itemUpgradeSeeds, pkg.ReadInt(), pkg.ReadInt());
+            }
+        }
     }
 
     // mirrors: Player.Save(ZPackage)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    One writer-only side effect the game performs is NOT
     //          replicated: it strips U+0016 (SYN) from both key and value of
     //          m_knownTexts — a lossy, one-way transform with no read-side
@@ -464,7 +498,7 @@ public partial class Player
     //          above), there's nothing here for Save to skip.
     public void Save(ZPackage pkg)
     {
-        pkg.Write(33);
+        pkg.Write(34);
         pkg.Write(m_maxHealth);
         pkg.Write(m_health);
         pkg.Write(m_maxStamina);
@@ -559,5 +593,22 @@ public partial class Player
         // writes the empty array, which source treats as "reset to defaults"
         // and is what the Hud-less branch would have produced anyway.
         pkg.Write(m_buildUiData);
+
+        // note: NEW AT 1.0.20, and written UNCONDITIONALLY, like the build-UI
+        // blob above. A pre-34 save carried neither block; it gets two empty
+        // ones, which is what the game writes for empty dictionaries too.
+        pkg.Write(s_pseudoCounter.Count);
+        foreach (KeyValuePair<int, int> pair in s_pseudoCounter)
+        {
+            pkg.Write(pair.Key);
+            pkg.Write(pair.Value);
+        }
+
+        pkg.Write(m_itemUpgradeSeeds.Count);
+        foreach (KeyValuePair<int, int> pair in m_itemUpgradeSeeds)
+        {
+            pkg.Write(pair.Key);
+            pkg.Write(pair.Value);
+        }
     }
 }

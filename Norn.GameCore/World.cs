@@ -4,7 +4,7 @@ namespace Norn.GameCore;
 
 // mirrors: World field declarations (identity-relevant subset) +
 //          World.LoadWorld(SaveWithBackups)
-// source:  Valheim 1.0.17
+// source:  Valheim 1.0.20
 // note:    NOT AN EXHAUSTIVE FIELD LIST. Only fields reachable from
 //          LoadWorld's read path are carried, per the same rule
 //          PlayerProfile.cs already applies to its own load path. Not
@@ -36,7 +36,7 @@ namespace Norn.GameCore;
 //          would refuse to open. Deliberate: a missing .db has no bearing on
 //          whether the .fwl's own identity fields are readable, and this
 //          mirror never touches .db2 at all either way.
-//          `world != Version.World.DeepNorth -> m_createBackupBeforeSaving
+//          `world != Version.World.CheatCleanSlate -> m_createBackupBeforeSaving
 //          = true` (also no bytes, and a literal `v != 37` at 0.221.10) is
 //          likewise not carried, same "filesystem choreography, not format"
 //          reasoning PlayerProfile.cs already documents for its own
@@ -97,7 +97,7 @@ public class World
     public List<ZNet.CrossNetworkUserInfo> m_playerHistory = new List<ZNet.CrossNetworkUserInfo>();
 
     // mirrors: World.LoadWorld(SaveWithBackups)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    SIGNATURE DIVERGENCE. static World LoadWorld(SaveWithBackups)
     //          in source, resolving its own file paths from a
     //          SaveWithBackups value Norn has no counterpart for
@@ -157,18 +157,6 @@ public class World
 
         m_needsDB = ver >= Version.World.NeedsDB && zpackage.ReadBool();
 
-        // note: OMISSION, accepted, flagged here at its actual position
-        // (contrast the class-header note further up, which is too far away
-        // to catch on a patch-day diff):
-        // `if (world != Version.World.DeepNorth) { m_createBackupBeforeSaving
-        // = true; }` in source (World.cs:331-334 at 1.0.7) — a real per-patch
-        // version-tracking site, consuming no bytes and setting a field this
-        // mirror doesn't carry (filesystem-backup choreography, not format).
-        // It has moved with the ceiling every patch (`!= 36` at 0.221.4,
-        // `!= 37` at 0.221.10, and the named member for 41 now), which is
-        // exactly why it is flagged here rather than only in the class header.
-        // Same treatment PlayerProfile.cs gives its own equivalent omission.
-
         // note: OMISSION, accepted, NEW AT 1.0.7. Source also assigns
         // m_chunkedSave and then checks it against the
         // version at this point in the sequence: `if (flag != world >=
@@ -184,6 +172,23 @@ public class World
         // itself rejects outright. Accepted for the same reason — a world's
         // name and UID are readable either way, and this mirror never
         // inspects paths.
+
+        // note: OMISSION, accepted, flagged here at its actual position
+        // (contrast the class-header note further up, which is too far away
+        // to catch on a patch-day diff):
+        // `if (world != Version.World.CheatCleanSlate) { m_createBackupBeforeSaving
+        // = true; }` in source (World.cs:331-334 at 1.0.7) — a real per-patch
+        // version-tracking site, consuming no bytes and setting a field this
+        // mirror doesn't carry (filesystem-backup choreography, not format).
+        // It has moved with the ceiling every patch (`!= 36` at 0.221.4,
+        // `!= 37` at 0.221.10, `!= 41` through 1.0.17, and the named member
+        // for 42 now), which is
+        // exactly why it is flagged here rather than only in the class header.
+        // Same treatment PlayerProfile.cs gives its own equivalent omission.
+
+        // note: OMISSION, accepted, marker at its source position: source
+        // calls CheckDbFile here, between the backup flag and the GlobalKeys
+        // read. No bytes; see the class-header note.
 
         if (ver >= Version.World.GlobalKeys)
         {
@@ -217,7 +222,7 @@ public class World
     // frame, prior to any ZPackage parsing) — not a named source method of
     // its own, same "frame reading kept separate from payload parsing" shape
     // as PlayerProfile.LoadPlayerDataFromDisk.
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    FRAME DIVERGENCE FROM .fch. Confirmed directly: a .fwl is
     //          length-prefixed payload, then EOF — no
     //          trailing hash pair, unlike PlayerProfile's envelope. Nothing

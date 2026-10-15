@@ -9,15 +9,17 @@ namespace Norn.UI;
 /// </summary>
 public static class ForgeOfPotential
 {
-    // game-derived: CraftingStation upgrader idols' m_upgradeChance (flat
-    // across all 16 idol SharedData assets — not tiered by idol), confirmed
-    // 1.0.15.
+    // game-derived: upgrader idols' m_upgradeChance (ItemDrop SharedData on
+    // all 16 idol prefabs, flat — not tiered by idol), confirmed 1.0.20.
     private const double SuccessChance = 0.65;
 
     /// <summary>Chance of reaching <paramref name="quality"/> from
-    /// <paramref name="maxQuality"/> via that many consecutive, independent
+    /// <paramref name="maxQuality"/> via that many consecutive successful
     /// Forge attempts — 1.0 when already at or under max (zero attempts
-    /// needed).</summary>
+    /// needed). Since 1.0.20 the game draws each roll from a seeded chain
+    /// stored in the save (<c>Player.GetItemUpgradeChance</c>), so a given
+    /// character's outcome is fixed in advance; to someone who can't see the
+    /// seed, this is still the right odds.</summary>
     public static double ProbabilityOfReaching(int quality, int maxQuality) =>
         Math.Pow(SuccessChance, Math.Max(0, quality - maxQuality));
 

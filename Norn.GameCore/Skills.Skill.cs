@@ -3,7 +3,7 @@ namespace Norn.GameCore;
 public partial class Skills
 {
     // mirrors: Skills.Skill (fields relevant to the wire format only)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    TYPE DIVERGENCE. Source's Skill does not carry a skill type
     //          directly — it holds `m_info`, a reference to a SkillDef
     //          resolved by linear-scanning a Unity-inspector-populated asset

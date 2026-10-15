@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: Inventory
-// source:  Valheim 1.0.17
+// source:  Valheim 1.0.20
 // note:    LOCATION DIVERGENCE. m_inventory (the Inventory instance) is
 //          declared on Humanoid in source, not Player; Player inherits it.
 //          GameCore's Player holds an Inventory instance directly, since
@@ -16,7 +16,7 @@ public partial class Inventory
     public List<ItemData> m_inventory = new List<ItemData>();
 
     // mirrors: Inventory.Load(ZPackage)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    OMISSION, accepted. Source hands every item it reads to
     //          AddItem, whose post-read semantics are not mirrored here, on
     //          this path or LoadOld's. AddItem drops the item when ObjectDB
@@ -25,11 +25,15 @@ public partial class Inventory
     //          stack to the prefab's max; assigns quality through SetQuality,
     //          which keeps the value; resets the variant to 0 when it is
     //          greater than 0 and greater than or equal to the prefab's
-    //          declared variant count (NEW AT 1.0.17,
-    //          ItemDrop.ResetVariantIfInvalid, no version gate); truncates
-    //          world level through a byte cast; and sets the cheated flag to
-    //          the stored flag OR "total damage exceeds 10000f", so an item
-    //          the file never marked cheated can come out marked. It then
+    //          declared variant count (NEW AT 1.0.17, no version gate);
+    //          truncates world level through a byte cast; and sets the
+    //          cheated flag to the stored flag OR "total damage exceeds
+    //          10000f", so an item the file never marked cheated can come out
+    //          marked. Since 1.0.20 the variant reset and the damage test both
+    //          live in ItemDrop.EnsureValid (the test via
+    //          CheatUtils.HasCheatedProperties), called after the cheated
+    //          assignment; the stored flag it ORs with is already false for
+    //          item version 109 (see ItemData.m_cheated). It then
     //          places the item at its stored grid position: merged into a
     //          same-type stack already there as far as that stack has room
     //          (any remainder is lost), otherwise put in that exact slot.
@@ -90,7 +94,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.Save(ZPackage)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    COLLAPSED TO THREE LINES AT 1.0.7. The per-item field sequence
     //          that used to live here moved onto ItemData.Save when the
     //          compact record landed; this method now writes only the version
@@ -108,7 +112,7 @@ public partial class Inventory
     //          out to be reachable, its shape difference matters.
     public void Save(ZPackage pkg)
     {
-        pkg.Write(109);
+        pkg.Write(110);
         pkg.Write((ushort)m_inventory.Count);
         foreach (ItemData item in m_inventory)
         {
@@ -117,7 +121,7 @@ public partial class Inventory
     }
 
     // mirrors: Inventory.LoadOld(ZPackage, Version.Item)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    NEW METHOD AT 1.0.7 in name only — this is the 0.221.10 read
     //          loop, extracted into its own method when the compact path
     //          landed. Every gate below is unchanged from the previous mirror;

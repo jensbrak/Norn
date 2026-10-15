@@ -7,6 +7,14 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.3.1
+
+Compatibility adjustments:
+
+- Tested with Valheim 1.0.20, which changed the character save format. Characters saved by Valheim 1.0.20 can now be opened.
+- Saving a character in Norn writes the Valheim 1.0.20 format, just as the game does.
+- Items in characters saved before Valheim 1.0.20 no longer show as cheated. Valheim 1.0.20 clears that flag on old saves, and Norn shows what the game will see.
+
 ## 1.3.0
 
 Quality of life improvements:

@@ -9,7 +9,7 @@ namespace Norn.GameCore;
 public partial class PlayerProfile
 {
     // mirrors: PlayerProfile..ctor(string)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    OMISSION, partially accepted. Source's constructor also sets
     //          m_playerID = Utils.GenerateUID() after m_playerName. Both fields
     //          are read ungated at every supported version, so a loaded profile
@@ -35,7 +35,7 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile field declarations, in source's own declaration
     // order (which differs from LoadPlayerFromDisk's read order below).
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    NOT AN EXHAUSTIVE FIELD LIST. Only fields reachable from
     //          LoadPlayerFromDisk/SavePlayerToDisk are carried. Source declares
     //          several more with no bearing on the byte format at all, none
@@ -45,8 +45,9 @@ public partial class PlayerProfile
     //          standalone reader doesn't use — see the note on
     //          LoadPlayerDataFromDisk below; m_createBackupBeforeSaving governs
     //          the separate *timestamped* backup taken only when the version read at
-    //          load was not the current one (46 at 1.0.7, expressed as a named enum
-    //          member — it was a literal 43 at 0.221.10) — not the unconditional `.old`
+    //          load was not the current one (47 at 1.0.20, 46 at 1.0.7–1.0.17,
+    //          expressed as a named enum member — it was a literal 43 at
+    //          0.221.10) — not the unconditional `.old`
     //          rotation, which is a different mechanism entirely (see the note on
     //          SavePlayerToDisk's envelope overload); m_lastSaveLoad is a
     //          runtime timestamp never written to disk).
@@ -140,7 +141,7 @@ public partial class PlayerProfile
     public int ProfileVersion { get; private set; }
 
     // mirrors: PlayerProfile.LoadPlayerDataFromDisk()
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    m_filename holds a full path here, where the game holds a bare
     //          character name and composes the path through
     //          SaveSystem.GetCharacterPath(m_fileSource, m_filename) — called
@@ -205,7 +206,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.Load()
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     /// <summary>Loads the profile envelope. The inner player-data blob stays opaque.</summary>
     public bool Load()
     {
@@ -213,7 +214,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.LoadPlayerFromDisk()
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    BEHAVIOURAL DIVERGENCE, same as LoadPlayerDataFromDisk above: the
     //          game wraps this whole body in a try/catch that logs and swallows,
     //          still returning true. Exceptions propagate here instead.
@@ -221,12 +222,13 @@ public partial class PlayerProfile
     //          whose result is discarded — dead timing scaffolding, no bytes,
     //          no observable effect. Not carried.
     // note:    OMITTED VERSION COMPARISON. Immediately after the compatibility
-    //          check, source has `if (player != Version.Player.DeepNorth)
+    //          check, source has `if (player != Version.Player.CheatCleanSlate)
     //          { m_createBackupBeforeSaving = true; }` — a real version
     //          comparison that has tracked the ceiling at every patch so far
-    //          (`!= 42` at 0.221.4, `!= 43` at 0.221.10, now the named member
-    //          for 46), but the field it sets contributes no bytes (see the
-    //          field-declaration note above), so it has no counterpart here.
+    //          (`!= 42` at 0.221.4, `!= 43` at 0.221.10, `!= 46` through
+    //          1.0.17, now the named member for 47), but the field it sets
+    //          contributes no bytes (see the field-declaration note above), so
+    //          it has no counterpart here.
     //          Flagged at its actual position for patch-day visibility, since
     //          the field note alone is easy to miss when diffing this body.
     // note:    THE STATISTICS GATE IS NOT MONOTONIC, and this is the single
@@ -464,7 +466,7 @@ public partial class PlayerProfile
         return true;
 
         // mirrors: <LoadPlayerFromDisk>g__GetFirstSpawnFromPlayerData|10_0
-        // source:  Valheim 1.0.17
+        // source:  Valheim 1.0.20
         // note:    Decompiler-surfaced local function; source name restated per
         //          the source reading. Peeks into the m_playerData blob without
         //          disturbing the real parse of it — a fresh ZPackage is
@@ -501,7 +503,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SetName(string)
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     public void SetName(string name)
     {
         m_playerName = name;
@@ -509,7 +511,7 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile.SavePlayerToDisk() [profile-level fields; the
     // envelope frame below carries the final hash + length prefixes]
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    Writer-only side effects the game performs are NOT replicated,
     //          and they grew at 1.0.7: the game now increments the current
     //          world's play seconds in TWO stat slots (slot 0 and the current
@@ -554,7 +556,7 @@ public partial class PlayerProfile
         // field or a literal at this call site, so the bare-literal reading
         // is the consistent one across every version-literal site in this
         // project, not evidence about source's own form at this one.
-        payload.Write(46);
+        payload.Write(47);
 
         payload.Write(205);
         payload.Write(10);
@@ -674,7 +676,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SavePlayerToDisk(), envelope only
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    Only the final four writes are mirrored — GenerateHash, GetArray,
     //          then length/payload/length/hash. Everything else in the game's
     //          method is either payload serialisation or

@@ -1,7 +1,7 @@
 namespace Norn.GameCore;
 
 // mirrors: Version
-// source:  Valheim 1.0.17
+// source:  Valheim 1.0.20
 // note:    NOT AN EXHAUSTIVE FIELD LIST. Only the fields, enums and methods
 //          reachable from the .fch load path plus the .fwl2 load path are
 //          carried, per the rule "only fields reachable from Load/Save"
@@ -28,9 +28,11 @@ namespace Norn.GameCore;
 //          compatibility methods — source names the members there now, so we
 //          do too, and there is no longer an inlining question to reason
 //          about.
-// note:    MEMBER ORDER. Fields, methods and enum members are all kept in
-//          source's own declaration order, including where that order is
-//          strange. Version.Player in particular declares Stats/MapData/
+// note:    MEMBER ORDER. Within each group — fields, methods, enum members —
+//          source's own declaration order is kept, including where that
+//          order is strange. The groups themselves are not: a decompile
+//          emits the two methods before the five constants; here the
+//          constants come first. Version.Player in particular declares Stats/MapData/
 //          DeathPoint before OldestForwardCompatible and then jumps to
 //          FoodFix = 34; the gap at 31-33 and the out-of-sequence
 //          OldestForwardCompatible = 27 are source's, not a transcription
@@ -46,28 +48,28 @@ namespace Norn.GameCore;
 /// <summary>Version constants and the profile-envelope/world-envelope compatibility checks.</summary>
 public static class Version
 {
-    public const Player c_PlayerVersion = Player.DeepNorth;
+    public const Player c_PlayerVersion = Player.CheatCleanSlate;
 
-    public const World c_WorldVersion = World.DeepNorth;
+    public const World c_WorldVersion = World.CheatCleanSlate;
 
-    public const Item c_ItemDataVersion = Item.ChunksNCheats;
+    public const Item c_ItemDataVersion = Item.NewCheats;
 
-    public const PlayerData c_PlayerDataVersion = PlayerData.ChunkedNorth;
+    public const PlayerData c_PlayerDataVersion = PlayerData.PostLaunch;
 
     public const Map c_MapVersion = Map.PinsAuthor;
 
     public static bool IsWorldVersionCompatible(World version)
     {
-        return version <= World.DeepNorth && version >= World.OldestForwardCompatible;
+        return version <= World.CheatCleanSlate && version >= World.OldestForwardCompatible;
     }
 
     public static bool IsPlayerVersionCompatible(Player version)
     {
-        return version <= Player.DeepNorth && version >= Player.OldestForwardCompatible;
+        return version <= Player.CheatCleanSlate && version >= Player.OldestForwardCompatible;
     }
 
     // mirrors: Version.Player
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     public enum Player
     {
         Stats = 28,
@@ -86,11 +88,12 @@ public static class Version
         Celebration,
         AbandonedDN,
         Chunked,
-        DeepNorth
+        DeepNorth,
+        CheatCleanSlate
     }
 
     // mirrors: Version.World
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     public enum World
     {
         SupportNetTime = 4,
@@ -124,11 +127,12 @@ public static class Version
         DeepNorthNoChunk,
         DeepNorthNoChunk2,
         ChunkedSave,
-        DeepNorth
+        DeepNorth,
+        CheatCleanSlate
     }
 
     // mirrors: Version.Item
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     public enum Item
     {
         Quality = 101,
@@ -140,11 +144,12 @@ public static class Version
         Stable = 106,
         AbandonedDN,
         Smaller,
-        ChunksNCheats
+        ChunksNCheats,
+        NewCheats
     }
 
     // mirrors: Version.PlayerData
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     public enum PlayerData
     {
         Original = 2,
@@ -176,11 +181,12 @@ public static class Version
         BogWitch,
         AbandonedDN = 31,
         ChunkedSaves,
-        ChunkedNorth
+        ChunkedNorth,
+        PostLaunch
     }
 
     // mirrors: Version.Map
-    // source:  Valheim 1.0.17
+    // source:  Valheim 1.0.20
     // note:    Lived on Minimap as `private static int MAPVERSION = 8` through
     //          0.221.10 and moved here at 1.0.7. The value did not change; the
     //          home and the type did, and every Minimap gate that read an int

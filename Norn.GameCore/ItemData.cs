@@ -3,7 +3,7 @@ using Norn.GameCore.Primitives;
 namespace Norn.GameCore;
 
 // mirrors: ItemDrop.ItemData (fields on the .fch wire path only)
-// source:  Valheim 1.0.17
+// source:  Valheim 1.0.20
 // note:    LOCATION DIVERGENCE. Declared nested inside ItemDrop (a
 //          MonoBehaviour not otherwise mirrored) in source; nested inside
 //          Inventory here instead.
@@ -91,10 +91,14 @@ public partial class Inventory
         // written. It is: the compact record's trailing flag byte carries it
         // in bit 0x01, and item version 107 carried it as a plain trailing
         // bool. Item version 108 alone has no cheated byte at all.
+        // CHANGED AT 1.0.20: at item version 109 the byte is still read but
+        // no longer assigned, so the flag comes out false — the game's
+        // "clean slate" for items saved by 1.0.7–1.0.17. Only 110 and later
+        // assign it. Inventory.LoadOld's own cheated read (107) is unchanged.
         public bool m_cheated;
 
         // mirrors: ItemDrop.ItemData.Save(ZPackage)
-        // source:  Valheim 1.0.17
+        // source:  Valheim 1.0.20
         // note:    NEW METHOD AT 1.0.7. Through 0.221.10 the item record was
         //          written inline by Inventory.Save; the per-item write moved
         //          onto ItemData when the compact layout landed at item
@@ -186,7 +190,7 @@ public partial class Inventory
 
         // mirrors: ItemDrop.ItemData.Load(ZPackage, Version.Item) [static, and
         // the ValueTuple-returning overload that wraps it]
-        // source:  Valheim 1.0.17
+        // source:  Valheim 1.0.20
         // note:    SIGNATURE DIVERGENCE, two overloads collapsed to one.
         //          Source has `static (int, ItemData) Load(ZPackage,
         //          Version.Item)` whose entire body is `new ItemData()` plus a
@@ -242,7 +246,10 @@ public partial class Inventory
             if (itemVersion >= Version.Item.ChunksNCheats || itemVersion == Version.Item.AbandonedDN)
             {
                 byte b2 = pkg.ReadByte();
-                itemData.m_cheated = (b2 & 1) > 0;
+                if (itemVersion >= Version.Item.NewCheats)
+                {
+                    itemData.m_cheated = (b2 & 1) > 0;
+                }
             }
 
             itemData.PrefabHash = num;

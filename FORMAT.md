@@ -9,8 +9,10 @@ re-investigation.
 field order, types, version gates, and the behaviours a parser has to know. It
 is a description of a file format, not a copy of anyone's code.
 
-Reference version below is the format as of Valheim **1.0.7**. Historical
-values (0.221.4/0.221.10, pre-1.0) are given alongside where they differ, since
+Reference version below is the format as of Valheim **1.0.7**, with the
+1.0.20 changes (version bumps, two new player-data maps, the cheated-flag
+clean slate) marked where they land. Historical values (0.221.4/0.221.10,
+pre-1.0) are given alongside where they differ, since
 an older save can still show up and still has to load correctly.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for how Norn mirrors this, and
@@ -25,13 +27,13 @@ world file's own version, briefly noted at the end of this section), each a
 little-endian `Int32` at offset 0 of its own region. **The file envelope
 itself carries no version.**
 
-| Region | Where the version lives | Pre-1.0 (0.221.10) | 1.0.7 | Named (1.0.7) |
-|---|---|---:|---:|---|
-| Profile (outer package) | first `Int32` of the package | 43 | **46** | `Player.DeepNorth` |
-| Player data (inner blob) | first `Int32` of the player-data blob | 29 | **33** | `PlayerData.ChunkedNorth` |
-| Inventory (inside player data) | first `Int32` of the inventory region | 106 | **109** | `Item.ChunksNCheats` |
-| Skills (inside player data) | first `Int32` of the skills region | 2 | **2** (unchanged) | — |
-| Map data (per-world blob) | first `Int32` of the blob | 8 | **8** (unchanged) | `Map.PinsAuthor` |
+| Region | Where the version lives | Pre-1.0 (0.221.10) | 1.0.7–1.0.17 | 1.0.20 | Named (1.0.20) |
+|---|---|---:|---:|---:|---|
+| Profile (outer package) | first `Int32` of the package | 43 | 46 | **47** | `Player.CheatCleanSlate` |
+| Player data (inner blob) | first `Int32` of the player-data blob | 29 | 33 | **34** | `PlayerData.PostLaunch` |
+| Inventory (inside player data) | first `Int32` of the inventory region | 106 | 109 | **110** | `Item.NewCheats` |
+| Skills (inside player data) | first `Int32` of the skills region | 2 | 2 | **2** (unchanged) | — |
+| Map data (per-world blob) | first `Int32` of the blob | 8 | 8 | **8** (unchanged) | `Map.PinsAuthor` |
 
 As of 1.0.7 these are typed enum members in source (`Version.Player`,
 `Version.PlayerData`, `Version.Item`, `Version.Map`), not loose integer
@@ -49,14 +51,16 @@ The compatibility check is applied **only to the profile envelope version**,
 never to player-data, inventory, skills, or map versions:
 
 ```
-accepted  ⇔  27 ≤ profileVersion ≤ 46      (43 pre-1.0)
+accepted  ⇔  27 ≤ profileVersion ≤ 47      (46 at 1.0.7–1.0.17, 43 pre-1.0)
 ```
 
 **Both bounds are inclusive.**
 
 **World files (`.fwl`/`.fwl2`) carry their own, separate version**, unrelated
-to the four above — 37 pre-1.0, **41** at 1.0.7 (`World.DeepNorth`), same
-27-style compatibility check (`9 ≤ worldVersion ≤ 41`). Out of scope for the
+to the four above — 37 pre-1.0, 41 at 1.0.7–1.0.17 (`World.DeepNorth`),
+**42** at 1.0.20 (`World.CheatCleanSlate`, a version bump only — the
+`.fwl2` layout is unchanged), same 27-style compatibility check
+(`9 ≤ worldVersion ≤ 42`). Out of scope for the
 rest of this document, which is about the character-save path specifically;
 noted here only because the world file's version lives in the same style of
 region header.
@@ -196,7 +200,7 @@ With `ver` = profile version:
 
 1. `Int32` — profile version.
 2. Compatibility check; out-of-range aborts the load.
-3. `ver != 46` (`ver != 42` pre-1.0) sets a "back up before saving" flag.
+3. `ver != 47` (`!= 46` at 1.0.7–1.0.17, `ver != 42` pre-1.0) sets a "back up before saving" flag.
    **Write-side only**, no read effect. Note this is an inequality, not a
    comparison.
 4. **Statistics block — restructured at 1.0.7, and not a simple version bump.**
@@ -382,8 +386,16 @@ With `v` = player-data version:
 24. **New at 1.0.7 — trailing build-UI blob, gated `v ≥ 33 || v == 31`** (same
     non-monotonic gate as known biomes, step 15): a length-prefixed byte array
     with **no version field of its own**, read as the *last* thing in the
-    player blob, after the flametal migration. See section 5a. `v == 0` (an empty
-    blob) is legal and means "reset to defaults."
+    player blob through 1.0.17, after the flametal migration. See section 5a.
+    `v == 0` (an empty blob) is legal and means "reset to defaults."
+25. **New at 1.0.20 — two trailing `Int32`→`Int32` maps, one gate `v ≥ 34`:**
+    an `Int32` count (plain, not a varint) then that many (`Int32` key,
+    `Int32` value) pairs, twice. The first holds the game's pity counters for
+    low-chance creature drops (key: a hash of the creature prefab name plus
+    the drop chance ×1000; value: tries left until the drop is guaranteed).
+    The second holds per-item seeds for the upgrade-chance roll. **The writer
+    emits both unconditionally**, so a re-saved pre-34 file gains two empty
+    maps (two zero counts).
 
 ### Write-side asymmetry worth knowing
 
@@ -470,7 +482,11 @@ custom data:
 Then, gated **`version ≥ 109 || version == 107`**: one `byte`, whose bit
 `0x01` is a new `cheated` flag (the remaining seven bits are unused). Only
 reachable in practice via `version ≥ 109` — see the three-way item-version
-split below.
+split below. **Since 1.0.20 the byte is only *assigned* at `version ≥ 110`:**
+at 109 it is still read (no offset changes) but discarded, so every item
+saved by 1.0.7–1.0.17 loads as not cheated. The game's own name for the
+release is "cheat clean slate". The legacy record's cheated bool (`== 107`)
+is unaffected.
 
 **The prefab identifier is now a one-way hash, not a name.** The compact
 record stores a stable hash of the prefab name (a 32-bit hash over the
@@ -530,7 +546,8 @@ maximum; world level is truncated through a byte cast (300 becomes 44,
 unchanged from pre-1.0, now also the on-wire representation in the compact
 form rather than just a post-read mutation); a variant that is above 0 and at
 or past the prefab's variant count is reset to 0 (new at 1.0.17); the cheated
-flag is OR-ed with "total damage exceeds 10000"; and an item is merged into a
+flag is OR-ed with "total damage exceeds 10000" (after the 1.0.20 discard at
+item version 109, see above); and an item is merged into a
 same-type stack already at its stored grid position, or else placed in that
 exact slot — never relocated, and discarded if the position is outside the
 grid. An item with an unresolvable prefab (empty name
@@ -673,8 +690,8 @@ unchanged rather than recomputing it.
 
 | Region | Gate | Note |
 |---|---|---|
-| profile accepted | `27 ≤ ver ≤ 46` (43 pre-1.0) | both inclusive |
-| backup-before-save flag | `ver != 46` (`!= 43` pre-1.0) | inequality; write-side only |
+| profile accepted | `27 ≤ ver ≤ 47` (46 at 1.0.7–1.0.17, 43 pre-1.0) | both inclusive |
+| backup-before-save flag | `ver != 47` (`!= 46` at 1.0.7–1.0.17, `!= 43` pre-1.0) | inequality; write-side only |
 | stats — new 2-D block | `ver ≥ 46 \|\| ver == 44` | **non-monotonic; 45 excluded** |
 | stats — legacy flat array | `38 ≤ ver < 46 && ver != 44` | into slot 0 only |
 | stats — legacy 4 ints | `28 ≤ ver < 38` | into slot 0 only |
@@ -708,6 +725,7 @@ unchanged rather than recomputing it.
 | material rename | `v < 27` | consumes no bytes |
 | first-spawn back-fill | `8 ≤ v < 28` | consumes no bytes |
 | build-UI blob | `v ≥ 33 \|\| v == 31` | **new at 1.0.7; same non-monotonic gate as known biomes** |
+| drop pity counters + item upgrade seeds | `v ≥ 34` | **new at 1.0.20**; written unconditionally |
 | inventory legacy vs. compact | `iv ≥ 108` | field-width change too: `ushort` count, not `Int32` |
 | item quality (legacy record) | `iv ≥ 101` | default `1` |
 | item variant (legacy record) | `iv ≥ 102` | default `0` |
@@ -717,6 +735,7 @@ unchanged rather than recomputing it.
 | item picked up (legacy record) | `iv ≥ 106` | default `false` |
 | item legacy cheated bool | `iv == 107` | trailing bool, legacy record only |
 | item cheated flag (compact record) | `iv ≥ 109 \|\| iv == 107` | effectively `iv ≥ 109`; see section 6 |
+| item cheated flag *assigned* | `iv ≥ 110`, nested inside the above | **new at 1.0.20**; at 109 the byte is read and discarded |
 | skill accumulator | `sv ≥ 2` | default `0` |
 | map compressed | `m ≥ 7` | |
 | map masks as byte arrays | `m ≥ 5` | else per-texel bools |
