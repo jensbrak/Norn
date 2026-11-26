@@ -7,6 +7,14 @@ text matching `AppInfo.Version` (i.e. the `Version` value in
 `Directory.Build.props`) exactly. A version with no matching section here
 falls back to the welcome window's own placeholder text.
 
+## 1.3.2
+
+Compatibility adjustments:
+
+- Tested with Valheim 1.0.30, which did not change the character save format (Norn 1.3.1 reads Valheim 1.0.30 save files just fine).
+- Item, recipe and piece data are refreshed from the new game version (for example Linen Thread's weight and the Forge of Potential upgrade items).
+- "Date created" now shows the date in your local timezone, as the game does from 1.0.30.
+
 ## 1.3.1
 
 Compatibility adjustments:
