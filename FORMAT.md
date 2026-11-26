@@ -668,18 +668,23 @@ a writer that always emits the current version still has to *do* the
 migration (convert, not just discard), because the field has to be written in
 some form and the current format only has one.
 
-### The creation-date field does not round-trip in the game itself
+### The creation-date field did not round-trip in the game itself before 1.0.30
 
-This is a genuine game bug, not a decompilation artefact. The date is read from
-Unix seconds with **time-of-day discarded**. The write side then reconstructs
-the integer from that date-only value using a conversion that treats an
-unspecified-kind timestamp as **local** time. On any host not on UTC this
-recomputes a *different* Unix timestamp than the one on disk, drifting by a
-calendar day around local midnight. Unchanged by 1.0.7.
+This was a genuine game bug, not a decompilation artefact. Through 1.0.20 the
+date was read from Unix seconds with **time-of-day discarded**. The write side
+reconstructs the integer using a conversion that treats the timestamp as
+**local** time, so on any host not on UTC it recomputed a *different* Unix
+timestamp than the one on disk, drifting by a calendar day around local
+midnight.
 
-**The game's own save/load cycle does not round-trip this field on a non-UTC
-host.** A byte-exact writer must capture the on-disk integer and re-emit it
-unchanged rather than recomputing it.
+**Since 1.0.30 the read side converts to local time instead**, keeping the
+time of day, so the game's own save/load cycle round-trips the integer exactly
+on any host (`ver >= 38`). The value the game holds in memory, and shows, is
+therefore the creation time in the host's own timezone. For older saves
+(`ver < 38`, no integer on disk) the game still synthesizes one from a fixed
+default date as local time, which differs by host. A byte-exact writer should
+still capture the on-disk integer and re-emit it unchanged rather than
+recomputing it.
 
 ## 9. Consolidated gate inventory
 

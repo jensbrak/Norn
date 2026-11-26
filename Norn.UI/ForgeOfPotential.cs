@@ -10,7 +10,7 @@ namespace Norn.UI;
 public static class ForgeOfPotential
 {
     // game-derived: upgrader idols' m_upgradeChance (ItemDrop SharedData on
-    // all 16 idol prefabs, flat — not tiered by idol), confirmed 1.0.20.
+    // all 16 idol prefabs, flat — not tiered by idol), confirmed 1.0.30.
     private const double SuccessChance = 0.65;
 
     /// <summary>Chance of reaching <paramref name="quality"/> from

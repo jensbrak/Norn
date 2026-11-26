@@ -3,7 +3,21 @@ using System.Security.Cryptography;
 namespace Norn.GameCore.Primitives;
 
 // mirrors: ZPackage
-// source:  Valheim 0.221.10
+// source:  Valheim 1.0.30
+// note:    1.0.30 re-decomposed the writer half byte-neutrally and Norn keeps
+//          the older shape: nine Write overloads route through this.Write(...)
+//          instead of m_writer, Write(float)/Write(double) go through
+//          BitConverter.SingleToInt32Bits/DoubleToInt64Bits, GetArray()/Size()
+//          call Flush() instead of inlining the two flush calls, and
+//          Write(ZPackage) writes from the stream buffer instead of a
+//          GetArray() copy. Every change produces the same bytes; source's
+//          reader half did not change. The one real encoding change,
+//          WriteSmallRotation (via a new Utils.QuantizeHalfDegrees), is
+//          world/ZDO-only.
+// note:    NOT AN EXHAUSTIVE MEMBER LIST. Besides SetReader/SetWriter (below),
+//          these source members (all present since 1.0.7) are not carried, as
+//          nothing on the .fch path calls them: GetCompressed(), Decompress(),
+//          WriteSmallRotation(Vector3), ReadSmallRotation(), Flush().
 // note:    The game declares this in the global namespace; ours is namespaced.
 //          Unavoidable, and the only such divergence in this project.
 // note:    SetReader(BinaryReader) and SetWriter(BinaryWriter) are NOT carried.

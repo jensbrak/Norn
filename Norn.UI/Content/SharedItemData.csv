@@ -618,7 +618,7 @@ Larva,True,False,100,50,20,$item_larva,1,1,1,0,False
 LastBossGate_RuneTile,True,False,100,50,3,$item_runetile,1,1,0.5,0,False
 LeatherScraps,True,False,100,50,50,Leather Scraps,1,1,0.5,0,False
 Leatherstraps,True,False,100,50,50,Leather Straps,1,1,0.5,0,False
-LinenThread,True,False,100,50,50,Linen Thread,1,1,2,0,False
+LinenThread,True,False,100,50,50,Linen Thread,1,1,0.5,0,False
 Lingonberry,True,False,100,50,50,Lingonberries,1,2,0.1,0,False
 Lingondricka,True,False,100,50,10,Lingonberry Juice,1,2,1,0,True
 LoxMeat,True,False,100,50,20,Lox Meat,1,1,2,0,False

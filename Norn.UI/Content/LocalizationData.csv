@@ -4829,7 +4829,7 @@ item_legs_gold_uncooked_description,This armour needs to be hardened with frost.
 piece_woodroof67_description,"A simple roof to keep the rain out, built at a very steep angle."
 piece_darkwoodroof67_description,"This very steep roof is sure to keep the rain out, and look good doing it."
 piece_stave_walls_description,Heavy timber walls are good for keeping out the cold.
-piece_scale_walls_description,The overlapping wood of these walls provide excellent protection against the elements.
+piece_scale_walls_description,The overlapping wood of these walls provides excellent protection against the elements.
 piece_stavebeams_description,These thick chunks of wood are sure to support your constructions.
 piece_stave_deco_beams_description,These supports add a tasteful and decorative touch.
 piece_deco_stave_wall_description,"This wall won't do much to keep out the cold, but it's very pretty to look at."
@@ -5939,6 +5939,10 @@ se_loxseteffect_tooltip,The fur allows you to blend in with the wilderness and m
 stat_DeathByDrawBridge,Death by drawbridge
 enemy_writhan,Writhan
 enemy_root,Root
+piece_darkwoodbeam_67,Darkwood Beam 67°
+report_user_warning_received_body,Another player has reported you for your online behaviour. Your actions were deemed to have breached the terms of service as listed in the EULA at valheim.com/eula. Further infractions may result in your account being banned from crossplay.
+report_user_ban_reason,Ban reason: $1
+stat_DeathByAshlandsLava,Death by Ashlands lava
 playstation_activity_name,Exploring the 10th world
 playstation_trophy_set_online_only,Multiplayer-only trophies
 settings_skip_intro_cinematic,Skip intro cinematic
@@ -5954,3 +5958,7 @@ settings_hotbar7,Hotbar 7
 settings_hotbar8,Hotbar 8
 settings_clearkeyinfo,Press Delete to clear
 settings_open_radial_wheel,Open Radial Wheel
+settings_accessibilitybrightness,Brighten dark environments
+buildui_search,Search
+buildui_focustags,Focus Tags
+buildui_focuspieces,Focus Pieces

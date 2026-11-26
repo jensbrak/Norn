@@ -9,7 +9,7 @@ namespace Norn.GameCore;
 public partial class PlayerProfile
 {
     // mirrors: PlayerProfile..ctor(string)
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    OMISSION, partially accepted. Source's constructor also sets
     //          m_playerID = Utils.GenerateUID() after m_playerName. Both fields
     //          are read ungated at every supported version, so a loaded profile
@@ -17,6 +17,11 @@ public partial class PlayerProfile
     //          counter/random source) is not mirrored since it has no bearing
     //          on reading an existing file. "Stranger" is kept for diffability;
     //          the ID stays at its field default (0).
+    // note:    OMISSION. Source's constructor also takes a FileHelpers.FileSource
+    //          parameter (default Auto) and sets m_fileSource from it, between
+    //          m_filename and m_playerName. Not carried: m_fileSource only picks
+    //          a path strategy and contributes no bytes (see the field note
+    //          further down).
     // note:    The m_playerStats fill loop is new at 1.0.7 and is NOT optional
     //          the way the omissions above are: the field initializer allocates
     //          the array but leaves all ten elements null, so without this loop
@@ -35,7 +40,7 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile field declarations, in source's own declaration
     // order (which differs from LoadPlayerFromDisk's read order below).
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    NOT AN EXHAUSTIVE FIELD LIST. Only fields reachable from
     //          LoadPlayerFromDisk/SavePlayerToDisk are carried. Source declares
     //          several more with no bearing on the byte format at all, none
@@ -45,7 +50,7 @@ public partial class PlayerProfile
     //          standalone reader doesn't use — see the note on
     //          LoadPlayerDataFromDisk below; m_createBackupBeforeSaving governs
     //          the separate *timestamped* backup taken only when the version read at
-    //          load was not the current one (47 at 1.0.20, 46 at 1.0.7–1.0.17,
+    //          load was not the current one (47 at 1.0.20–1.0.30, 46 at 1.0.7–1.0.17,
     //          expressed as a named enum member — it was a literal 43 at
     //          0.221.10) — not the unconditional `.old`
     //          rotation, which is a different mechanism entirely (see the note on
@@ -110,22 +115,22 @@ public partial class PlayerProfile
     /// </summary>
     public byte[] m_playerData;
 
-    // note:    NOT IN SOURCE. m_dateCreated (ver >= 38) is derived from a Unix-
-    //          seconds Int64 via DateTimeOffset.FromUnixTimeSeconds(...).Date —
-    //          truncating to a date discards the time-of-day irrecoverably. The
-    //          game's own write side then reconstructs the Int64 via
-    //          `new DateTimeOffset(m_dateCreated).ToUnixTimeSeconds()`, and that
-    //          constructor treats a Kind=Unspecified DateTime as LOCAL time. On
-    //          any host east or west of UTC this recomputes a different Unix
-    //          timestamp than the one on disk — a genuine bug in the game, not a
-    //          decompilation artefact, and a concrete R1/R2 hazard independent of
-    //          host timezone. Fixed here by treating the raw Int64 as the
-    //          authoritative value: captured verbatim on load, re-emitted
-    //          verbatim on save, never recomputed from m_dateCreated. For the
-    //          ver < 38 legacy branch (no Int64 on disk at all), a value is
-    //          synthesized from the literal 2021-02-02 default using an explicit
-    //          UTC offset (not the game's local-time-assuming constructor), which
-    //          round-trips deterministically regardless of host timezone.
+    // note:    NOT IN SOURCE. The raw Unix-seconds Int64 behind m_dateCreated,
+    //          captured verbatim on load and re-emitted verbatim on save, never
+    //          recomputed from m_dateCreated. For ver >= 38 the game
+    //          derives m_dateCreated via `.LocalDateTime` (since 1.0.30), and its
+    //          write side recomputes the Int64 from that, which round-trips on
+    //          any host except for instants in the repeated hour of a DST
+    //          fall-back. So this field is still needed there, for that hour,
+    //          not only for the legacy branch. On the ver < 38 legacy branch there is no
+    //          Int64 on disk; it is synthesized from the literal 2021-02-02
+    //          default exactly as the game's write side computes it
+    //          (`new DateTimeOffset(m_dateCreated)`, LOCAL time), so the value
+    //          written is host-dependent, as in the game, and reads back via
+    //          `.LocalDateTime` as the same 2021-02-02 midnight. (Norn versions
+    //          mirroring 1.0.20 and earlier used an explicit UTC offset here.)
+    //          m_dateCreated itself is host-timezone-dependent (local time of
+    //          day); the game also seeds the Forge upgrade-roll fallback from it.
     public long DateCreatedUnixSeconds;
 
     // note:    NOT IN SOURCE. The game writes nothing after the hash and never
@@ -141,7 +146,7 @@ public partial class PlayerProfile
     public int ProfileVersion { get; private set; }
 
     // mirrors: PlayerProfile.LoadPlayerDataFromDisk()
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    m_filename holds a full path here, where the game holds a bare
     //          character name and composes the path through
     //          SaveSystem.GetCharacterPath(m_fileSource, m_filename) — called
@@ -206,7 +211,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.Load()
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     /// <summary>Loads the profile envelope. The inner player-data blob stays opaque.</summary>
     public bool Load()
     {
@@ -214,7 +219,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.LoadPlayerFromDisk()
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    BEHAVIOURAL DIVERGENCE, same as LoadPlayerDataFromDisk above: the
     //          game wraps this whole body in a try/catch that logs and swallows,
     //          still returning true. Exceptions propagate here instead.
@@ -399,7 +404,7 @@ public partial class PlayerProfile
 
             long dateCreatedUnixSeconds = zpackage.ReadLong();
             DateCreatedUnixSeconds = dateCreatedUnixSeconds;
-            m_dateCreated = DateTimeOffset.FromUnixTimeSeconds(dateCreatedUnixSeconds).Date;
+            m_dateCreated = DateTimeOffset.FromUnixTimeSeconds(dateCreatedUnixSeconds).LocalDateTime;
 
             if (ver < Version.Player.DeepNorth && ver != Version.Player.AbandonedDN)
             {
@@ -446,7 +451,7 @@ public partial class PlayerProfile
         else
         {
             m_dateCreated = new DateTime(2021, 2, 2);
-            DateCreatedUnixSeconds = new DateTimeOffset(m_dateCreated, TimeSpan.Zero).ToUnixTimeSeconds();
+            DateCreatedUnixSeconds = new DateTimeOffset(m_dateCreated).ToUnixTimeSeconds();
         }
 
         if (zpackage.ReadBool())
@@ -466,7 +471,7 @@ public partial class PlayerProfile
         return true;
 
         // mirrors: <LoadPlayerFromDisk>g__GetFirstSpawnFromPlayerData|10_0
-        // source:  Valheim 1.0.20
+        // source:  Valheim 1.0.30
         // note:    Decompiler-surfaced local function; source name restated per
         //          the source reading. Peeks into the m_playerData blob without
         //          disturbing the real parse of it — a fresh ZPackage is
@@ -503,7 +508,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SetName(string)
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     public void SetName(string name)
     {
         m_playerName = name;
@@ -511,17 +516,18 @@ public partial class PlayerProfile
 
     // mirrors: PlayerProfile.SavePlayerToDisk() [profile-level fields; the
     // envelope frame below carries the final hash + length prefixes]
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    Writer-only side effects the game performs are NOT replicated,
     //          and they grew at 1.0.7: the game now increments the current
     //          world's play seconds in TWO stat slots (slot 0 and the current
     //          achievement-difficulty slot) and rebuilds m_knownWorldKeys for
-    //          both by looping GlobalKeys 0..52. A read-only mirror re-emits
+    //          both by looping GlobalKeys 0..55. A read-only mirror re-emits
     //          values exactly as read.
-    // note:    THE `53` IN SOURCE'S WRITE PATH IS THE GLOBALKEYS LOOP BOUND,
+    // note:    THE `56` IN SOURCE'S WRITE PATH IS THE GLOBALKEYS LOOP BOUND,
     //          NOT A STAT COUNT — it sits a few lines from the real stat loop
-    //          and was 43 at 0.221.10, which makes `43 -> 53` look exactly like
-    //          a stat-count bump in a diff. It is not. The stat count is the
+    //          and was 43 at 0.221.10, 53 at 1.0.7–1.0.20 and 56 at 1.0.30
+    //          (three members inserted mid-enum, not appended), which makes
+    //          `43 -> 53` look exactly like a stat-count bump in a diff. It is not. The stat count is the
     //          literal written by `Write(205)` (was 105), and neither number
     //          has ever been the GlobalKeys bound. A patch-day reconnaissance
     //          pass mistook one for the other on this very upgrade; the note is
@@ -676,7 +682,7 @@ public partial class PlayerProfile
     }
 
     // mirrors: PlayerProfile.SavePlayerToDisk(), envelope only
-    // source:  Valheim 1.0.20
+    // source:  Valheim 1.0.30
     // note:    Only the final four writes are mirrored — GenerateHash, GetArray,
     //          then length/payload/length/hash. Everything else in the game's
     //          method is either payload serialisation or

@@ -2051,7 +2051,7 @@
     },
     {
       "name": "darkwood_beam_67",
-      "nameToken": "$piece_darkwoodbeam67",
+      "nameToken": "$piece_darkwoodbeam_67",
       "tool": "Hammer",
       "category": 5,
       "station": "piece_workbench",
@@ -3971,7 +3971,7 @@
           "amount": 10
         },
         {
-          "item": "TrophyCharredMelee",
+          "item": "Charredskull",
           "amount": 5
         },
         {

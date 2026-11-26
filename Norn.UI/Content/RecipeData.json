@@ -2167,7 +2167,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader1Weapon",
+          "item": "Upgrader7Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2574,7 +2574,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader2Weapon",
+          "item": "Upgrader1Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2617,7 +2617,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader2Weapon",
+          "item": "Upgrader1Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2654,7 +2654,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader1Weapon",
+          "item": "Upgrader0Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2691,7 +2691,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader4Weapon",
+          "item": "Upgrader7Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2796,7 +2796,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader4Weapon",
+          "item": "Upgrader7Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2833,7 +2833,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader3Weapon",
+          "item": "Upgrader2Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2876,7 +2876,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader4Weapon",
+          "item": "Upgrader5Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -2918,9 +2918,9 @@
       "name": "Recipe_BakedPoteitr",
       "item": "BakedPoteitrUncooked",
       "amount": 1,
-      "station": "piece_cauldron",
-      "stationToken": "$piece_cauldron",
-      "minStationLevel": 7,
+      "station": "piece_preptable",
+      "stationToken": "$piece_preptable",
+      "minStationLevel": 1,
       "craftable": true,
       "requireOnlyOneIngredient": false,
       "season": null,
@@ -4164,7 +4164,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader2Weapon",
+          "item": "Upgrader3Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -6604,7 +6604,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader2Armor",
+          "item": "Upgrader7Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -6734,7 +6734,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader5Armor",
+          "item": "Upgrader1Armor",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -7150,6 +7150,12 @@
           "amount": 4,
           "amountPerLevel": 3,
           "upgrader": false
+        },
+        {
+          "item": "Upgrader7Armor",
+          "amount": 1,
+          "amountPerLevel": 0,
+          "upgrader": true
         }
       ]
     },
@@ -7179,7 +7185,7 @@
         {
           "item": "TrophyMoose",
           "amount": 1,
-          "amountPerLevel": 1,
+          "amountPerLevel": 0,
           "upgrader": false
         },
         {
@@ -7825,9 +7831,9 @@
       "name": "Recipe_KaleChips",
       "item": "KaleChipsUncooked",
       "amount": 4,
-      "station": "piece_cauldron",
-      "stationToken": "$piece_cauldron",
-      "minStationLevel": 6,
+      "station": "piece_preptable",
+      "stationToken": "$piece_preptable",
+      "minStationLevel": 1,
       "craftable": true,
       "requireOnlyOneIngredient": false,
       "season": null,
@@ -7932,7 +7938,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader3Weapon",
+          "item": "Upgrader2Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -8228,7 +8234,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader4Weapon",
+          "item": "Upgrader5Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -9786,9 +9792,9 @@
       "name": "Recipe_OvenPancake",
       "item": "OvenPancakeUncooked",
       "amount": 1,
-      "station": "piece_cauldron",
-      "stationToken": "$piece_cauldron",
-      "minStationLevel": 6,
+      "station": "piece_preptable",
+      "stationToken": "$piece_preptable",
+      "minStationLevel": 1,
       "craftable": true,
       "requireOnlyOneIngredient": false,
       "season": null,
@@ -9905,7 +9911,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader4Weapon",
+          "item": "Upgrader5Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -12045,7 +12051,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader5Weapon",
+          "item": "Upgrader6Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -12082,7 +12088,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader5Weapon",
+          "item": "Upgrader6Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -12119,7 +12125,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader5Weapon",
+          "item": "Upgrader6Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -12156,7 +12162,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader5Weapon",
+          "item": "Upgrader6Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
@@ -13598,7 +13604,7 @@
           "upgrader": false
         },
         {
-          "item": "Upgrader1Weapon",
+          "item": "Upgrader0Weapon",
           "amount": 1,
           "amountPerLevel": 0,
           "upgrader": true
